@@ -16,15 +16,16 @@ import android.widget.TabHost;
 public class SelectionActivity extends TabActivity{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+//		setContentView(R.layout.activity_selection);
 		
 		TabHost host = getTabHost();
 		Resources r = getResources();
 		
 		host.addTab(host.newTabSpec("Images")
 			.setIndicator("Images", r.getDrawable(android.R.drawable.picture_frame))
-			.setContent(new Intent(this, DisplayActivity.class).putExtra("TAB", "Images")));
+			.setContent(new Intent(this, ImageDisplayActivity.class).putExtra("TAB", "Images")));
 		host.addTab(host.newTabSpec("Music")
 			.setIndicator("Music", r.getDrawable(android.R.drawable.picture_frame))
-			.setContent(new Intent(this, DisplayActivity.class).putExtra("TAB", "Music")));
+			.setContent(new Intent(this, MusicDisplayActivity.class).putExtra("TAB", "Music")));
 	}
 }

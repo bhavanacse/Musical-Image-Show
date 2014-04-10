@@ -11,7 +11,9 @@ import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -29,21 +31,20 @@ import android.widget.ImageView;
  * @author bhavana
  * 
  */
-public class DisplayActivity extends Activity {
+public class ImageDisplayActivity extends Activity {
 
 	private static final int SELECT_PICTURE = 1;
-	private static final int SELECT_MUSIC = 1;
+
 	List<Drawable> splittedBitmaps;
 	List<String> filePaths;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_display);
+		setContentView(R.layout.activity_imagedisplay);
 
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addImageButton);
-		btnChooseGallery.setOnClickListener(btnOpenGallery);
 
+		btnChooseGallery.setOnClickListener(btnOpenGallery);
 	}
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
@@ -57,12 +58,6 @@ public class DisplayActivity extends Activity {
 				intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 				startActivityForResult(intent, SELECT_PICTURE);
 
-			} else {
-				Intent intent = new Intent(
-						Intent.ACTION_PICK,
-						android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-
-				startActivityForResult(intent, SELECT_MUSIC);
 			}
 		}
 	};
@@ -89,13 +84,14 @@ public class DisplayActivity extends Activity {
 					cursor.close();
 
 					filePaths.add(filePath);
+
 				}
 			}
-		}
 
-		GridView grid = (GridView) findViewById(R.id.grid);
-		if (!filePaths.isEmpty()) {
-			grid.setAdapter(new ImageAdapter(this, filePaths));
+			GridView imageGrid = (GridView) findViewById(R.id.grid);
+			if (!filePaths.isEmpty()) {
+				imageGrid.setAdapter(new ImageAdapter(this, filePaths));
+			}
 		}
 	}
 
@@ -128,15 +124,59 @@ public class DisplayActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			ImageView imageView;
 			imageView = new ImageView(mContext);
-			imageView.setLayoutParams(new GridView.LayoutParams(110, 110));
-			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			imageView.setPadding(8, 8, 8, 8);
-			imageView.setImageBitmap(BitmapFactory.decodeFile(mThumbIds
-					.get(position)));
+			try {
+				// TODO Auto-generated method stub
+				imageView.setLayoutParams(new GridView.LayoutParams(110, 110));
+				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				imageView.setPadding(8, 8, 8, 8);
+
+				final BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+
+				BitmapFactory.decodeFile(mThumbIds.get(position), options);
+
+				// Calculate inSampleSize
+				options.inSampleSize = calculateInSampleSize(options, 110, 110);
+
+				// // Decode bitmap with inSampleSize set
+				options.inJustDecodeBounds = false;
+				Bitmap tempBitmap = BitmapFactory.decodeFile(
+						mThumbIds.get(position), options);
+				imageView.setImageBitmap(tempBitmap);
+
+			} catch (Error e) {
+				e.printStackTrace();
+			}
 			return imageView;
 		}
+
+		public int calculateInSampleSize(BitmapFactory.Options options,
+				int reqWidth, int reqHeight) {
+			// Raw height and width of image
+			final int height = options.outHeight;
+			final int width = options.outWidth;
+			int inSampleSize = 1;
+
+			if (height > reqHeight || width > reqWidth) {
+
+				final int halfHeight = height / 2;
+				final int halfWidth = width / 2;
+
+				// Calculate the largest inSampleSize value that is a power of 2
+				// and
+				// keeps both
+				// height and width larger than the requested height and width.
+				while ((halfHeight / inSampleSize) > reqHeight
+						&& (halfWidth / inSampleSize) > reqWidth) {
+					inSampleSize *= 2;
+				}
+			}
+
+			return inSampleSize;
+		}
+
 	}
+
 }

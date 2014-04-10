@@ -1,20 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res/org.bhavmayyin.musicalimageshow"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <ImageView
-        android:id="@+id/imageSelection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+    
     <GridView
         android:id="@+id/grid"
         android:layout_width="fill_parent"
-        android:layout_height="274dp"
-        android:layout_weight="3.05"
+        android:layout_height="350dip"
+        android:layout_weight="0.42"
         android:columnWidth="100dip"
         android:gravity="center"
         android:horizontalSpacing="5dip"
@@ -26,10 +21,12 @@
 
     <ImageButton
         android:id="@+id/addImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.64"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_weight="0.52"
         android:onClick="onClick"
         android:src="@android:drawable/ic_menu_add" />
 
-</LinearLayout>
+</RelativeLayout>
