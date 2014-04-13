@@ -28,7 +28,6 @@ public class ShowList extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_list);
-		//setActivityBackgroundcolor(0);
 		setRequestedOrientation(ActivityInfo   
 				  .SCREEN_ORIENTATION_PORTRAIT);
 	    datasource = new DatabaseHelper(this);
@@ -127,16 +126,18 @@ public class ShowList extends ListActivity {
 		 	    }
 		 	    public void addNewShow() {
 		 	    	boolean checked = false;
+		 	    	ArrayList<Integer> selectedlist = new ArrayList<Integer>();
 		 	        Toast.makeText(this, "add Option Selected", Toast.LENGTH_SHORT).show();
 			 	   	for (int i = 0;i < slideshows.size();i++) {
 						if (slideshows.get(i).isSelected()) {
 							checked = true;
-							break;
+							selectedlist.add(slideshows.get(i).getId());
 						}
 			 	   	}
 			 	   	if (checked){
 			 	    	Intent intent = new Intent(this, SelectionActivity.class);
-			 	    	startActivityForResult(intent,0);
+			 	    	intent.putExtra("Selected Slide Show", selectedlist);
+			 	    	startActivity(intent);
 			 	   	} else {
 
 			 	   		edTitle.setVisibility(View.VISIBLE);

@@ -5,6 +5,7 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,6 +28,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * @author bhavana
@@ -39,14 +41,26 @@ public class ImageDisplayActivity extends Activity {
 
 	List<Drawable> splittedBitmaps;
 	List<String> filePaths;
-
+	DatabaseHelper db;
+	int showid ;
+	String sTitle;
+	String sDesc;
+	TextView tv;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_imagedisplay);
-
+		
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addImageButton);
 
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
+		db = new DatabaseHelper(this);
+		showid = getIntent().getIntExtra("showID", 0);
+		SlideShow ss = new SlideShow();
+		ss=(db.getSlideShow(showid));
+		sTitle = ss.getshowName();
+		sDesc = ss.getshowDescription();
+		tv = (TextView)  findViewById(R.id.ssTitle);
+		tv.setText(sTitle + (!sDesc.isEmpty()? "-" :"") + sDesc);
 	}
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {

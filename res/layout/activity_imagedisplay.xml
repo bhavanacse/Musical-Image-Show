@@ -5,10 +5,19 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     
+    <TextView
+    	android:id="@+id/ssTitle"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center_horizontal"
+    	android:layout_centerHorizontal="true"
+    	android:text="@string/app_name" />
+    
     <GridView
         android:id="@+id/grid"
         android:layout_width="fill_parent"
         android:layout_height="350dip"
+        android:layout_below="@+id/ssTitle"
         android:layout_weight="0.42"
         android:columnWidth="100dip"
         android:gravity="center"

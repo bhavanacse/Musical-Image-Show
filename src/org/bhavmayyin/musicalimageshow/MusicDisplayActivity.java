@@ -44,6 +44,11 @@ public class MusicDisplayActivity extends Activity {
 	private static final int SELECT_MUSIC = 1;
 
 	File file;
+	DatabaseHelper db;
+	int showid ;
+	String sTitle;
+	String sDesc;
+	TextView tv;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +57,15 @@ public class MusicDisplayActivity extends Activity {
 
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addMusicButton);
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
+		
+		db = new DatabaseHelper(this);
+		showid = getIntent().getIntExtra("showID", 0);
+		SlideShow ss = new SlideShow();
+		ss=(db.getSlideShow(showid));
+		sTitle = ss.getshowName();
+		sDesc = ss.getshowDescription();
+		tv = (TextView)  findViewById(R.id.ssMTitle);
+		tv.setText(sTitle + (!sDesc.isEmpty()? "-" :"") + sDesc);
 	}
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {

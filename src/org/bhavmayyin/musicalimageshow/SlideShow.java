@@ -2,6 +2,8 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 
+import android.os.Parcelable;
+
 public class SlideShow {
 	private int id;
 	private ArrayList<ImageShow> imglist;
