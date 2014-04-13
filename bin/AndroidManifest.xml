@@ -17,7 +17,7 @@
             android:name="org.bhavmayyin.musicalimageshow.ImageDisplayActivity">
             <intent-filter >
 		        <action android:name="android.intent.action.SEND_MULTIPLE"/>
-		        <category android:name="android.intent.category.DEFAULT"/>
+		        <category android:name="android.intent.category.OPENABLE"/>
 		        <data android:mimeType="image/*" />
     		</intent-filter>
         </activity>
@@ -33,5 +33,5 @@
             </intent-filter>
         </activity>
     </application>
-
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>

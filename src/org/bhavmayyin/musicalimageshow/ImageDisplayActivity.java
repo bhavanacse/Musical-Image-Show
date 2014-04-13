@@ -1,12 +1,12 @@
 /**
- * 
+ * clone 4/12/2014
  */
 package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.widget.ImageView;
  * @author bhavana
  * 
  */
+@SuppressLint("NewApi")
 public class ImageDisplayActivity extends Activity {
 
 	private static final int SELECT_PICTURE = 1;
@@ -62,17 +64,19 @@ public class ImageDisplayActivity extends Activity {
 		}
 	};
 
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-
-				int totalImages = data.getClipData().getItemCount();
+					//result array[0] mData mData path decode
+				// data.getData()
+				int totalImages = 1; //data.getClipData().getItemCount();
 				filePaths = new ArrayList<String>();
 				for (int currentImage = 0; currentImage < totalImages; currentImage++) {
-					Item currentClip = data.getClipData().getItemAt(
-							currentImage);
+					//Item currentClip = data.getClipData().getItemAt(
+						//	currentImage);
 
-					Uri selectedImageUri = currentClip.getUri();
+					Uri selectedImageUri = data.getData(); //currentClip.getUri();
 					String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
 					Cursor cursor = getContentResolver().query(

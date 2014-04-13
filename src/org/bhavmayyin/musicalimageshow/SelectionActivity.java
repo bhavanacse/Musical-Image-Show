@@ -11,7 +11,7 @@ import android.widget.TabHost;
 
 /**
  * @author bhavana
- *
+ *clone by Mayyin 4/12/2014
  */
 public class SelectionActivity extends TabActivity{
 	public void onCreate(Bundle savedInstanceState){
