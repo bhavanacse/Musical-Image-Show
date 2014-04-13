@@ -19,6 +19,7 @@
                <CheckBox 
 		         android:id="@+id/checkbox" 
 		         android:focusable="false"
+		         android:button="@drawable/apptheme_btn_check_holo_light"
 		         android:freezesText="false"
 		         android:layout_width="wrap_content" 
 		         android:layout_height="wrap_content"

@@ -141,6 +141,8 @@ public class ShowList extends ListActivity {
 
 			 	   		edTitle.setVisibility(View.VISIBLE);
 			 	   		edDesc.setVisibility(View.VISIBLE);
+			 	   		edTitle.requestFocus();
+			 	 
 			 	   	}
 		 	    }
 

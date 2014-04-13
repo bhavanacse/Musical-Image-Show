@@ -22,19 +22,28 @@ public final class R {
     }
     public static final class drawable {
         public static final int addmusic=0x7f020000;
-        public static final int checkbox_selected=0x7f020001;
-        public static final int ic_action_accept=0x7f020002;
-        public static final int ic_action_cancel=0x7f020003;
-        public static final int ic_action_edit=0x7f020004;
-        public static final int ic_action_new=0x7f020005;
-        public static final int ic_action_play=0x7f020006;
-        public static final int ic_action_remove=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int images=0x7f020009;
-        public static final int newshow=0x7f02000a;
-        public static final int no_media=0x7f02000b;
-        public static final int play_slideshow=0x7f02000c;
-        public static final int slide_show=0x7f02000d;
+        public static final int apptheme_btn_check_holo_light=0x7f020001;
+        public static final int apptheme_btn_check_off_focused_holo_light=0x7f020002;
+        public static final int apptheme_btn_check_on_focused_holo_light=0x7f020003;
+        public static final int apptheme_edit_text_holo_light=0x7f020004;
+        public static final int apptheme_textfield_activated_holo_light=0x7f020005;
+        public static final int apptheme_textfield_default_holo_light=0x7f020006;
+        public static final int apptheme_textfield_disabled_focused_holo_light=0x7f020007;
+        public static final int apptheme_textfield_disabled_holo_light=0x7f020008;
+        public static final int apptheme_textfield_focused_holo_light=0x7f020009;
+        public static final int checkbox_selected=0x7f02000a;
+        public static final int ic_action_accept=0x7f02000b;
+        public static final int ic_action_cancel=0x7f02000c;
+        public static final int ic_action_edit=0x7f02000d;
+        public static final int ic_action_new=0x7f02000e;
+        public static final int ic_action_play=0x7f02000f;
+        public static final int ic_action_remove=0x7f020010;
+        public static final int ic_launcher=0x7f020011;
+        public static final int images=0x7f020012;
+        public static final int newshow=0x7f020013;
+        public static final int no_media=0x7f020014;
+        public static final int play_slideshow=0x7f020015;
+        public static final int slide_show=0x7f020016;
     }
     public static final class id {
         public static final int accept_show=0x7f08000f;
