@@ -1,0 +1,83 @@
+package org.bhavmayyin.musicalimageshow;
+
+import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.text.Layout;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import android.widget.TextView;
+
+
+public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
+
+	  private final List<SlideShow> list;
+	  private final Activity context;
+
+	  public InteractiveArrayAdapter(Activity context, List<SlideShow> list) {
+	    super(context, R.layout.grouprow, list);
+	    this.context = context;
+	    this.list = list;
+	  }
+
+	  static class ViewHolder {
+	    protected TextView text;
+	    protected CheckBox checkbox;
+	    LinearLayout lout;
+	
+	  }
+
+	  @SuppressLint("NewApi")
+	@Override
+	  public View getView(int position, View convertView, ViewGroup parent) {
+	    View view = null;
+	    if (convertView == null) {
+	      LayoutInflater inflator = context.getLayoutInflater();
+	      view = inflator.inflate(R.layout.grouprow, null);
+	      final ViewHolder viewHolder = new ViewHolder();
+	      viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
+	      
+	      viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
+	      viewHolder.checkbox
+	          .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+	            @Override
+	            public void onCheckedChanged(CompoundButton buttonView,
+	                boolean isChecked) {
+	              SlideShow element = (SlideShow) viewHolder.checkbox
+	                  .getTag();
+	              element.setselected(buttonView.isChecked());
+	              
+
+	            }
+	          });
+
+	      view.setTag(viewHolder);
+	      viewHolder.checkbox.setTag(list.get(position));
+	    } else {
+	      view = convertView;
+	      ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
+	    }
+	    ViewHolder holder = (ViewHolder) view.getTag();
+	    StringBuffer result = new StringBuffer();// for using arrayList adapter
+    	//result.append(list.get(position).getshowName()+System.getProperty("line.separator"));
+	    result.append(list.get(position).getshowName());
+	    if (!list.get(position).getshowDescription().isEmpty())
+	    	result.append(" - " + list.get(position).getshowDescription());
+	    holder.text.setText(result.toString());
+	    holder.checkbox.setChecked(list.get(position).isSelected());
+
+	    return view;
+	  } 
+	
+	} 

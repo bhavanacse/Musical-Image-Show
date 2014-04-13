@@ -21,30 +21,76 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int addmusic=0x7f020000;
+        public static final int checkbox_selected=0x7f020001;
+        public static final int ic_action_accept=0x7f020002;
+        public static final int ic_action_cancel=0x7f020003;
+        public static final int ic_action_edit=0x7f020004;
+        public static final int ic_action_new=0x7f020005;
+        public static final int ic_action_play=0x7f020006;
+        public static final int ic_action_remove=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int images=0x7f020009;
+        public static final int newshow=0x7f02000a;
+        public static final int no_media=0x7f02000b;
+        public static final int play_slideshow=0x7f02000c;
+        public static final int slide_show=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f080004;
-        public static final int addImageButton=0x7f080001;
-        public static final int addMusicButton=0x7f080003;
-        public static final int grid=0x7f080000;
-        public static final int menuAdd=0x7f080005;
-        public static final int musicListView=0x7f080002;
+        public static final int accept_show=0x7f08000f;
+        public static final int action_settings=0x7f080010;
+        public static final int addImageButton=0x7f080002;
+        public static final int addMusicButton=0x7f080007;
+        public static final int checkbox=0x7f08000b;
+        public static final int delete_show=0x7f08000d;
+        public static final int grid=0x7f080001;
+        public static final int imageSelection=0x7f080000;
+        public static final int imageView1=0x7f080005;
+        public static final int mainact=0x7f080003;
+        public static final int menuAdd=0x7f080011;
+        public static final int musicListView=0x7f080006;
+        public static final int new_show=0x7f08000e;
+        public static final int play_show=0x7f08000c;
+        public static final int showdesc=0x7f080009;
+        public static final int showname=0x7f080008;
+        public static final int shwtitle=0x7f08000a;
+        public static final int title=0x7f080004;
     }
     public static final class layout {
-        public static final int activity_imagedisplay=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int activity_musicdisplay=0x7f030002;
+        public static final int activity_display=0x7f030000;
+        public static final int activity_imagedisplay=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_musicdisplay=0x7f030003;
+        public static final int activity_show_list=0x7f030004;
+        public static final int grouprow=0x7f030005;
     }
     public static final class menu {
-        public static final int main=0x7f070000;
-        public static final int options=0x7f070001;
+        public static final int action_bar_item=0x7f070000;
+        public static final int display=0x7f070001;
+        public static final int main=0x7f070002;
+        public static final int new_slide_show=0x7f070003;
+        public static final int options=0x7f070004;
+        public static final int show_list=0x7f070005;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
-        public static final int add=0x7f050003;
+        public static final int add=0x7f050002;
         public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        public static final int cancel=0x7f05000d;
+        public static final int hello=0x7f050005;
+        public static final int hello_world=0x7f050004;
+        public static final int magic_show=0x7f050006;
+        public static final int my_show=0x7f050008;
+        public static final int new_show=0x7f050007;
+        public static final int ok=0x7f05000c;
+        public static final int title_activity_android_select_image=0x7f05000e;
+        public static final int title_activity_choice=0x7f05000a;
+        public static final int title_activity_display=0x7f050011;
+        public static final int title_activity_main=0x7f050003;
+        public static final int title_activity_menu=0x7f050009;
+        public static final int title_activity_new_slide_show=0x7f05000f;
+        public static final int title_activity_newshow_dialog=0x7f05000b;
+        public static final int title_activity_show_list=0x7f050010;
     }
     public static final class style {
         /** 
