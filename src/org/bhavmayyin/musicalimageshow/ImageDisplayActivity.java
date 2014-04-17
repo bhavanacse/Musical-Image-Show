@@ -9,6 +9,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author bhavana
@@ -41,11 +43,13 @@ public class ImageDisplayActivity extends Activity {
 
 	List<Drawable> splittedBitmaps;
 	List<String> filePaths;
+	List<String> imgURI;
 	DatabaseHelper db;
 	int showid ;
-	String sTitle;
-	String sDesc;
 	TextView tv;
+	ImageAdapter imgadapter;
+	GridView imageGrid;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_imagedisplay);
@@ -55,12 +59,12 @@ public class ImageDisplayActivity extends Activity {
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
-		SlideShow ss = new SlideShow();
-		ss=(db.getSlideShow(showid));
-		sTitle = ss.getshowName();
-		sDesc = ss.getshowDescription();
+		imgURI = db.getAllimageURI(showid);
 		tv = (TextView)  findViewById(R.id.ssTitle);
-		tv.setText(sTitle + (!sDesc.isEmpty()? "-" :"") + sDesc);
+		tv.setText(getIntent().getStringExtra("showTitle"));
+		imageGrid = (GridView) findViewById(R.id.grid);
+		imgadapter= new ImageAdapter(this, imgURI);
+		imageGrid.setAdapter(imgadapter);
 	}
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
@@ -81,14 +85,15 @@ public class ImageDisplayActivity extends Activity {
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			if (requestCode == SELECT_PICTURE) {
+			//if (requestCode == SELECT_PICTURE) {
+			if(data.getData() != null){
 					//result array[0] mData mData path decode
 				// data.getData()
-				int totalImages = 1; //data.getClipData().getItemCount();
+				int totalImages =1; // data.getClipData().getItemCount();
 				filePaths = new ArrayList<String>();
 				for (int currentImage = 0; currentImage < totalImages; currentImage++) {
 					//Item currentClip = data.getClipData().getItemAt(
-						//	currentImage);
+					//		currentImage);
 
 					Uri selectedImageUri = data.getData(); //currentClip.getUri();
 					String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -100,15 +105,14 @@ public class ImageDisplayActivity extends Activity {
 					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 					String filePath = cursor.getString(columnIndex);
 					cursor.close();
-
-					filePaths.add(filePath);
-
+					
+					if (!filePath.isEmpty()) {
+						filePaths.add(filePath);
+						imgURI.add(filePath);
+					}
 				}
-			}
-
-			GridView imageGrid = (GridView) findViewById(R.id.grid);
-			if (!filePaths.isEmpty()) {
-				imageGrid.setAdapter(new ImageAdapter(this, filePaths));
+				db.addImage(filePaths, showid);
+				imgadapter.notifyDataSetChanged();
 			}
 		}
 	}

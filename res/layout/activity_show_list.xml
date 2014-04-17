@@ -32,6 +32,8 @@
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:choiceMode="singleChoice"
+    	android:descendantFocusability="beforeDescendants"
         android:fadingEdge="none"
         android:layout_below="@+id/showdesc"
     	android:cacheColorHint="#ffffff"

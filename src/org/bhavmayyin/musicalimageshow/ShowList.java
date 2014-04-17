@@ -24,6 +24,7 @@ public class ShowList extends ListActivity {
 	DatabaseHelper datasource;
 	EditText edTitle;
 	EditText edDesc;
+	int npos = -1;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,13 +34,7 @@ public class ShowList extends ListActivity {
 	    datasource = new DatabaseHelper(this);
 	    slideshows = (ArrayList<SlideShow>) datasource.getAllSlideShows();
 	   
-	    if (slideshows.size() < 1){
-	    	SlideShow ss = new SlideShow();
-	    	ss.setshowName("Create Slide Show");
-	    	ss.setshowDescription("Press + button on Action Bar to add First Slide show");
-	    	ss.setId(-1);
-	        slideshows.add(ss);
-	    }
+	    setDummyList();
 	    adapter = new InteractiveArrayAdapter(this,
 	            slideshows);
 	    setListAdapter(adapter);
@@ -48,7 +43,15 @@ public class ShowList extends ListActivity {
 	    edTitle.setVisibility(View.GONE);
 	    edDesc.setVisibility(View.GONE);
 	}
-
+	public void setDummyList(){
+	    if (slideshows.size() < 1){
+	    	SlideShow ss = new SlideShow();
+	    	ss.setshowName("Create Slide Show");
+	    	ss.setshowDescription("Press + button on Action Bar to add First Slide show");
+	    	ss.setId(-1);
+	        slideshows.add(ss);
+	    }
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -57,6 +60,21 @@ public class ShowList extends ListActivity {
 		return super.onCreateOptionsMenu(menu);
 
 	}
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+	    super.onListItemClick(l, v, position, id);
+	    npos = position;
+	    for (int i=0; i < slideshows.size();i ++){
+      	  if (i != position){
+      		  slideshows.get(i).setselected(false);
+      	  } else {
+      		  slideshows.get(i).setselected(!slideshows.get(i).isSelected());
+      	  }
+      	  
+        }
+	    ((InteractiveArrayAdapter) adapter).notifyDataSetChanged();
+	}
+
 	 @SuppressLint("NewApi")
 	@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
@@ -102,14 +120,11 @@ public class ShowList extends ListActivity {
 		 	    public void deleteShow() {
 		 	       // cancel the new input if inputbox is visible and X is pressed
 		 	    	if (!edTitle.isShown()) {
-			 	       	for (int i = slideshows.size() -1; i >=0 ;i--) {
-							if (slideshows.get(i).isSelected()) {
-								if (slideshows.get(i).getId() != -1) {
-									datasource.deleteSlideShow((long) slideshows.get(i).getId());
-									slideshows.remove(i);
+								if (slideshows.get(npos).getId() != -1) {
+									datasource.deleteSlideShow((long) slideshows.get(npos).getId());
+									slideshows.remove(npos);
+									setDummyList();
 								}
-							}
-			 	       	}
 			 	       	} else {
 			 	       		edTitle.setText("");
 			 	       		edDesc.setText("");
@@ -124,33 +139,38 @@ public class ShowList extends ListActivity {
 		 	        Toast.makeText(this, "Play Option Selected", Toast.LENGTH_SHORT).show();
 
 		 	    }
+		 	    
 		 	    public void addNewShow() {
-		 	    	boolean checked = false;
-		 	    	ArrayList<Integer> selectedlist = new ArrayList<Integer>();
-		 	        Toast.makeText(this, "add Option Selected", Toast.LENGTH_SHORT).show();
-			 	   	for (int i = 0;i < slideshows.size();i++) {
-						if (slideshows.get(i).isSelected()) {
-							checked = true;
-							selectedlist.add(slideshows.get(i).getId());
-						}
-			 	   	}
-			 	   	if (checked){
-			 	    	Intent intent = new Intent(this, SelectionActivity.class);
-			 	    	intent.putExtra("Selected Slide Show", selectedlist);
-			 	    	startActivity(intent);
-			 	   	} else {
+		 	    	if(slideshows.get(0).getId() > -1 ){
+		 	    		boolean checked = false;
+		 	    		if (npos > -1) {
+		 	    			checked = slideshows.get(npos).isSelected();
+		 	    		}
+		 	    		//Toast.makeText(this, "add Option Selected" + checked + npos, Toast.LENGTH_SHORT).show();
 
-			 	   		edTitle.setVisibility(View.VISIBLE);
-			 	   		edDesc.setVisibility(View.VISIBLE);
-			 	   		edTitle.requestFocus();
+		 	    		if (checked){
+		 	    			Intent intent = new Intent(this, SelectionActivity.class);
+		 	    			intent.putExtra("Selected Slide Show", slideshows.get(npos).getId());
+		 	    			startActivity(intent);
+		 	    		} else {
+
+		 	    			edTitle.setVisibility(View.VISIBLE);
+		 	    			edDesc.setVisibility(View.VISIBLE);
+		 	    			edTitle.requestFocus();
 			 	 
-			 	   	}
+		 	    		} 
+		 	    	} else {
+	 	    			edTitle.setVisibility(View.VISIBLE);
+	 	    			edDesc.setVisibility(View.VISIBLE);
+	 	    			edTitle.requestFocus();
+		 	    	}
 		 	    }
 
  	   public void setActivityBackgroundcolor( int color){
  	    	View view = this.getWindow().getDecorView();
  	    	view.setBackgroundColor(color);
  	   }
+
  	   void OnStop(){
  		   datasource.closeDB();
  	   }

@@ -15,21 +15,25 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 
 	  private final List<SlideShow> list;
 	  private final Activity context;
-
+	  int selectedIndex = -1;
 	  public InteractiveArrayAdapter(Activity context, List<SlideShow> list) {
 	    super(context, R.layout.grouprow, list);
 	    this.context = context;
 	    this.list = list;
 	  }
-
+	/*  
+	  public void setSelectedIndex(int index){
+	      selectedIndex = index;
+	  }
+*/
 	  static class ViewHolder {
 	    protected TextView text;
 	    protected CheckBox checkbox;
@@ -48,20 +52,6 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	      viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
 	      
 	      viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
-	      viewHolder.checkbox
-	          .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-	            @Override
-	            public void onCheckedChanged(CompoundButton buttonView,
-	                boolean isChecked) {
-	              SlideShow element = (SlideShow) viewHolder.checkbox
-	                  .getTag();
-	              element.setselected(buttonView.isChecked());
-	              
-
-	            }
-	          });
-
 	      view.setTag(viewHolder);
 	      viewHolder.checkbox.setTag(list.get(position));
 	    } else {

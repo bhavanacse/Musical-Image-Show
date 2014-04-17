@@ -6,7 +6,7 @@
         android:title="delete selected show"
         android:icon="@drawable/ic_action_play" 
         android:orderInCategory="1"
-         android:showAsAction="always" >
+         android:showAsAction="never" >
     </item>
     <item
         android:id="@+id/delete_show"

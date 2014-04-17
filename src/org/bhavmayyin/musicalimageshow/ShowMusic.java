@@ -3,7 +3,9 @@ package org.bhavmayyin.musicalimageshow;
 public class ShowMusic {
 	int id;
 	String showname;
+	int showid;
 	String music;
+	String artist;
 	
 	public ShowMusic() {
 		// TODO Auto-generated constructor stub
@@ -18,6 +20,12 @@ public class ShowMusic {
 	public void setID(int i){
 		this.id = i;
 	}
+	public void setshowID(int i){
+		this.showid = i;
+	}
+	public void setArtist(String s){
+		this.artist = s;
+	}
 	public void setname(String s){
 		this.showname = s;
 	}
@@ -27,10 +35,16 @@ public class ShowMusic {
 	public int getId(){
 		return this.id;
 	}
+	public int getshowId(){
+		return this.showid;
+	}
 	public String getName(){
 		return this.showname ;
 	}
 	public String getMusic(){
 		return this.music ;
+	}
+	public String getArtist(){
+		return this.artist ;
 	}
 }

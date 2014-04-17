@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author bhavana
@@ -46,10 +47,11 @@ public class MusicDisplayActivity extends Activity {
 	File file;
 	DatabaseHelper db;
 	int showid ;
-	String sTitle;
-	String sDesc;
 	TextView tv;
-	
+	ListView musicList;
+	MusicAdapter musicadapter;
+	List<ShowMusic> musicObj ;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -57,15 +59,17 @@ public class MusicDisplayActivity extends Activity {
 
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addMusicButton);
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
-		
+
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
-		SlideShow ss = new SlideShow();
-		ss=(db.getSlideShow(showid));
-		sTitle = ss.getshowName();
-		sDesc = ss.getshowDescription();
 		tv = (TextView)  findViewById(R.id.ssMTitle);
-		tv.setText(sTitle + (!sDesc.isEmpty()? "-" :"") + sDesc);
+		tv.setText(getIntent().getStringExtra("showTitle"));
+		musicObj = db.getShowMusic(showid);
+		//Toast.makeText(this, "add music added" , Toast.LENGTH_SHORT).show();
+		musicList = (ListView) findViewById(R.id.musicListView);
+		musicadapter = new MusicAdapter(this, musicObj);
+		musicList.setAdapter(musicadapter);
+
 	}
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
@@ -87,12 +91,6 @@ public class MusicDisplayActivity extends Activity {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_MUSIC) {
 
-				List<String> musicFileNames;
-				List<String> artistNames;
-				
-				musicFileNames = new ArrayList<String>();
-				artistNames = new ArrayList<String>();
-				
 				Uri selectedMusicUri = data.getData();
 				String[] filePathColumn = { 
 						MediaStore.Audio.Media.TITLE,
@@ -105,26 +103,18 @@ public class MusicDisplayActivity extends Activity {
 
 				int columnOneIndex = cursor.getColumnIndex(filePathColumn[0]);
 				String displayName = cursor.getString(columnOneIndex);
-				
+
 				int columnTwoIndex = cursor.getColumnIndex(filePathColumn[1]);
 				String artistName = cursor.getString(columnTwoIndex);
-				
+
 				cursor.close();
 
-				musicFileNames.add(displayName);
-				artistNames.add(artistName);
-
-				ListView musicList = (ListView) findViewById(R.id.musicListView);
-				if (!musicFileNames.isEmpty()) {
-					musicList
-							.setAdapter(new MusicAdapter(this, musicFileNames, artistNames));
-
-				}
-//				if (!musicFileNames.isEmpty()) {
-//					musicList
-//							.setAdapter(new MusicAdapter(this, musicFileNames));
-//
-//				}
+				ShowMusic sm = new ShowMusic();
+				sm.setArtist( artistName);
+				sm.setMusic(displayName);
+				musicObj.add(sm);
+				db.addMusic( displayName, artistName,showid);
+				musicadapter.notifyDataSetChanged();
 
 			}
 		}
@@ -132,23 +122,16 @@ public class MusicDisplayActivity extends Activity {
 
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
-		private List<String> fileNames;
-		private List<String> artistNames;
+		private List<ShowMusic> showmusic ;
 //		AssetManager assetManager = getAssets(); 
 
-		public MusicAdapter(Context c, List<String> names, List<String> ans) {
+		public MusicAdapter(Context c, List<ShowMusic> musiclist) {
 			myContext = c;
-			fileNames = names;
-			artistNames = ans;
+			showmusic = musiclist;
 		}
-		
-//		public MusicAdapter(Context c, List<String> names) {
-//			myContext = c;
-//			fileNames = names;
-//		}
 
 		public int getCount() {
-			return fileNames.size();
+			return showmusic.size();
 		}
 
 		public Object getItem(int position) {
@@ -162,12 +145,10 @@ public class MusicDisplayActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
 
-			String fileDisplayName = fileNames.get(position);
-			String fileArtistName = artistNames.get(position);
+			textView.setLayoutParams(new ListView.LayoutParams(400, 100));
 
-			textView.setLayoutParams(new ListView.LayoutParams(150, 80));
-			String wholeText = fileDisplayName + " " +fileArtistName;
-			textView.setText(wholeText);
+			textView.setText(showmusic.get(position).getMusic() + " " 
+					+ showmusic.get(position).getArtist());
 //			textView.setText(fileDisplayName);
 //			textView.setBackgroundColor(color.holo_red_dark);
 //			final Typeface tvFont = Typeface.createFromAsset(assetManager, "OPTIMA.TTF");
@@ -180,3 +161,6 @@ public class MusicDisplayActivity extends Activity {
 	}
 
 }
+
+
+

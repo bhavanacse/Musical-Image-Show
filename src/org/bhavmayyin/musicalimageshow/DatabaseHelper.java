@@ -6,19 +6,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String LOG = "DatabaseHelper";
 
 	// Database Version
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 4;
 
 		// Database Name
 		
@@ -47,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		// showmusic Table - column names
 
 		private static final String KEY_MUSIC = "showmusic";
+		private static final String KEY_ARTIST = "artist";
 
 // Table Create Statements
 
@@ -66,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String CREATE_TABLE_SHOWMUSIC = "CREATE TABLE "
 				+ TABLE_SHOWMUSIC + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ KEY_SHOWID + " INTEGER, " +  KEY_MUSIC + " TEXT"
+			+ KEY_SHOWID + " INTEGER, " +  KEY_MUSIC + " TEXT," +  KEY_ARTIST + " TEXT"
 			+ ")";
 
 public DatabaseHelper(Context context) {
@@ -292,13 +295,25 @@ public void createImageShow(String imgs, long showid) {
 //return image_id;
 
 }
+//adding images
+public void addImage(List<String> filePaths, long showid){
+	SQLiteDatabase db = this.getWritableDatabase();
+	for ( String strimg : filePaths){
+
+		ContentValues values = new ContentValues();
+		values.put(KEY_SHOWID, showid);
+		values.put(KEY_IMAGE, strimg);
+		// insert row
+		db.insert(TABLE_IMAGESHOW, null, values);
+	}
+}
 
 /**
 
 * getting all imageshow
 
 * */
-
+// get all image object
 public List<ImageShow> getAllimages(long showid) {
 	List<ImageShow> imageshows = new ArrayList<ImageShow>();
 	String selectQuery = "SELECT * FROM " + TABLE_IMAGESHOW  
@@ -322,7 +337,25 @@ public List<ImageShow> getAllimages(long showid) {
 	}
 	
 	return imageshows;
-
+}
+//get all image URI
+public List<String> getAllimageURI(long showid) {
+	List<String> imageshows = new ArrayList<String>();
+	String selectQuery = "SELECT * FROM " + TABLE_IMAGESHOW  
+			+ " WHERE " + KEY_SHOWID 
+			+ " = " + showid;
+	SQLiteDatabase db = this.getReadableDatabase();
+	Cursor c = db.rawQuery(selectQuery, null);
+	// looping through all rows and adding to list
+	if (c.moveToFirst()) {
+		do {
+		// adding to imageshow list
+			imageshows.add(c.getString(c.getColumnIndex(KEY_IMAGE)));
+		} while (c.moveToNext());
+	
+	}
+	
+	return imageshows;
 }
 
 /*
@@ -349,15 +382,40 @@ public void deleteImageShow(ImageShow is) {
 * Creating SHOWMUSIC
 
 */
-
-public void createShowMusic(long slideshow_id, String music) {
+// add music
+public void addMusic(String filePath,String artist, long showid){
 	SQLiteDatabase db = this.getWritableDatabase();
-	ContentValues values = new ContentValues();
-	values.put(KEY_SHOWID, slideshow_id);
-	values.put(KEY_MUSIC, music);
+	//for ( String strimg : filePaths){
 
-	 db.insert(TABLE_SHOWMUSIC, null, values);
+		ContentValues values = new ContentValues();
+		values.put(KEY_SHOWID, showid);
+		values.put(KEY_MUSIC, filePath);
+		values.put(KEY_ARTIST, artist);
+		// insert row
+		db.insert(TABLE_SHOWMUSIC, null, values);
+	//}
+}
+public void addMusicList(List<ShowMusic> filePaths, long showid){
+	SQLiteDatabase db = this.getWritableDatabase();
+	
+	for ( ShowMusic s: filePaths){
+		ContentValues values = new ContentValues();
+		values.put(KEY_SHOWID, showid);
+		values.put(KEY_MUSIC, s.getMusic());
+		values.put(KEY_ARTIST, s.getArtist());
+		// insert row
+		db.insert(TABLE_IMAGESHOW, null, values);
+		System.out.println( showid + " db to add music added " + getMusicCount(showid));
+	}
+}
 
+public int getMusicCount(long slideshow_id){
+	SQLiteDatabase db = this.getWritableDatabase();
+	Cursor mCount= db.rawQuery("select count(*) from " + TABLE_SHOWMUSIC  + " where showId=" + slideshow_id , null);
+	mCount.moveToFirst();
+	int count= mCount.getInt(0);
+	mCount.close();
+	return count;
 }
 //delete a music
 
@@ -365,9 +423,31 @@ public void deleteShowMusic(long id) {
 
 	SQLiteDatabase db = this.getWritableDatabase();
 	// 
-	db.delete(TABLE_IMAGESHOW, KEY_ID + " = ?",
+	db.delete(TABLE_SHOWMUSIC, KEY_ID + " = ?",
 			new String[] { String.valueOf(id) });
 
+}
+//get the show music file
+public List<ShowMusic> getShowMusic(long showid) {
+
+	SQLiteDatabase db = this.getReadableDatabase();
+	String selectQuery = "SELECT * FROM " + TABLE_SHOWMUSIC +  " WHERE "
+			+  KEY_SHOWID + " = " + showid;
+	//Log.e(LOG, selectQuery);
+	ArrayList<ShowMusic> musicURI= new ArrayList<ShowMusic>();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			do {
+				ShowMusic t = new ShowMusic();
+				t.setID(c.getInt((c.getColumnIndex(KEY_ID))));
+				t.setshowID(c.getInt((c.getColumnIndex(KEY_SHOWID))));
+				t.setMusic(c.getString(c.getColumnIndex(KEY_MUSIC)));
+				t.setArtist(c.getString(c.getColumnIndex(KEY_ARTIST)));
+		// adding to imageshow list
+				musicURI.add(t);
+			} while (c.moveToNext());
+		}
+		return musicURI; 
 }
 
 // closing database
