@@ -3,16 +3,23 @@ package org.bhavmayyin.musicalimageshow;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.bhavmayyin.musicalimageshow.R.color;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 
 @SuppressLint("NewApi")
@@ -28,6 +35,8 @@ private MyHandler handler;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		imagev = (ImageView) findViewById(R.id.imageView1);
+	    ActionBar bar = getActionBar();
+	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
 		timer = new Timer();
 		timer.schedule(new TickClass(), 1000,1000);
 		handler = new MyHandler();

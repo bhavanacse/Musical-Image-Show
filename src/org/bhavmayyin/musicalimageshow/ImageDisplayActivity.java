@@ -6,6 +6,7 @@ package org.bhavmayyin.musicalimageshow;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -42,6 +43,7 @@ public class ImageDisplayActivity extends Activity {
 	private static final int SELECT_PICTURE = 1;
 
 	List<Drawable> splittedBitmaps;
+	private int currentImageIndex = 0;
 	List<String> filePaths;
 	List<String> imgURI;
 	DatabaseHelper db;
@@ -55,8 +57,10 @@ public class ImageDisplayActivity extends Activity {
 		setContentView(R.layout.activity_imagedisplay);
 		
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addImageButton);
+		ImageButton btnPlayShow = (ImageButton) findViewById(R.id.playImageButton);
 
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
+		btnPlayShow.setOnClickListener(btnSlideShow);
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
 		imgURI = db.getAllimageURI(showid);
@@ -82,20 +86,40 @@ public class ImageDisplayActivity extends Activity {
 		}
 	};
 
+	public OnClickListener btnSlideShow = new OnClickListener() {
+
+		@SuppressLint("InlinedApi")
+		public void onClick(View view) {
+			if (getIntent().getCharSequenceExtra("TAB").toString()
+					.contentEquals("Images")) {
+			 playSlideShow();
+			}
+		}
+	};
+	
+	public void playSlideShow(){
+		Bundle b = new Bundle();
+		String key = "ImageFilePaths";
+		b.putStringArrayList(key, (ArrayList<String>) imgURI);
+		Intent intent = new Intent(this, SlideShowActivity.class);
+		intent.putExtras(b);
+		startActivity(intent);
+	}
+	
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			//if (requestCode == SELECT_PICTURE) {
+			if (requestCode == SELECT_PICTURE) {
 			if(data.getData() != null){
 					//result array[0] mData mData path decode
 				// data.getData()
-				int totalImages =1; // data.getClipData().getItemCount();
-				filePaths = new ArrayList<String>();
-				for (int currentImage = 0; currentImage < totalImages; currentImage++) {
+				int totalImages = 1;//data.getClipData().getItemCount();// 
+				filePaths = new ArrayList<String>(); 
+				//for (int currentImage = 0; currentImage < totalImages; currentImage++) {
 					//Item currentClip = data.getClipData().getItemAt(
-					//		currentImage);
+				//			currentImage);
 
-					Uri selectedImageUri = data.getData(); //currentClip.getUri();
+					Uri selectedImageUri = data.getData(); //currentClip.getUri();// 
 					String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
 					Cursor cursor = getContentResolver().query(
@@ -110,9 +134,10 @@ public class ImageDisplayActivity extends Activity {
 						filePaths.add(filePath);
 						imgURI.add(filePath);
 					}
-				}
+				//}
 				db.addImage(filePaths, showid);
 				imgadapter.notifyDataSetChanged();
+			}
 			}
 		}
 	}
@@ -150,7 +175,7 @@ public class ImageDisplayActivity extends Activity {
 			imageView = new ImageView(mContext);
 			try {
 				// TODO Auto-generated method stub
-				imageView.setLayoutParams(new GridView.LayoutParams(110, 110));
+				imageView.setLayoutParams(new GridView.LayoutParams(300, 300));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 

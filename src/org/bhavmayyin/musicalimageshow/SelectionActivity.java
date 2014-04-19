@@ -5,9 +5,12 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -38,7 +41,8 @@ public class SelectionActivity extends TabActivity{
 		sTitle = selshow.getshowName();
 		sDesc = selshow.getshowDescription();
 		sTitleDesc = (sTitle + (!sDesc.isEmpty()? "-" :"") + sDesc);
-	
+	    ActionBar bar = getActionBar();
+	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
 		
 		TabHost host = getTabHost();
 		Resources r = getResources();

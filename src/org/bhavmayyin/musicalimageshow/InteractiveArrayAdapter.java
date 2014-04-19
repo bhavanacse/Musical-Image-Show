@@ -5,6 +5,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -66,7 +67,12 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    	result.append(" - " + list.get(position).getshowDescription());
 	    holder.text.setText(result.toString());
 	    holder.checkbox.setChecked(list.get(position).isSelected());
-
+	    if (position %2 == 1) {
+	    	view.setBackgroundColor(Color.rgb(204,255,255));
+	    }
+	    else {
+	    	view.setBackgroundColor(Color.rgb(255,255,255));
+	    }
 	    return view;
 	  } 
 	

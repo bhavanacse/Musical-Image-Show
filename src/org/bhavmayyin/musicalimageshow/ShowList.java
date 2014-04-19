@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +45,8 @@ public class ShowList extends ListActivity {
 	    edDesc = (EditText) findViewById(R.id.showdesc);
 	    edTitle.setVisibility(View.GONE);
 	    edDesc.setVisibility(View.GONE);
+	    ActionBar bar = getActionBar();
+	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
 	}
 	public void setDummyList(){
 	    if (slideshows.size() < 1){
@@ -69,6 +74,9 @@ public class ShowList extends ListActivity {
       		  slideshows.get(i).setselected(false);
       	  } else {
       		  slideshows.get(i).setselected(!slideshows.get(i).isSelected());
+      		  if (!slideshows.get(i).isSelected()){
+      			  npos = -1;
+      		  }
       	  }
       	  
         }
@@ -119,20 +127,21 @@ public class ShowList extends ListActivity {
 		 	 
 		 	    public void deleteShow() {
 		 	       // cancel the new input if inputbox is visible and X is pressed
-		 	    	if (!edTitle.isShown()) {
-								if (slideshows.get(npos).getId() != -1) {
-									datasource.deleteSlideShow((long) slideshows.get(npos).getId());
-									slideshows.remove(npos);
-									setDummyList();
-								}
-			 	       	} else {
-			 	       		edTitle.setText("");
-			 	       		edDesc.setText("");
-			 	       		edTitle.setVisibility(View.GONE);
-			 	       		edDesc.setVisibility(View.GONE);
-			 	       	
-			 	       	}
-		 	    		adapter.notifyDataSetChanged();
+		 	    	if (edTitle.isShown()) {
+		 	    		edTitle.setText("");
+		 	       		edDesc.setText("");
+		 	       		edTitle.setVisibility(View.GONE);
+		 	       		edDesc.setVisibility(View.GONE);
+		 	    	} else {
+		 	    		//if (npos != -1 ) {  //no selection
+		 	    			if (npos != -1 && slideshows.get(npos).getId() != -1) { // the first dummy entry
+								datasource.deleteSlideShow((long) slideshows.get(npos).getId());
+								slideshows.remove(npos);
+								npos = -1;
+								setDummyList();
+							} 	
+			 	    }
+		 	    	adapter.notifyDataSetChanged();
 			 	   } 
 
 		 	    public void playShow() {
