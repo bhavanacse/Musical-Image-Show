@@ -87,9 +87,9 @@ public class ShowList extends ListActivity {
 	@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 		 	 switch (item.getItemId()) {
-		 	 	case R.id.play_show:
+		 	 	/*case R.id.play_show:
 		 	 		playShow();
-	 	            return true;
+	 	            return true; */ // hide this for now
 		 	 	case R.id.delete_show:
 		 	            deleteShow();
 		 	            return true;

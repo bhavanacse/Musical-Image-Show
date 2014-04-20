@@ -113,13 +113,13 @@ public class ImageDisplayActivity extends Activity {
 			if(data.getData() != null){
 					//result array[0] mData mData path decode
 				// data.getData()
-				int totalImages = 1;//data.getClipData().getItemCount();// 
+				int totalImages = 1;//data.getClipData().getItemCount();// 1;
 				filePaths = new ArrayList<String>(); 
-				//for (int currentImage = 0; currentImage < totalImages; currentImage++) {
-					//Item currentClip = data.getClipData().getItemAt(
-				//			currentImage);
+			//	for (int currentImage = 0; currentImage < totalImages; currentImage++) {
+			//		Item currentClip = data.getClipData().getItemAt(
+			//				currentImage);
 
-					Uri selectedImageUri = data.getData(); //currentClip.getUri();// 
+					Uri selectedImageUri = data.getData();// currentClip.getUri();// 
 					String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
 					Cursor cursor = getContentResolver().query(
@@ -134,10 +134,10 @@ public class ImageDisplayActivity extends Activity {
 						filePaths.add(filePath);
 						imgURI.add(filePath);
 					}
-				//}
+				}
 				db.addImage(filePaths, showid);
 				imgadapter.notifyDataSetChanged();
-			}
+			//}
 			}
 		}
 	}
