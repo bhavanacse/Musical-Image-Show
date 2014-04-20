@@ -42,7 +42,8 @@ public class SlideShowActivity extends Activity {
 	
 	private int filePathIndex = 0;
 	ImageView mySlidingImage;
-	
+	Timer timer = new Timer();
+	final Handler mHandler = new Handler();
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow);
@@ -52,7 +53,7 @@ public class SlideShowActivity extends Activity {
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 	    ActionBar bar = getActionBar();
 	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
-		final Handler mHandler = new Handler();
+		
 		
 		final Runnable mUpdateResults = new Runnable() {
 	        public void run() {
@@ -62,7 +63,7 @@ public class SlideShowActivity extends Activity {
 	    
 	    int delay = 0;
 	    int period = 2500;
-	    Timer timer = new Timer();
+	   // Timer timer = new Timer();
 	    timer.scheduleAtFixedRate(new TimerTask() {
 
 	        public void run() {
@@ -147,7 +148,10 @@ public class SlideShowActivity extends Activity {
 
 		return inSampleSize;
 	}
-
+ public void OnPause(){
+	 timer.cancel();
+	 
+ }
 //	final Animation.AnimationListener animationListener = new Animation.AnimationListener() {
 //		@Override
 //		public void onAnimationStart(final Animation animation) {

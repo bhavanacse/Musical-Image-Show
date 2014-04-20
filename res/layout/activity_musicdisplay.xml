@@ -28,6 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_weight="0.52"
+        android:background="@drawable/custombutton"
         android:onClick="onClick"
         android:src="@android:drawable/ic_menu_add" />
 
