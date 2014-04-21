@@ -36,9 +36,10 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	  }
 */
 	  static class ViewHolder {
+		protected CheckBox checkbox;
 	    protected TextView text;
-	    protected CheckBox checkbox;
-	    LinearLayout lout;
+	    
+	    //LinearLayout lout;
 	
 	  }
 
@@ -50,22 +51,16 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	      LayoutInflater inflator = context.getLayoutInflater();
 	      view = inflator.inflate(R.layout.grouprow, null);
 	      final ViewHolder viewHolder = new ViewHolder();
-	      viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
-	      
 	      viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
-	      view.setTag(viewHolder);
 	      viewHolder.checkbox.setTag(list.get(position));
+	      viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
+	      view.setTag(viewHolder);
+	      
 	    } else {
 	      view = convertView;
 	      ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
 	    }
 	    ViewHolder holder = (ViewHolder) view.getTag();
-	    StringBuffer result = new StringBuffer();// for using arrayList adapter
-    	//result.append(list.get(position).getshowName()+System.getProperty("line.separator"));
-	    result.append(list.get(position).getshowName());
-	    if (!list.get(position).getshowDescription().isEmpty())
-	    	result.append(" - " + list.get(position).getshowDescription());
-	    holder.text.setText(result.toString());
 	    holder.checkbox.setChecked(list.get(position).isSelected());
 	    if (position %2 == 1) {
 	    	view.setBackgroundColor(Color.rgb(204,255,255));
@@ -73,6 +68,13 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    else {
 	    	view.setBackgroundColor(Color.rgb(255,255,255));
 	    }
+	    StringBuffer result = new StringBuffer();// for using arrayList adapter
+    	//result.append(list.get(position).getshowName()+System.getProperty("line.separator"));
+	    result.append(list.get(position).getshowName());
+	    if (!list.get(position).getshowDescription().isEmpty())
+	    	result.append(" - " + list.get(position).getshowDescription());
+	    holder.text.setText(result.toString());
+
 	    return view;
 	  } 
 	
