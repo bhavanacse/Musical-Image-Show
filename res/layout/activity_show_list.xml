@@ -37,7 +37,7 @@
         android:fadingEdge="none"
         android:layout_below="@+id/showdesc"
     	android:cacheColorHint="#000000"
-    	android:divider="#FFCC00"	
+    	android:divider="#0099CC"	
     	android:dividerHeight="2px"        
         android:background="#ffffff"
         android:text="SlideShowList" />    

@@ -3,33 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res/org.bhavmayyin.musicalimageshow"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#ffffff">
+    
     <TextView
     	android:id="@+id/ssMTitle"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:gravity="center_horizontal"
     	android:layout_centerHorizontal="true"
-    	android:text="@string/app_name" />
+    	android:text="@string/app_name"
+    	android:textStyle="bold"
+    	android:textColor="#0099CC" />
     
     <ListView
         android:id="@+id/musicListView"
         android:layout_width="fill_parent"
         android:layout_below="@+id/ssMTitle"
         android:layout_height="wrap_content"
-        android:layout_weight="0.44" >
+        android:cacheColorHint="#000000"
+    	android:divider="#0099CC"	
+    	android:dividerHeight="3px">
 
     </ListView>
 
     <ImageButton
         android:id="@+id/addMusicButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="163dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_weight="0.52"
         android:background="@drawable/custombutton"
         android:onClick="onClick"
-        android:src="@android:drawable/ic_menu_add" />
+        android:src="@drawable/ic_action_new" />
+    
+    <ImageButton
+        android:id="@+id/playMusicButton"
+        android:layout_width="163dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/custombutton"
+        android:onClick="onClick"
+        android:src="@drawable/ic_action_play" />
 
 </RelativeLayout>

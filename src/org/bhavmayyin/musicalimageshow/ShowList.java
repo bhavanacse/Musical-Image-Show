@@ -46,7 +46,7 @@ public class ShowList extends ListActivity {
 	    edTitle.setVisibility(View.GONE);
 	    edDesc.setVisibility(View.GONE);
 	    ActionBar bar = getActionBar();
-	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
+	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 	}
 	public void setDummyList(){
 	    if (slideshows.size() < 1){

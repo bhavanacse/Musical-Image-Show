@@ -6,7 +6,6 @@ package org.bhavmayyin.musicalimageshow;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -43,31 +42,34 @@ public class ImageDisplayActivity extends Activity {
 	private static final int SELECT_PICTURE = 1;
 
 	List<Drawable> splittedBitmaps;
-	private int currentImageIndex = 0;
 	List<String> filePaths;
 	List<String> imgURI;
 	DatabaseHelper db;
-	int showid ;
+	int showid;
 	TextView tv;
 	ImageAdapter imgadapter;
+
 	GridView imageGrid;
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_imagedisplay);
-		
+
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addImageButton);
 		ImageButton btnPlayShow = (ImageButton) findViewById(R.id.playImageButton);
 
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
 		btnPlayShow.setOnClickListener(btnSlideShow);
+
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
 		imgURI = db.getAllimageURI(showid);
-		tv = (TextView)  findViewById(R.id.ssTitle);
+		
+		tv = (TextView) findViewById(R.id.ssTitle);
 		tv.setText(getIntent().getStringExtra("showTitle"));
+
 		imageGrid = (GridView) findViewById(R.id.grid);
-		imgadapter= new ImageAdapter(this, imgURI);
+		imgadapter = new ImageAdapter(this, imgURI);
 		imageGrid.setAdapter(imgadapter);
 	}
 
@@ -92,12 +94,12 @@ public class ImageDisplayActivity extends Activity {
 		public void onClick(View view) {
 			if (getIntent().getCharSequenceExtra("TAB").toString()
 					.contentEquals("Images")) {
-			 playSlideShow();
+				playSlideShow();
 			}
 		}
 	};
-	
-	public void playSlideShow(){
+
+	public void playSlideShow() {
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
 		b.putStringArrayList(key, (ArrayList<String>) imgURI);
@@ -105,41 +107,56 @@ public class ImageDisplayActivity extends Activity {
 		intent.putExtras(b);
 		startActivity(intent);
 	}
-	
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		int totalImages = 0;
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-			if(data.getData() != null){
-					//result array[0] mData mData path decode
-				// data.getData()
-				int totalImages = 1;//data.getClipData().getItemCount();// 1;
-				filePaths = new ArrayList<String>(); 
-			//	for (int currentImage = 0; currentImage < totalImages; currentImage++) {
-			//		Item currentClip = data.getClipData().getItemAt(
-			//				currentImage);
-
-					Uri selectedImageUri = data.getData();// currentClip.getUri();// 
-					String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-					Cursor cursor = getContentResolver().query(
-							selectedImageUri, filePathColumn, null, null, null);
-					cursor.moveToFirst();
-
-					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-					String filePath = cursor.getString(columnIndex);
-					cursor.close();
-					
-					if (!filePath.isEmpty()) {
-						filePaths.add(filePath);
-						imgURI.add(filePath);
-					}
+				filePaths = new ArrayList<String>();
+				Uri selectedImageUri = null;
+				String path;
+				if (data.getClipData() != null){
+					totalImages = data.getClipData().getItemCount(); 
+				} else if (data.getData() != null){
+					totalImages = 1;
 				}
-				db.addImage(filePaths, showid);
-				imgadapter.notifyDataSetChanged();
-			//}
-			}
+					for (int currentImage = 0; currentImage < totalImages; currentImage++) {
+						if (data.getClipData() != null){
+							Item currentClip = data.getClipData().getItemAt(
+									currentImage);
+		
+							selectedImageUri = currentClip.getUri();
+							
+						} else if (data.getData() != null){
+							selectedImageUri = data.getData();
+						}
+						
+						path = getFilePath(selectedImageUri);
+	
+						if (!path.isEmpty()) {
+							filePaths.add(path);
+							imgURI.add(path);
+						}
+					}
+					db.addImage(filePaths, showid);
+					// imgadapter.notifyDataSetChanged();
+				}
+				imageGrid.setAdapter(imgadapter);
 		}
+	}
+	
+	public String getFilePath(Uri currentUri){
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		
+		Cursor cursor = getContentResolver().query(
+				currentUri, filePathColumn, null, null, null);
+		cursor.moveToFirst();
+
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		String filePath = cursor.getString(columnIndex);
+		cursor.close();
+
+		return filePath;
 	}
 
 	public class ImageAdapter extends BaseAdapter {
@@ -175,7 +192,7 @@ public class ImageDisplayActivity extends Activity {
 			imageView = new ImageView(mContext);
 			try {
 				// TODO Auto-generated method stub
-				imageView.setLayoutParams(new GridView.LayoutParams(300, 300));
+				imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 
@@ -187,7 +204,7 @@ public class ImageDisplayActivity extends Activity {
 				// Calculate inSampleSize
 				options.inSampleSize = calculateInSampleSize(options, 110, 110);
 
-				// // Decode bitmap with inSampleSize set
+				// Decode bitmap with inSampleSize set
 				options.inJustDecodeBounds = false;
 				Bitmap tempBitmap = BitmapFactory.decodeFile(
 						mThumbIds.get(position), options);

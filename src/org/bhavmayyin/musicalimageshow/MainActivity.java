@@ -36,7 +36,7 @@ private MyHandler handler;
 		setContentView(R.layout.activity_main);
 		imagev = (ImageView) findViewById(R.id.imageView1);
 	    ActionBar bar = getActionBar();
-	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
+	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 		timer = new Timer();
 		timer.schedule(new TickClass(), 1000,1000);
 		handler = new MyHandler();

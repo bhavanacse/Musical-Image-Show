@@ -14,7 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -44,6 +46,8 @@ public class SlideShowActivity extends Activity {
 	ImageView mySlidingImage;
 	Timer timer = new Timer();
 	final Handler mHandler = new Handler();
+//	BackgroundSound mBackgroundSound = new BackgroundSound();
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow);
@@ -52,27 +56,28 @@ public class SlideShowActivity extends Activity {
 		//myFilePaths = b.getStringArrayList("ImageFilePaths");
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 	    ActionBar bar = getActionBar();
-	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0066FF")));
-		
-		
-		final Runnable mUpdateResults = new Runnable() {
+//	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
+	    bar.hide();
+	    
+//	    mediaPlayer.start(); // no need to call prepare(); create() does that for you
+//	    mBackgroundSound.execute();
+	    
+	    final Runnable mUpdateResults = new Runnable() {
 	        public void run() {
 	        	animateImage();
 	        }
 	    };
 	    
 	    int delay = 0;
-	    int period = 2500;
-	   // Timer timer = new Timer();
+	    int period = 2000;
 	    timer.scheduleAtFixedRate(new TimerTask() {
 
 	        public void run() {
 	            mHandler.post(mUpdateResults);
 	        }
 	    },delay, period);
-	  
 	}
-
+	
 	public void animateImage() {
 		int imageCount = myImageUris.size();
 	//	int imageCount = IMAGE_IDS.length;
@@ -88,8 +93,8 @@ public class SlideShowActivity extends Activity {
 			options.inJustDecodeBounds = false;
 			Bitmap currentBitmap = BitmapFactory.decodeFile(
 					myImageUris.get(filePathIndex%imageCount), options);
-			Bitmap scaledBitmap = Bitmap.createScaledBitmap(currentBitmap, 1000,
-					1000, true);
+			Bitmap scaledBitmap = Bitmap.createScaledBitmap(currentBitmap, 800,
+					1400, true);
 
 //			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), IMAGE_IDS[filePathIndex % IMAGE_IDS.length]);
 
@@ -137,9 +142,8 @@ public class SlideShowActivity extends Activity {
 			final int halfWidth = width / 2;
 
 			// Calculate the largest inSampleSize value that is a power of 2
-			// and
-			// keeps both
-			// height and width larger than the requested height and width.
+			// and keeps both height and width larger than the requested height and width.
+
 			while ((halfHeight / inSampleSize) > reqHeight
 					&& (halfWidth / inSampleSize) > reqWidth) {
 				inSampleSize *= 2;
@@ -148,10 +152,18 @@ public class SlideShowActivity extends Activity {
 
 		return inSampleSize;
 	}
- public void OnPause(){
-	 timer.cancel();
-	 
- }
+	
+//	public void onResume() {
+//	    super.onResume();
+////	    mBackgroundSound.execute();
+//	}
+
+	public void onPause(){
+		super.onPause(); 
+		timer.cancel();	 
+//		 mBackgroundSound.cancel(true);
+	 }
+	
 //	final Animation.AnimationListener animationListener = new Animation.AnimationListener() {
 //		@Override
 //		public void onAnimationStart(final Animation animation) {
@@ -169,4 +181,17 @@ public class SlideShowActivity extends Activity {
 //			// nothing to do here
 //		}
 //	};
+	
+//	public class BackgroundSound extends AsyncTask<Void, Void, Void> {
+//
+//	    @Override
+//	    protected Void doInBackground(Void... params) {
+//	        MediaPlayer mediaPlayer = MediaPlayer.create(SlideShowActivity.this, R.raw.rojaflute); 
+//	        mediaPlayer.setLooping(true); // Set looping 
+//	        mediaPlayer.setVolume(100,100); 
+//	        mediaPlayer.start(); 
+//
+//	        return null;
+//	    }
+//	}
 }
