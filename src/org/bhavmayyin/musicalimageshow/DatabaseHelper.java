@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String LOG = "DatabaseHelper";
 
 	// Database Version
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 		// Database Name
 		
@@ -50,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String KEY_MUSIC = "showmusic";
 		private static final String KEY_ARTIST = "artist";
+		private static final String KEY_URI = "uri";
 
 // Table Create Statements
 
@@ -69,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String CREATE_TABLE_SHOWMUSIC = "CREATE TABLE "
 				+ TABLE_SHOWMUSIC + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ KEY_SHOWID + " INTEGER, " +  KEY_MUSIC + " TEXT," +  KEY_ARTIST + " TEXT"
+			+ KEY_SHOWID + " INTEGER, " + KEY_URI + " TEXT," + KEY_MUSIC + " TEXT," +  KEY_ARTIST + " TEXT"
 			+ ")";
 
 public DatabaseHelper(Context context) {
@@ -383,13 +384,14 @@ public void deleteImageShow(ImageShow is) {
 
 */
 // add music
-public void addMusic(String filePath,String artist, long showid){
+public void addMusic(String filePath,String music, String artist, long showid){
 	SQLiteDatabase db = this.getWritableDatabase();
 	//for ( String strimg : filePaths){
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_SHOWID, showid);
-		values.put(KEY_MUSIC, filePath);
+		values.put(KEY_URI, filePath);
+		values.put(KEY_MUSIC, music);
 		values.put(KEY_ARTIST, artist);
 		// insert row
 		db.insert(TABLE_SHOWMUSIC, null, values);
@@ -400,6 +402,7 @@ public void addMusicList(List<ShowMusic> filePaths, long showid){
 	
 	for ( ShowMusic s: filePaths){
 		ContentValues values = new ContentValues();
+		values.put(KEY_URI, s.getName());
 		values.put(KEY_SHOWID, showid);
 		values.put(KEY_MUSIC, s.getMusic());
 		values.put(KEY_ARTIST, s.getArtist());
@@ -439,12 +442,29 @@ public List<ShowMusic> getShowMusic(long showid) {
 		if (c.moveToFirst()) {
 			do {
 				ShowMusic t = new ShowMusic();
+				t.setname(c.getString(c.getColumnIndex(KEY_URI)));
 				t.setID(c.getInt((c.getColumnIndex(KEY_ID))));
 				t.setshowID(c.getInt((c.getColumnIndex(KEY_SHOWID))));
 				t.setMusic(c.getString(c.getColumnIndex(KEY_MUSIC)));
 				t.setArtist(c.getString(c.getColumnIndex(KEY_ARTIST)));
 		// adding to imageshow list
 				musicURI.add(t);
+			} while (c.moveToNext());
+		}
+		return musicURI; 
+}
+public List<String> getShowMusicURI(long showid) {
+
+	SQLiteDatabase db = this.getReadableDatabase();
+	String selectQuery = "SELECT * FROM " + TABLE_SHOWMUSIC +  " WHERE "
+			+  KEY_SHOWID + " = " + showid;
+	//Log.e(LOG, selectQuery);
+	ArrayList<String> musicURI= new ArrayList<String>();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			do {
+		// adding to imageshow list
+				musicURI.add(c.getString(c.getColumnIndex(KEY_URI)));
 			} while (c.moveToNext());
 		}
 		return musicURI; 

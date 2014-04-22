@@ -44,6 +44,7 @@ public class ImageDisplayActivity extends Activity {
 	List<Drawable> splittedBitmaps;
 	List<String> filePaths;
 	List<String> imgURI;
+	List<String> musicURI;
 	DatabaseHelper db;
 	int showid;
 	TextView tv;
@@ -102,7 +103,10 @@ public class ImageDisplayActivity extends Activity {
 	public void playSlideShow() {
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
+		String musickey = "MusicFilePaths";
+		musicURI =db.getShowMusicURI(showid);
 		b.putStringArrayList(key, (ArrayList<String>) imgURI);
+		b.putStringArrayList(musickey, (ArrayList<String>) musicURI);
 		Intent intent = new Intent(this, SlideShowActivity.class);
 		intent.putExtras(b);
 		startActivity(intent);

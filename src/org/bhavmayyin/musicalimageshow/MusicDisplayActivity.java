@@ -65,7 +65,7 @@ public class MusicDisplayActivity extends Activity {
 		tv = (TextView)  findViewById(R.id.ssMTitle);
 		tv.setText(getIntent().getStringExtra("showTitle"));
 		musicObj = db.getShowMusic(showid);
-		//Toast.makeText(this, "add music added" , Toast.LENGTH_SHORT).show();
+
 		musicList = (ListView) findViewById(R.id.musicListView);
 		musicadapter = new MusicAdapter(this, musicObj);
 		musicList.setAdapter(musicadapter);
@@ -90,12 +90,14 @@ public class MusicDisplayActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_MUSIC) {
-
+				
 				Uri selectedMusicUri = data.getData();
+
 				String[] filePathColumn = { 
 						MediaStore.Audio.Media.TITLE,
 						MediaStore.Audio.Media.ARTIST
 						};
+
 
 				Cursor cursor = getContentResolver().query(selectedMusicUri,
 						filePathColumn, null, null, null);
@@ -110,10 +112,12 @@ public class MusicDisplayActivity extends Activity {
 				cursor.close();
 
 				ShowMusic sm = new ShowMusic();
+				sm.setname(selectedMusicUri.toString());
 				sm.setArtist( artistName);
 				sm.setMusic(displayName);
+				sm.setshowID(showid);
 				musicObj.add(sm);
-				db.addMusic( displayName, artistName,showid);
+				db.addMusic(selectedMusicUri.toString(),displayName,artistName,showid);
 				musicadapter.notifyDataSetChanged();
 
 			}

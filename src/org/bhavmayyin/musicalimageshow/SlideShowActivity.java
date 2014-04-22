@@ -41,26 +41,33 @@ public class SlideShowActivity extends Activity {
 //    };
 	
 	ArrayList<String> myImageUris;
-	
+	ArrayList<String> musicUris;
 	private int filePathIndex = 0;
 	ImageView mySlidingImage;
 	Timer timer = new Timer();
 	final Handler mHandler = new Handler();
 //	BackgroundSound mBackgroundSound = new BackgroundSound();
-	
+	MediaPlayer mediaPlayer = null;
+	int showid;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow);
 
 		Bundle b = this.getIntent().getExtras();
-		//myFilePaths = b.getStringArrayList("ImageFilePaths");
+
 		myImageUris = b.getStringArrayList("ImageFilePaths");
+		musicUris = b.getStringArrayList("MusicFilePaths");
 	    ActionBar bar = getActionBar();
 //	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 	    bar.hide();
-	    
-//	    mediaPlayer.start(); // no need to call prepare(); create() does that for you
-//	    mBackgroundSound.execute();
+		try {
+	        mediaPlayer=MediaPlayer.create(getApplication(), Uri.parse(musicUris.get(0)));
+			mediaPlayer.start();
+			mediaPlayer.setLooping(true);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
 	    
 	    final Runnable mUpdateResults = new Runnable() {
 	        public void run() {
@@ -78,7 +85,9 @@ public class SlideShowActivity extends Activity {
 	    },delay, period);
 	}
 	
+
 	public void animateImage() {
+		
 		int imageCount = myImageUris.size();
 	//	int imageCount = IMAGE_IDS.length;
 			final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -125,7 +134,6 @@ public class SlideShowActivity extends Activity {
 
 //		    mySlidingImage.startAnimation(slideInImage);
 			mySlidingImage.getAnimation();
-		//}
 	
 	}
 
@@ -160,7 +168,11 @@ public class SlideShowActivity extends Activity {
 
 	public void onPause(){
 		super.onPause(); 
-		timer.cancel();	 
+		timer.cancel();	
+		if(mediaPlayer.isPlaying()){
+			mediaPlayer.stop(); 
+			mediaPlayer.release();
+		};
 //		 mBackgroundSound.cancel(true);
 	 }
 	

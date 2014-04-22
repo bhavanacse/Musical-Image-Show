@@ -2,7 +2,7 @@ package org.bhavmayyin.musicalimageshow;
 
 public class ShowMusic {
 	int id;
-	String showname;
+	String showname;//uri
 	int showid;
 	String music;
 	String artist;
