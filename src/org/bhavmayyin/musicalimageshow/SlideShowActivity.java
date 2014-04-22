@@ -169,7 +169,8 @@ public class SlideShowActivity extends Activity {
 	public void onPause(){
 		super.onPause(); 
 		timer.cancel();	
-		if(mediaPlayer.isPlaying()){
+
+		if(mediaPlayer != null && mediaPlayer.isPlaying()){
 			mediaPlayer.stop(); 
 			mediaPlayer.release();
 		};
