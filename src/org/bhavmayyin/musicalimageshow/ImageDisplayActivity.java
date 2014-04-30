@@ -17,14 +17,19 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -49,8 +54,10 @@ public class ImageDisplayActivity extends Activity {
 	int showid;
 	TextView tv;
 	ImageAdapter imgadapter;
-
+	AdapterView.AdapterContextMenuInfo info;
 	GridView imageGrid;
+	int imageId;
+	String selected;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,8 +79,43 @@ public class ImageDisplayActivity extends Activity {
 		imageGrid = (GridView) findViewById(R.id.grid);
 		imgadapter = new ImageAdapter(this, imgURI);
 		imageGrid.setAdapter(imgadapter);
+	     registerForContextMenu(imageGrid);
 	}
 
+    @Override 
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+    {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+           	info.targetView.setBackgroundColor(Color.rgb(255,204,0));// orange rim
+            imageId = (int)info.position;
+            selected = imgadapter.getURI(imageId);
+           // Toast.makeText(getApplicationContext(),"deleting image file-id-" + imageId ,Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(),"deleting image file-uri" + selected ,Toast.LENGTH_LONG).show();
+            menu.setHeaderTitle("Delete Image file:"  );  
+            menu.add(0, v.getId(), 0, "Cancel");//groupId, itemId, order, title 
+            menu.add(0, v.getId(), 0, "Delete"); 
+
+    } 
+    
+    @Override  
+    public boolean onContextItemSelected(MenuItem item){  
+            if(item.getTitle()=="Delete"){
+            	Toast.makeText(getApplicationContext(),"deleting image file-" + selected ,Toast.LENGTH_LONG).show();
+            	db.deleteImageShow(showid, selected);
+            	imgURI.remove(imgadapter.getURI(imageId));
+            	imgadapter.notifyDataSetChanged();
+            }  
+            else if(item.getTitle()=="Cancel"){
+            	Toast.makeText(getApplicationContext(),"Cancelling delete",Toast.LENGTH_LONG).show();
+            	info.targetView.setBackgroundColor(Color.rgb(255,255,255));
+            }else{
+               return false;
+            } 
+            selected = "";
+          return true;  
+                            
+      }  
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
@@ -183,7 +225,9 @@ public class ImageDisplayActivity extends Activity {
 			// TODO Auto-generated method stub
 			return BitmapFactory.decodeFile(mThumbIds.get(position));
 		}
-
+		public String getURI(int position){
+			return mThumbIds.get(position);
+		}
 		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub

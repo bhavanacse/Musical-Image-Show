@@ -366,7 +366,19 @@ public List<String> getAllimageURI(long showid) {
 * Deleting an image
 
 */
+//delete an image given showid and uri
+public void deleteImageShow(int showid, String uri){
 
+	SQLiteDatabase db = this.getWritableDatabase();
+	String deletesql = " DELETE FROM  " + TABLE_IMAGESHOW +
+			" WHERE " +  KEY_SHOWID + " = " +  showid + " AND "
+			+ KEY_IMAGE + " = (SELECT " + KEY_IMAGE + " FROM "  
+			+ TABLE_IMAGESHOW + " WHERE " +  KEY_SHOWID + " = " 
+			+  showid + " AND "	+ KEY_IMAGE + " = '" + uri + 
+			"' ORDER BY id LIMIT 1);";
+	//  deleting an image
+	db.execSQL(deletesql);
+}
 public void deleteImageShow(ImageShow is) {
 
 	SQLiteDatabase db = this.getWritableDatabase();
@@ -396,6 +408,29 @@ public void addMusic(String filePath,String music, String artist, long showid){
 		// insert row
 		db.insert(TABLE_SHOWMUSIC, null, values);
 	//}
+}
+@SuppressWarnings("null")
+public long addMusicGetID(String filePath,String music, String artist, long showid){
+	SQLiteDatabase db = this.getWritableDatabase();
+	//for ( String strimg : filePaths){
+
+		ContentValues values = new ContentValues();
+		values.put(KEY_SHOWID, showid);
+		values.put(KEY_URI, filePath);
+		values.put(KEY_MUSIC, music);
+		values.put(KEY_ARTIST, artist);
+		// insert row
+		return db.insert(TABLE_SHOWMUSIC, null, values);
+	//}
+		/*String queryMax = "SELECT MAX(" + KEY_ID + ") as _id FROM " + TABLE_SHOWMUSIC ;
+		       queryMax += " WHERE " + KEY_SHOWID + " = " + showid + 
+				 " AND " + KEY_URI + " = '" + filePath + 
+				 "' AND " + KEY_MUSIC + " = '" + music  +
+				 "' AND " + KEY_ARTIST + " = '" + artist + "'";
+		Cursor mcursor = db.rawQuery(queryMax, null);
+		
+		return  mcursor.getLong(0);
+		*/
 }
 public void addMusicList(List<ShowMusic> filePaths, long showid){
 	SQLiteDatabase db = this.getWritableDatabase();

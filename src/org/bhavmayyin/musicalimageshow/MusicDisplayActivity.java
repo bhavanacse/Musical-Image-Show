@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,10 +25,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract.Data;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -51,6 +57,9 @@ public class MusicDisplayActivity extends Activity {
 	ListView musicList;
 	MusicAdapter musicadapter;
 	List<ShowMusic> musicObj ;
+	String musicTitle;
+	long musicId;
+	AdapterView.AdapterContextMenuInfo info;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,8 +78,44 @@ public class MusicDisplayActivity extends Activity {
 		musicList = (ListView) findViewById(R.id.musicListView);
 		musicadapter = new MusicAdapter(this, musicObj);
 		musicList.setAdapter(musicadapter);
-
+	    // Register the ListView  for Context menu
+        registerForContextMenu(musicList);
 	}
+	
+
+    @Override 
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+    {
+            super.onCreateContextMenu(menu, v, menuInfo);
+           info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            musicTitle = ((TextView) info.targetView).getText().toString();
+            info.targetView.setBackgroundColor(Color.rgb(153,204,255));
+   
+            musicId = info.id;
+            menu.setHeaderTitle("Delete Music file:" + musicTitle );  
+            menu.add(0, v.getId(), 0, "Cancel");//groupId, itemId, order, title 
+            menu.add(0, v.getId(), 0, "Delete"); 
+
+    } 
+    
+    @Override  
+    public boolean onContextItemSelected(MenuItem item){  
+            if(item.getTitle()=="Delete"){
+            	Toast.makeText(getApplicationContext(),"deleting music file-" + musicTitle,Toast.LENGTH_LONG).show();
+            	ShowMusic sm = (ShowMusic) musicadapter.getItem((int)musicId);
+            	db.deleteShowMusic(sm.getId());
+            	musicObj.remove(sm);
+            	musicadapter.notifyDataSetChanged();
+            }  
+            else if(item.getTitle()=="Cancel"){
+            	Toast.makeText(getApplicationContext(),"Cancelling delete",Toast.LENGTH_LONG).show();
+            	info.targetView.setBackgroundColor(Color.rgb(255,255,255));
+            }else{
+               return false;
+            }  
+          return true;  
+                            
+      }  
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
@@ -98,7 +143,6 @@ public class MusicDisplayActivity extends Activity {
 						MediaStore.Audio.Media.ARTIST
 						};
 
-
 				Cursor cursor = getContentResolver().query(selectedMusicUri,
 						filePathColumn, null, null, null);
 				cursor.moveToFirst();
@@ -116,14 +160,14 @@ public class MusicDisplayActivity extends Activity {
 				sm.setArtist( artistName);
 				sm.setMusic(displayName);
 				sm.setshowID(showid);
+				sm.setID((int) db.addMusicGetID(selectedMusicUri.toString(),displayName,artistName,showid));
+		
 				musicObj.add(sm);
-				db.addMusic(selectedMusicUri.toString(),displayName,artistName,showid);
 				musicadapter.notifyDataSetChanged();
-
 			}
 		}
 	}
-
+ 
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
 		private List<ShowMusic> showmusic ;
@@ -139,7 +183,7 @@ public class MusicDisplayActivity extends Activity {
 		}
 
 		public Object getItem(int position) {
-			return position;
+			return showmusic.get(position);
 		}
 
 		public long getItemId(int position) {
@@ -149,8 +193,8 @@ public class MusicDisplayActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
 
-			textView.setLayoutParams(new ListView.LayoutParams(400, 100));
-
+			//textView.setLayoutParams(new ListView.LayoutParams(400, 100));
+			textView.setLayoutParams(new ListView.LayoutParams(LayoutParams.FILL_PARENT,100 ));
 			textView.setText(showmusic.get(position).getMusic() + " " 
 					+ showmusic.get(position).getArtist());
 //			textView.setText(fileDisplayName);
