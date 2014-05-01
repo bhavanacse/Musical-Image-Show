@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -51,8 +53,8 @@ public class ShowList extends ListActivity {
 	public void setDummyList(){
 	    if (slideshows.size() < 1){
 	    	SlideShow ss = new SlideShow();
-	    	ss.setshowName("Create Slide Show");
-	    	ss.setshowDescription("Press + button on Action Bar to add First Slide show");
+	    	ss.setshowName("Create Image Show");
+	    	ss.setshowDescription("Press + button on Action Bar to add First Image show");
 	    	ss.setId(-1);
 	        slideshows.add(ss);
 	    }
@@ -110,16 +112,12 @@ public class ShowList extends ListActivity {
 		 	        		slideshows.add(0,ss);
 		 	        		datasource.createSlideShow(ss);
 		 	        		ss.setId(datasource.getShowID(stitle, sdesc));
-		 	        		edTitle.setText("");
-		 	        		edDesc.setText("");
-		 	        		// hide the keyboard when input is done
-		 	        		InputMethodManager inputmgr = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-		 	        			inputmgr.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-	 	        		    edTitle.setVisibility(View.GONE);
-	 	        		    edDesc.setVisibility(View.GONE);
-	 	        			adapter.notifyDataSetChanged();
+		 	        		resetInputScreen();
 
+		 	        	} else {
+		 	        		alertbox("Cannot Add Image Show", "Image Show Name Cannot Be Blank");
 		 	        	}
+
 		 	        default:
 		 	            return super.onOptionsItemSelected(item);
 		 	        }
@@ -128,17 +126,12 @@ public class ShowList extends ListActivity {
 		 	    public void deleteShow() {
 		 	       // cancel the new input if inputbox is visible and X is pressed
 		 	    	if (edTitle.isShown()) {
-		 	    		edTitle.setText("");
-		 	       		edDesc.setText("");
-		 	       		edTitle.setVisibility(View.GONE);
-		 	       		edDesc.setVisibility(View.GONE);
+		 	    		resetInputScreen();
 		 	    	} else {
 		 	    		//if (npos != -1 ) {  //no selection
 		 	    			if (npos != -1 && slideshows.get(npos).getId() != -1) { // the first dummy entry
-								datasource.deleteSlideShow((long) slideshows.get(npos).getId());
-								slideshows.remove(npos);
-								npos = -1;
-								setDummyList();
+		 	    				alertbox("Delete ImageShow","Are you sure you want to delete Imageshow " 
+		 	    						+ slideshows.get(npos).getshowName() + " ?");
 							} 	
 			 	    }
 		 	    	adapter.notifyDataSetChanged();
@@ -174,12 +167,56 @@ public class ShowList extends ListActivity {
 	 	    			edTitle.requestFocus();
 		 	    	}
 		 	    }
+		 	
 
  	   public void setActivityBackgroundcolor( int color){
  	    	View view = this.getWindow().getDecorView();
  	    	view.setBackgroundColor(color);
  	   }
+ 	   protected void resetInputScreen(){
+    		edTitle.setText("");
+    		edDesc.setText("");
+    		// hide the keyboard when input is done
+    		InputMethodManager inputmgr = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+    			inputmgr.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+		    edTitle.setVisibility(View.GONE);
+		    edDesc.setVisibility(View.GONE);
+			adapter.notifyDataSetChanged();
+ 	   }
+ 	   protected void alertbox(String title, String msg){
+ 		   final String finaltitle = title;
+ 		   new AlertDialog.Builder(this)
+ 		   				
+ 			 			.setTitle(finaltitle)
+		                .setMessage(msg)
+		                .setIcon(android.R.drawable.ic_dialog_alert)
+		                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		              public void onClick(DialogInterface dialog, int whichButton) {
+ 						 if (finaltitle.toLowerCase().contains("delete")){
+		        			 datasource.deleteSlideShow((long) slideshows.get(npos).getId());
+		        			 slideshows.remove(npos);
+		        			 npos = -1;
+		        			 setDummyList();
+		        			 adapter.notifyDataSetChanged();
+		        		 }
+		         	  }
+		        	 })
+		        	.setNegativeButton("Cancel", 
+		                new DialogInterface.OnClickListener() {
+		                    @Override
+		                    public void onClick(DialogInterface dialog, int which) {
+		                       //do nothing if it is delete
+		                    	
+		                    	
+		                      if(!finaltitle.toLowerCase().contains("delete")){
+		                    	  resetInputScreen();
+		                      }
 
+		                    }
+		        	})
+		        	.show();
+ 	   }
+ 	   
  	   void OnStop(){
  		   datasource.closeDB();
  	   }
