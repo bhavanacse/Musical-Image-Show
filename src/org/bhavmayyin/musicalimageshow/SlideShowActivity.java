@@ -4,9 +4,13 @@
 package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.database.Cursor;
@@ -20,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -41,6 +46,7 @@ public class SlideShowActivity extends Activity {
 //    };
 	
 	ArrayList<String> myImageUris;
+	Random randomNumGenerator = new Random();
 	ArrayList<String> musicUris;
 	private int filePathIndex = 0;
 	ImageView mySlidingImage;
@@ -67,22 +73,22 @@ public class SlideShowActivity extends Activity {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	    
-	    final Runnable mUpdateResults = new Runnable() {
-	        public void run() {
-	        	animateImage();
-	        }
-	    };
-	    
-	    int delay = 0;
-	    int period = 2000;
-	    timer.scheduleAtFixedRate(new TimerTask() {
-
-	        public void run() {
-	            mHandler.post(mUpdateResults);
-	        }
-	    },delay, period);
+		animateImage();
+//	    final Runnable mUpdateResults = new Runnable() {
+//	        public void run() {
+//	        	animateImage();
+//	        }
+//	    };
+//	    
+//	    int delay = 0;
+//	    int period = 5500;
+//	    timer.scheduleAtFixedRate(new TimerTask() {
+//
+//	        public void run() {
+//	            mHandler.post(mUpdateResults);
+//	        }	
+//	    },delay, period);
 	}
 	
 
@@ -102,39 +108,73 @@ public class SlideShowActivity extends Activity {
 			options.inJustDecodeBounds = false;
 			Bitmap currentBitmap = BitmapFactory.decodeFile(
 					myImageUris.get(filePathIndex%imageCount), options);
-			Bitmap scaledBitmap = Bitmap.createScaledBitmap(currentBitmap, 800,
-					1400, true);
 
-//			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), IMAGE_IDS[filePathIndex % IMAGE_IDS.length]);
-
-//		    int imViewheight = 400;
-//		    int imViewwidth = 600;
-//		    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, imViewwidth, imViewheight, true);
-			
 			mySlidingImage = (ImageView) findViewById(R.id.slide_show);
-//			mySlidingImage.setImageResource(IMAGE_IDS[filePathIndex%imageCount]);
-			mySlidingImage.setImageBitmap(scaledBitmap);
+			mySlidingImage.setImageBitmap(currentBitmap);
 			filePathIndex++;
 
 //			final AnimationSet animationSet = new AnimationSet(true);
 //			final Animation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
 //			final Animation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-
+//
 //			animationSet.addAnimation(fadeInAnimation);
 //			animationSet.addAnimation(fadeOutAnimation);
 //			fadeInAnimation.setDuration(2000);
 //			fadeInAnimation.setStartOffset(0);
 //			fadeOutAnimation.setDuration(2000);
 //			fadeOutAnimation.setStartOffset(2000 + 1000);
-
+			
 //			animationSet.setAnimationListener(animationListener);
+			
 //			mySlidingImage.startAnimation(animationSet);
 			
-//			Animation slideInImage = AnimationUtils.makeInChildBottomAnimation(this);
+//			mySlidingImage.getAnimation();
+			
+			mySlidingImage.setScaleX(1.0f);
+			mySlidingImage.setScaleY(1.0f);
+			mySlidingImage.setAlpha(0f);
+			mySlidingImage.setRotation(0);
+			
+			mySlidingImage.setVisibility(View.VISIBLE);
+			final float nextScale = 1.0f + (randomNumGenerator.nextFloat()-0.5f) * 2 / 5;
+			final float nextRotation = (randomNumGenerator.nextFloat()-0.5f) * 2 * 5;
 
-//		    mySlidingImage.startAnimation(slideInImage);
-			mySlidingImage.getAnimation();
+			final AnimatorListenerAdapter nextImageAnimationListener = new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					animateImage();
+				}
+			};
+			final AnimatorListenerAdapter thirdAnimationListener = new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mySlidingImage.animate().alpha(0f).setDuration(2000)
+							.setListener(nextImageAnimationListener).start();
+				};
+			};
+			AnimatorListenerAdapter secondAnimationListener = new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
 	
+					mySlidingImage.animate().scaleX(nextScale).scaleY(nextScale)
+							.rotationBy(nextRotation).setDuration(3000)
+							.setListener(thirdAnimationListener).start();
+				}
+			};
+			mySlidingImage.animate().alpha(1.0f).setDuration(1000)
+					.setListener(secondAnimationListener).start();
+								
+//			mySlidingImage.animate()
+//				.alpha(0f)
+//				.setDuration(1000)
+//				.setListener(new AnimatorListenerAdapter() {
+//				@Override
+//				public void onAnimationEnd(Animator animation) {
+//					mySlidingImage.setVisibility(View.GONE);
+//					mySlidingImage.setScaleX((float)1.0);
+//					mySlidingImage.setScaleY((float)1.0);
+//				}
+//				}).start();
 	}
 
 	public int calculateInSampleSize(BitmapFactory.Options options,

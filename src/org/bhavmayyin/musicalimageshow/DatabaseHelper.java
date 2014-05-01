@@ -159,6 +159,7 @@ public SlideShow getSlideShow(long showid) {
 		if (c != null)
 			c.moveToFirst();
 		SlideShow td = new SlideShow();
+		
 		td.setId(c.getInt(c.getColumnIndex(KEY_ID)));
 		td.setshowName(c.getString(c.getColumnIndex(KEY_SHOWNAME)));
 		td.setshowDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));

@@ -36,8 +36,8 @@
         android:background="@drawable/custombutton"
         android:onClick="onClick"
         android:src="@drawable/ic_action_new" />
- 
-    <ImageButton
+    
+   <ImageButton
         android:id="@+id/playMusicButton"
         android:layout_width="163dp"
         android:layout_height="45dp"
