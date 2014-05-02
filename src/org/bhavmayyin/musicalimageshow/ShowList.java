@@ -115,7 +115,9 @@ public class ShowList extends ListActivity {
 		 	        		resetInputScreen();
 
 		 	        	} else {
-		 	        		alertbox("Cannot Add Image Show", "Image Show Name Cannot Be Blank");
+		 	        		if (edTitle.isShown()) {
+		 	        			alertbox("Cannot Add Image Show", "Image Show Name Cannot Be Blank");
+		 	        		}
 		 	        	}
 
 		 	        default:

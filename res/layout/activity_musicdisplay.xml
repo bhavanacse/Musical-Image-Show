@@ -26,7 +26,16 @@
     	android:dividerHeight="3px">
 
     </ListView>
-
+ 	<TextView
+    	android:id="@+id/musicnote"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center_horizontal"
+    	android:layout_centerHorizontal="true"
+    	android:layout_above="@+id/addMusicButton"
+    	android:text="Press any music file above for 1-2 seconds to delete"
+    	android:textStyle="bold"
+    	android:textColor="#0099CC" />
     <ImageButton
         android:id="@+id/addMusicButton"
         android:layout_width="163dp"

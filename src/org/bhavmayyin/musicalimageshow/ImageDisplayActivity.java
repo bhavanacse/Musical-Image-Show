@@ -90,8 +90,6 @@ public class ImageDisplayActivity extends Activity {
            	info.targetView.setBackgroundColor(Color.rgb(255,204,0));// orange rim
             imageId = (int)info.position;
             selected = imgadapter.getURI(imageId);
-           // Toast.makeText(getApplicationContext(),"deleting image file-id-" + imageId ,Toast.LENGTH_LONG).show();
-           // Toast.makeText(getApplicationContext(),"deleting image file-uri" + selected ,Toast.LENGTH_LONG).show();
             menu.setHeaderTitle("Delete Image file:"  );  
             menu.add(0, v.getId(), 0, "Cancel");//groupId, itemId, order, title 
             menu.add(0, v.getId(), 0, "Delete"); 

@@ -35,6 +35,16 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+    <TextView
+    	android:id="@+id/imagenote"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center_horizontal"
+    	android:layout_centerHorizontal="true"
+    	android:layout_above="@+id/addImageButton"
+    	android:text="Press any image above for 1-2 seconds to delete"
+    	android:textStyle="bold"
+    	android:textColor="#0099CC" />
     
     <ImageButton
         android:id="@+id/addImageButton"
