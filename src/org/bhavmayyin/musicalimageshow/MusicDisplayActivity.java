@@ -59,6 +59,7 @@ public class MusicDisplayActivity extends Activity {
 	List<ShowMusic> musicObj ;
 	String musicTitle;
 	long musicId;
+	PlaySound mp;
 	AdapterView.AdapterContextMenuInfo info;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class MusicDisplayActivity extends Activity {
 
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addMusicButton);
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
+		ImageButton btnPlayMusic = (ImageButton) findViewById(R.id.playMusicButton);
 
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
@@ -116,8 +118,18 @@ public class MusicDisplayActivity extends Activity {
           return true;  
                             
       }  
+	public void btnPlayMusic (View  view) {
 
-	public OnClickListener btnOpenGallery = new OnClickListener() {
+		@SuppressLint("InlinedApi")
+		
+				ArrayList<String> musicUri = new ArrayList<String>();
+				for (int i = 0; i < musicObj.size();i++){
+					musicUri.add(musicObj.get(i).getName());
+				}
+				mp = new PlaySound(getApplication(),musicUri);
+			    PlaySound.play();
+	}
+		public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
 		public void onClick(View view) {
@@ -131,6 +143,11 @@ public class MusicDisplayActivity extends Activity {
 			}
 		}
 	};
+	@SuppressWarnings("static-access")
+	protected void onStop(){
+		super.onStop();
+		mp.stop_mediaPlayer();
+	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {

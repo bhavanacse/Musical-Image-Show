@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.database.Cursor;
@@ -36,6 +37,7 @@ import android.widget.Toast;
  * @author bhavana
  * 
  */
+@SuppressLint("NewApi")
 public class SlideShowActivity extends Activity {
 
 //	final static int[] IMAGE_IDS = {
@@ -53,8 +55,10 @@ public class SlideShowActivity extends Activity {
 	Timer timer = new Timer();
 	final Handler mHandler = new Handler();
 //	BackgroundSound mBackgroundSound = new BackgroundSound();
-	MediaPlayer mediaPlayer = null;
+	PlaySound mp ;
+	@SuppressWarnings("static-access")
 	int showid;
+	@SuppressWarnings("static-access")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow);
@@ -66,14 +70,8 @@ public class SlideShowActivity extends Activity {
 	    ActionBar bar = getActionBar();
 //	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 	    bar.hide();
-		try {
-	        mediaPlayer=MediaPlayer.create(getApplication(), Uri.parse(musicUris.get(0)));
-			mediaPlayer.start();
-			mediaPlayer.setLooping(true);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	    
+	    mp = new PlaySound(getApplication(), musicUris);
+	    mp.play();
 		animateImage();
 //	    final Runnable mUpdateResults = new Runnable() {
 //	        public void run() {
@@ -92,6 +90,7 @@ public class SlideShowActivity extends Activity {
 	}
 	
 
+	@SuppressLint("NewApi")
 	public void animateImage() {
 		
 		int imageCount = myImageUris.size();
@@ -146,6 +145,7 @@ public class SlideShowActivity extends Activity {
 				}
 			};
 			final AnimatorListenerAdapter thirdAnimationListener = new AnimatorListenerAdapter() {
+				@SuppressLint("NewApi")
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					mySlidingImage.animate().alpha(0f).setDuration(2000)
@@ -209,11 +209,7 @@ public class SlideShowActivity extends Activity {
 	public void onPause(){
 		super.onPause(); 
 		timer.cancel();	
-
-		if(mediaPlayer != null && mediaPlayer.isPlaying()){
-			mediaPlayer.stop(); 
-			mediaPlayer.release();
-		};
+		mp.stop();
 //		 mBackgroundSound.cancel(true);
 	 }
 	

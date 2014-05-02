@@ -44,7 +44,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/custombutton"
-        android:onClick="onClick"
+        android:onClick="btnPlayMusic"
         android:src="@drawable/ic_action_play" />
  
 </RelativeLayout>
