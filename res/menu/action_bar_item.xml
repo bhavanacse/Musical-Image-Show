@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-  <!-- This is the play button, hide it for now 
-     <item
-        android:id="@+id/play_show"
-        android:title="delete selected show"
-        android:icon="@drawable/ic_action_play" 
-        android:orderInCategory="1"
-         android:showAsAction="never" >
-    </item>
-  -->  
-    <item
-        android:id="@+id/delete_show"
-        android:title="delete selected show"
-        android:icon="@drawable/ic_action_remove" 
-        android:orderInCategory="1"
-         android:showAsAction="always" >
-    </item>
+ 
     <item
         android:id="@+id/new_show"
         android:title="@string/new_show"
         android:icon="@drawable/ic_action_new" 
-         android:orderInCategory="2"
+         android:orderInCategory="1"
         android:showAsAction="always" >
     </item>
     <item
         android:id="@+id/accept_show"
          android:title="Save selected show"
         android:icon="@drawable/ic_action_accept" 
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:showAsAction="always" >
      </item>
+     
+     <item
+        android:id="@+id/edit_show"
+        android:title="delete selected show"
+        android:icon="@drawable/ic_action_edit" 
+        android:orderInCategory="3"
+         android:showAsAction="always" >
+    </item>
+  
+    <item
+        android:id="@+id/delete_show"
+        android:title="delete selected show"
+        android:icon="@drawable/ic_action_remove" 
+        android:orderInCategory="4"
+         android:showAsAction="always" >
+    </item>
+
 
 </menu>

@@ -30,17 +30,11 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    this.context = context;
 	    this.list = list;
 	  }
-	/*  
-	  public void setSelectedIndex(int index){
-	      selectedIndex = index;
-	  }
-*/
+
 	  static class ViewHolder {
 		protected CheckBox checkbox;
 	    protected TextView text;
-	    
-	    //LinearLayout lout;
-	
+
 	  }
 
 	  @SuppressLint("NewApi")
@@ -62,6 +56,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    }
 	    ViewHolder holder = (ViewHolder) view.getTag();
 	    holder.checkbox.setChecked(list.get(position).isSelected());
+	    
 	    if (position %2 == 1) {
 	    	view.setBackgroundColor(Color.rgb(204,255,255));
 	    }
@@ -74,8 +69,11 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    if (!list.get(position).getshowDescription().isEmpty())
 	    	result.append(" - " + list.get(position).getshowDescription());
 	    holder.text.setText(result.toString());
-
+	    if(list.get(position).getId() == -1){
+	    	holder.checkbox.setVisibility(View.GONE);
+	    } else {
+	    	holder.checkbox.setVisibility(View.VISIBLE);
+	    }
 	    return view;
 	  } 
-	
 	} 

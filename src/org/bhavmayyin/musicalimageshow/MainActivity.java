@@ -20,6 +20,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 @SuppressLint("NewApi")
@@ -33,6 +34,8 @@ private MyHandler handler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
 		imagev = (ImageView) findViewById(R.id.imageView1);
 	    ActionBar bar = getActionBar();

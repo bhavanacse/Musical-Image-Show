@@ -14,8 +14,10 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -30,9 +32,15 @@ public class ShowList extends ListActivity {
 	EditText edTitle;
 	EditText edDesc;
 	int npos = -1;
+	Menu actionmenu;
+	int actionBarState = 0;
+	MenuItem additem, acceptitem,edititem,deleteitem  ;
+   
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_show_list);
 		setRequestedOrientation(ActivityInfo   
 				  .SCREEN_ORIENTATION_PORTRAIT);
@@ -49,12 +57,13 @@ public class ShowList extends ListActivity {
 	    edDesc.setVisibility(View.GONE);
 	    ActionBar bar = getActionBar();
 	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
+
 	}
 	public void setDummyList(){
 	    if (slideshows.size() < 1){
 	    	SlideShow ss = new SlideShow();
 	    	ss.setshowName("Create Image Show");
-	    	ss.setshowDescription("Press + button on Action Bar to add First Image show");
+	    	ss.setshowDescription("Press + button to add Image show");
 	    	ss.setId(-1);
 	        slideshows.add(ss);
 	    }
@@ -63,9 +72,43 @@ public class ShowList extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.action_bar_item, menu);
-		
+		additem = menu.findItem(R.id.new_show);
+		acceptitem = menu.findItem(R.id.accept_show);
+		edititem = menu.findItem(R.id.edit_show);
+		deleteitem = menu.findItem(R.id.delete_show);
+		if (menu !=null) {
+			setActionBar();
+		}
 		return super.onCreateOptionsMenu(menu);
 
+	}
+	protected void setActionBar(){
+		//different state setting the actionBar icons
+	    switch (actionBarState) {
+	    	case 0 : //initial state
+	    		 deleteitem.setVisible(false);
+	    		 acceptitem.setVisible(false);
+	    		 additem.setVisible(true);
+	    		 edititem.setVisible(false);
+	    		 break;
+  	    	case 1 : //add item 
+	    		 deleteitem.setVisible(true);
+	    		 acceptitem.setVisible(true);
+	    		 additem.setVisible(false);
+	    		 edititem.setVisible(false);
+	    		 break;
+  	    	case 2 : // item selected 
+	    		 deleteitem.setVisible(true);
+	    		 acceptitem.setVisible(false);
+	    		 additem.setVisible(false);
+	    		 edititem.setVisible(true);
+	    		 break;
+	    	default:
+	    		 deleteitem.setVisible(true);
+	    		 acceptitem.setVisible(true);
+	    		 additem.setVisible(true);
+	    		 edititem.setVisible(true);	
+	      }
 	}
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -73,34 +116,38 @@ public class ShowList extends ListActivity {
 	    npos = position;
 	    for (int i=0; i < slideshows.size();i ++){
       	  if (i != position){
-      		  slideshows.get(i).setselected(false);
+      		  slideshows.get(i).setselected(false);//unselect other
       	  } else {
-      		  slideshows.get(i).setselected(!slideshows.get(i).isSelected());
-      		  if (!slideshows.get(i).isSelected()){
-      			  npos = -1;
+      		  if (slideshows.get(i).getId() != -1) {
+      			  slideshows.get(i).setselected(!slideshows.get(i).isSelected());
+      			  if (!slideshows.get(i).isSelected()){
+      				  npos = -1;
+      				  actionBarState = 0; // none selected then original action bar with + only
+      			  } else {
+      				  actionBarState = 2; // action bar has edit, delete only
+      			  }
+      			  invalidateOptionsMenu();
       		  }
-      	  }
-      	  
+      	  }  
         }
 	    ((InteractiveArrayAdapter) adapter).notifyDataSetChanged();
 	}
-
 	 @SuppressLint("NewApi")
 	@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 		 	 switch (item.getItemId()) {
-		 	 	/*case R.id.play_show:
-		 	 		playShow();
-	 	            return true; */ // hide this for now
+		 	 	case R.id.edit_show:
+		 	 		editShow();
+	 	            return true; // edit
 		 	 	case R.id.delete_show:
 		 	            deleteShow();
 		 	            return true;
-		 	 
-		 	        case R.id.new_show:
+		 	    case R.id.new_show:
+		 	        	actionBarState = 1;
+		 	        	invalidateOptionsMenu();
 		 	            addNewShow();
 		 	            return true;
-		 	 
-		 	        case R.id.accept_show:
+		 	    case R.id.accept_show:
 		 	        	String stitle = edTitle.getText().toString();
 		 	        	String sdesc = edDesc.getText().toString();
 		 	        	if(!stitle.isEmpty()) {
@@ -137,11 +184,23 @@ public class ShowList extends ListActivity {
 							} 	
 			 	    }
 		 	    	adapter.notifyDataSetChanged();
+		 	    	
 			 	   } 
 
-		 	    public void playShow() {
-		 	        Toast.makeText(this, "Play Option Selected", Toast.LENGTH_SHORT).show();
-
+		 	    public void editShow() {
+		 	        //Toast.makeText(this, "editOption Selected", Toast.LENGTH_SHORT).show();
+		 	    	if(slideshows.get(0).getId() > -1 ){
+		 	    		boolean checked = false;
+		 	    		if (npos > -1) {
+		 	    			checked = slideshows.get(npos).isSelected();
+		 	    		}
+		 	    		//Toast.makeText(this, "add Option Selected" + checked + npos, Toast.LENGTH_SHORT).show();
+		 	    		if (checked){
+		 	    			Intent intent = new Intent(this, SelectionActivity.class);
+		 	    			intent.putExtra("Selected Slide Show", slideshows.get(npos).getId());
+		 	    			startActivity(intent);
+		 	    		}
+		 	    	}
 		 	    }
 		 	    
 		 	    public void addNewShow() {
@@ -170,7 +229,6 @@ public class ShowList extends ListActivity {
 		 	    	}
 		 	    }
 		 	
-
  	   public void setActivityBackgroundcolor( int color){
  	    	View view = this.getWindow().getDecorView();
  	    	view.setBackgroundColor(color);
@@ -184,6 +242,8 @@ public class ShowList extends ListActivity {
 		    edTitle.setVisibility(View.GONE);
 		    edDesc.setVisibility(View.GONE);
 			adapter.notifyDataSetChanged();
+			actionBarState = 0;
+			invalidateOptionsMenu();
  	   }
  	   protected void alertbox(String title, String msg){
  		   final String finaltitle = title;
@@ -200,6 +260,8 @@ public class ShowList extends ListActivity {
 		        			 npos = -1;
 		        			 setDummyList();
 		        			 adapter.notifyDataSetChanged();
+		        			actionBarState = 0;
+		        			invalidateOptionsMenu(); 
 		        		 }
 		         	  }
 		        	 })

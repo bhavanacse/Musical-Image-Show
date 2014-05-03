@@ -27,9 +27,11 @@ import android.provider.ContactsContract.Data;
 import android.provider.MediaStore;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -64,7 +66,8 @@ public class MusicDisplayActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_musicdisplay);
 
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addMusicButton);
@@ -121,13 +124,23 @@ public class MusicDisplayActivity extends Activity {
 	public void btnPlayMusic (View  view) {
 
 		@SuppressLint("InlinedApi")
-		
+		List<ShowMusic> playlist = db.getShowMusic(showid);
 				ArrayList<String> musicUri = new ArrayList<String>();
-				for (int i = 0; i < musicObj.size();i++){
-					musicUri.add(musicObj.get(i).getName());
+				List<String> imgURI = new ArrayList<String>();
+				for (int i = 0; i <playlist.size();i++){
+					musicUri.add(playlist.get(i).getName());
 				}
-				mp = new PlaySound(getApplication(),musicUri);
-			    PlaySound.play();
+				imgURI = db.getAllimageURI(showid);
+				//mp = new PlaySound(getApplication(),musicUri);
+			   //PlaySound.play();
+			    Bundle b = new Bundle();
+				String key = "ImageFilePaths";
+				String musickey = "MusicFilePaths";
+				b.putStringArrayList(key, (ArrayList<String>) imgURI);
+				b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
+				Intent intent = new Intent(this, SlideShowActivity.class);
+				intent.putExtras(b);
+				startActivity(intent);
 	}
 		public OnClickListener btnOpenGallery = new OnClickListener() {
 
@@ -212,14 +225,20 @@ public class MusicDisplayActivity extends Activity {
 
 			//textView.setLayoutParams(new ListView.LayoutParams(400, 100));
 			textView.setLayoutParams(new ListView.LayoutParams(LayoutParams.FILL_PARENT,100 ));
-			textView.setText(showmusic.get(position).getMusic() + " " 
+			textView.setText("   " + showmusic.get(position).getMusic() + " " 
 					+ showmusic.get(position).getArtist());
 //			textView.setText(fileDisplayName);
 //			textView.setBackgroundColor(color.holo_red_dark);
 //			final Typeface tvFont = Typeface.createFromAsset(assetManager, "OPTIMA.TTF");
 //	        textView.setTypeface(tvFont);
 //			textView.setTextColor(color.holo_blue_dark);
-
+		    if (position %2 == 0) {
+		    	textView.setBackgroundColor(Color.rgb(204,255,255));
+		    }
+		    else {
+		    	textView.setBackgroundColor(Color.rgb(255,255,255));
+		    }
+		    textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}
 

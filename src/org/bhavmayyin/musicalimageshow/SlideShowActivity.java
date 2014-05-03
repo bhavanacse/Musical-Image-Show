@@ -25,12 +25,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -56,15 +64,22 @@ public class SlideShowActivity extends Activity {
 	final Handler mHandler = new Handler();
 //	BackgroundSound mBackgroundSound = new BackgroundSound();
 	PlaySound mp ;
-	@SuppressWarnings("static-access")
+
 	int showid;
+	AdapterView.AdapterContextMenuInfo info;
+	GridView imageGrid;
+	int imageId;
+	String selected;
+	
 	@SuppressWarnings("static-access")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		setContentView(R.layout.activity_slideshow);
-
 		Bundle b = this.getIntent().getExtras();
-
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 		musicUris = b.getStringArrayList("MusicFilePaths");
 	    ActionBar bar = getActionBar();
@@ -88,8 +103,7 @@ public class SlideShowActivity extends Activity {
 //	        }	
 //	    },delay, period);
 	}
-	
-
+	   @SuppressWarnings("static-access")
 	@SuppressLint("NewApi")
 	public void animateImage() {
 		

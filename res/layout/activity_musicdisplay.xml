@@ -4,7 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
     
     <TextView
     	android:id="@+id/ssMTitle"
@@ -20,7 +24,10 @@
         android:id="@+id/musicListView"
         android:layout_width="fill_parent"
         android:layout_below="@+id/ssMTitle"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:choiceMode="singleChoice"
+    	android:descendantFocusability="beforeDescendants"
+        android:fadingEdge="none"
         android:cacheColorHint="#000000"
     	android:divider="#0099CC"	
     	android:dividerHeight="3px">
@@ -35,7 +42,8 @@
     	android:layout_above="@+id/addMusicButton"
     	android:text="Press any music file above for 1-2 seconds to delete"
     	android:textStyle="bold"
-    	android:textColor="#0099CC" />
+    	android:textColor="#0099CC"  />
+ 	
     <ImageButton
         android:id="@+id/addMusicButton"
         android:layout_width="163dp"
