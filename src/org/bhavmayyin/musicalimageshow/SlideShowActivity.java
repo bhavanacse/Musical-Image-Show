@@ -14,6 +14,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,6 +72,7 @@ public class SlideShowActivity extends Activity {
 	GridView imageGrid;
 	int imageId;
 	String selected;
+
 	
 	@SuppressWarnings("static-access")
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,9 +88,20 @@ public class SlideShowActivity extends Activity {
 	    ActionBar bar = getActionBar();
 //	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 	    bar.hide();
-	    mp = new PlaySound(getApplication(), musicUris);
-	    mp.play();
-		animateImage();
+	    if (musicUris.size() > 0){
+	    	ArrayList<String> musicpath = new ArrayList<String>();
+	    	for (String struri : musicUris){
+	    		musicpath.add( getMusicPath(Uri.parse(struri)));
+	    	}
+	    	mp = new PlaySound( musicpath);
+	    	animateImage();
+	    	mp.play();
+	    }
+	    else {
+	    	
+	    	alertbox("Cannot Play Music With Image","No Music Selected");
+	    }
+		
 //	    final Runnable mUpdateResults = new Runnable() {
 //	        public void run() {
 //	        	animateImage();
@@ -103,10 +117,26 @@ public class SlideShowActivity extends Activity {
 //	        }	
 //	    },delay, period);
 	}
+	public String getMusicPath(Uri uri){
+		   Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		   cursor.moveToFirst();
+		   String document_id = cursor.getString(0);
+		   document_id = document_id.substring(document_id.lastIndexOf(":")+1);
+		   cursor.close();
+
+		   cursor = getContentResolver().query( 
+		   android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+		   null, MediaStore.Audio.Media._ID + " = ? ", new String[]{document_id}, null);
+		   cursor.moveToFirst();
+		   String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+		   cursor.close();
+
+		   return path;
+		}
 	   @SuppressWarnings("static-access")
 	@SuppressLint("NewApi")
 	public void animateImage() {
-		
+		   
 		int imageCount = myImageUris.size();
 	//	int imageCount = IMAGE_IDS.length;
 			final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -226,6 +256,29 @@ public class SlideShowActivity extends Activity {
 		mp.stop();
 //		 mBackgroundSound.cancel(true);
 	 }
+	 protected void alertbox(String title, String msg){
+		   final String finaltitle = title;
+		   new AlertDialog.Builder(this)
+		   				
+			 			.setTitle(finaltitle)
+		                .setMessage(msg)
+		                .setIcon(android.R.drawable.ic_dialog_alert)
+		                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		              public void onClick(DialogInterface dialog, int whichButton) { 
+		            	
+		            	  animateImage();
+		        	}
+	        	 })
+	        	 .setNegativeButton("Cancel", 
+		                new DialogInterface.OnClickListener() {
+		                    @Override
+		                    public void onClick(DialogInterface dialog, int which) {
+		                       //do nothing if it is delete
+		                    	finish();
+	                      }
+		        	})
+		        	.show();
+	   }
 	
 //	final Animation.AnimationListener animationListener = new Animation.AnimationListener() {
 //		@Override

@@ -51,6 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		private static final String KEY_MUSIC = "showmusic";
 		private static final String KEY_ARTIST = "artist";
 		private static final String KEY_URI = "uri";
+		
+		private Context context;
 
 // Table Create Statements
 
@@ -75,6 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 public DatabaseHelper(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	this.context = context;
 
 }
 
@@ -508,13 +511,20 @@ public List<String> getShowMusicURI(long showid) {
 
 // closing database
 public void closeDB() {
-
 	SQLiteDatabase db = this.getReadableDatabase();
-
 	if (db != null && db.isOpen())
-		db.close();
-		
+		db.close();	
 }
+public void reopen(){
+	SQLiteDatabase db = this.getWritableDatabase();
+	if (db == null || !db.isOpen()) {
+		close();
+		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+	}
+}
+
+
+
 }
 	
 

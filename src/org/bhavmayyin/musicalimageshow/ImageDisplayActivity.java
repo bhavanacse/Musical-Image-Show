@@ -205,7 +205,12 @@ public class ImageDisplayActivity extends Activity {
 
 		return filePath;
 	}
-
+	void OnPause(){
+		db.closeDB();
+	}
+	void OnResume(){
+		db.reopen();
+	}
 	public class ImageAdapter extends BaseAdapter {
 		private Context mContext;
 		private List<String> mThumbIds;

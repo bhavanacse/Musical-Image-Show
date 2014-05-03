@@ -23,7 +23,7 @@ import android.widget.TabHost.TabSpec;
  */
 public class SelectionActivity extends TabActivity {
 	int selshowID;
-	DatabaseHelper datasource;
+	DatabaseHelper db;
 	SlideShow selshow = new SlideShow();
 	ArrayList<ImageShow> selshowimg = new ArrayList<ImageShow>();
 	ArrayList<String> musicURI = new ArrayList<String>();
@@ -39,9 +39,10 @@ public class SelectionActivity extends TabActivity {
 		// setContentView(R.layout.activity_selection);
 		intent = getIntent();
 		selshowID = intent.getIntExtra("Selected Slide Show", 0);
-		datasource = new DatabaseHelper(this);
+		db = new DatabaseHelper(this);
 
-		selshow = datasource.getSlideShow(selshowID);
+		selshow = db.getSlideShow(selshowID);
+		db.closeDB();
 		sTitle = selshow.getshowName();
 		sDesc = selshow.getshowDescription();
 		sTitleDesc = (sTitle + (!sDesc.isEmpty() ? "-" : "") + sDesc);

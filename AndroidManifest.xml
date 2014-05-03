@@ -13,8 +13,9 @@
         android:icon="@drawable/images"
         android:label="@string/app_name">
         <activity
-            android:name="org.bhavmayyin.musicalimageshow.SlideShowActivity"
-            android:theme="@style/AppTheme">
+            android:name="org.bhavmayyin.musicalimageshow.SlideShowActivity" 
+            android:theme="@string/app_name">
+           
         </activity>
         <activity
             android:name="org.bhavmayyin.musicalimageshow.MainActivity"

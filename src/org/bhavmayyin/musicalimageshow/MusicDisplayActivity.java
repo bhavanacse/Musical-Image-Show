@@ -241,6 +241,9 @@ public class MusicDisplayActivity extends Activity {
 		    textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}
+		void OnPause(){
+			db.close();
+		}
 
 	}
 
