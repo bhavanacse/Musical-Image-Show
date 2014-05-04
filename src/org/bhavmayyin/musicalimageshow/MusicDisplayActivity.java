@@ -73,6 +73,7 @@ public class MusicDisplayActivity extends Activity {
 		ImageButton btnChooseGallery = (ImageButton) findViewById(R.id.addMusicButton);
 		btnChooseGallery.setOnClickListener(btnOpenGallery);
 		ImageButton btnPlayMusic = (ImageButton) findViewById(R.id.playMusicButton);
+		btnPlayMusic.setOnClickListener(btnPlay);
 
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
@@ -121,26 +122,31 @@ public class MusicDisplayActivity extends Activity {
           return true;  
                             
       }  
-	public void btnPlayMusic (View  view) {
+	public OnClickListener btnPlay = new OnClickListener()  {
 
 		@SuppressLint("InlinedApi")
+		public void onClick(View view) {
+
+				playSlideShow();
+		}
+	};
+	public void playSlideShow() {
 		List<ShowMusic> playlist = db.getShowMusic(showid);
-				ArrayList<String> musicUri = new ArrayList<String>();
-				List<String> imgURI = new ArrayList<String>();
-				for (int i = 0; i <playlist.size();i++){
-					musicUri.add(playlist.get(i).getName());
-				}
-				imgURI = db.getAllimageURI(showid);
-				//mp = new PlaySound(getApplication(),musicUri);
-			   //PlaySound.play();
-			    Bundle b = new Bundle();
-				String key = "ImageFilePaths";
-				String musickey = "MusicFilePaths";
-				b.putStringArrayList(key, (ArrayList<String>) imgURI);
-				b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
-				Intent intent = new Intent(this, SlideShowActivity.class);
-				intent.putExtras(b);
-				startActivity(intent);
+		ArrayList<String> musicUri = new ArrayList<String>();
+		List<String> imgURI = new ArrayList<String>();
+		for (int i = 0; i <playlist.size();i++){
+			musicUri.add(playlist.get(i).getName());
+		}
+		imgURI = db.getAllimageURI(showid);
+		Bundle b = new Bundle();
+		String key = "ImageFilePaths";
+		String musickey = "MusicFilePaths";
+		musicUri =(ArrayList<String>) db.getShowMusicURI(showid);
+		b.putStringArrayList(key, (ArrayList<String>) imgURI);
+		b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
+		Intent intent = new Intent(this, SlideShowActivity.class);
+		intent.putExtras(b);
+		startActivity(intent);
 	}
 		public OnClickListener btnOpenGallery = new OnClickListener() {
 

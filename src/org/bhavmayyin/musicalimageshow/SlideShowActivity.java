@@ -94,8 +94,10 @@ public class SlideShowActivity extends Activity {
 	    		musicpath.add( getMusicPath(Uri.parse(struri)));
 	    	}
 	    	mp = new PlaySound( musicpath);
+	    	
 	    	animateImage();
 	    	mp.play();
+	    	
 	    }
 	    else {
 	    	

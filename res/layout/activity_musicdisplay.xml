@@ -39,29 +39,46 @@
     	android:layout_height="wrap_content"
     	android:gravity="center_horizontal"
     	android:layout_centerHorizontal="true"
-    	android:layout_above="@+id/addMusicButton"
+    	android:layout_above="@+id/rowm1"
     	android:text="Press any music file above for 1-2 seconds to delete"
     	android:textStyle="bold"
     	android:textColor="#0099CC"  />
  	
+    <LinearLayout
+    android:id="@+id/rowm1"
+    android:layout_alignParentBottom="true"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+
+    
     <ImageButton
         android:id="@+id/addMusicButton"
-        android:layout_width="163dp"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="0.5"
+            android:scaleType="fitEnd"
         android:background="@drawable/custombutton"
         android:onClick="onClick"
         android:src="@drawable/ic_action_new" />
-    
-   <ImageButton
+ 
+    <ImageButton
         android:id="@+id/playMusicButton"
-        android:layout_width="163dp"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+              android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+             android:gravity="center_horizontal"
+             android:scaleType="fitStart"
         android:background="@drawable/custombutton"
-        android:onClick="btnPlayMusic"
+        android:onClick="onClick"
         android:src="@drawable/ic_action_play" />
+     
+</LinearLayout>
+   
  
 </RelativeLayout>
