@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,7 +29,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,13 +53,6 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public class SlideShowActivity extends Activity {
 
-//	final static int[] IMAGE_IDS = {
-//        // some ids
-//        R.drawable.ic_launcher,
-//        R.drawable.ic_action_new_light,
-//        R.drawable.ic_action_play_light,
-//    };
-	
 	ArrayList<String> myImageUris;
 	Random randomNumGenerator = new Random();
 	ArrayList<String> musicUris;
@@ -65,7 +61,8 @@ public class SlideShowActivity extends Activity {
 	Timer timer = new Timer();
 	final Handler mHandler = new Handler();
 //	BackgroundSound mBackgroundSound = new BackgroundSound();
-	PlaySound mp ;
+	static PlaySound mp ;
+	OrientationEventListener orientationListener ;
 
 	int showid;
 	AdapterView.AdapterContextMenuInfo info;
@@ -88,22 +85,35 @@ public class SlideShowActivity extends Activity {
 	    ActionBar bar = getActionBar();
 //	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 	    bar.hide();
+	    
 	    if (musicUris.size() > 0){
 	    	ArrayList<String> musicpath = new ArrayList<String>();
 	    	for (String struri : musicUris){
 	    		musicpath.add( getMusicPath(Uri.parse(struri)));
 	    	}
 	    	mp = new PlaySound( musicpath);
-	    	
+	    	if(!mp.isplaying()){
+				mp.stop(0);
+				mp.play();
+			}
 	    	animateImage();
-	    	mp.play();
-	    	
+
 	    }
 	    else {
 	    	
 	    	alertbox("Cannot Play Music With Image","No Music Selected");
 	    }
-		
+		orientationListener = new OrientationEventListener(getApplicationContext(), 
+				SensorManager.SENSOR_DELAY_UI) {
+			public void onOrientationChanged(int orientation) {
+				if(mp.isplaying()){
+					mp.pause();
+				}
+				else {
+					mp.resume();
+				}
+			}
+		};
 //	    final Runnable mUpdateResults = new Runnable() {
 //	        public void run() {
 //	        	animateImage();
@@ -140,7 +150,7 @@ public class SlideShowActivity extends Activity {
 	public void animateImage() {
 		   
 		int imageCount = myImageUris.size();
-	//	int imageCount = IMAGE_IDS.length;
+
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 
@@ -196,6 +206,7 @@ public class SlideShowActivity extends Activity {
 				public void onAnimationEnd(Animator animation) {
 					mySlidingImage.animate().alpha(0f).setDuration(2000)
 							.setListener(nextImageAnimationListener).start();
+
 				};
 			};
 			AnimatorListenerAdapter secondAnimationListener = new AnimatorListenerAdapter() {
@@ -205,11 +216,12 @@ public class SlideShowActivity extends Activity {
 					mySlidingImage.animate().scaleX(nextScale).scaleY(nextScale)
 							.rotationBy(nextRotation).setDuration(3000)
 							.setListener(thirdAnimationListener).start();
+
 				}
 			};
 			mySlidingImage.animate().alpha(1.0f).setDuration(1000)
 					.setListener(secondAnimationListener).start();
-								
+				
 //			mySlidingImage.animate()
 //				.alpha(0f)
 //				.setDuration(1000)
@@ -223,7 +235,7 @@ public class SlideShowActivity extends Activity {
 //				}).start();
 	}
 
-	public int calculateInSampleSize(BitmapFactory.Options options,
+	public static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {
 		// Raw height and width of image
 		final int height = options.outHeight;
@@ -243,20 +255,43 @@ public class SlideShowActivity extends Activity {
 				inSampleSize *= 2;
 			}
 		}
-
+		
+		
 		return inSampleSize;
 	}
 	
-//	public void onResume() {
-//	    super.onResume();
+	@SuppressWarnings("static-access")
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		if((keyCode == KeyEvent.KEYCODE_BACK)) {
+			//Toast.makeText(getApplicationContext(),"exiting music file-" ,Toast.LENGTH_LONG).show();
+        	
+			if(mp.isplaying()){
+				mp.pause();
+				mp.stop(1);
+			}
+		}
+		return super.onKeyDown(keyCode,  event);
+	}
+	public void onResume() {
+	    super.onResume();
 ////	    mBackgroundSound.execute();
-//	}
+		if(!mp.isplaying()){
+			mp.stop(0);
+			mp.resume();
+			//mp.play();
+		}
+	}
 
 	public void onPause(){
 		super.onPause(); 
 		timer.cancel();	
-		mp.stop();
+		//mp.stop(1);
 //		 mBackgroundSound.cancel(true);
+		if(mp.isplaying()){
+	
+			mp.pause();
+			mp.stop(1);
+		}
 	 }
 	 protected void alertbox(String title, String msg){
 		   final String finaltitle = title;

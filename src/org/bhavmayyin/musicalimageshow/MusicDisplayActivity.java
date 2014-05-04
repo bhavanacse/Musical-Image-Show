@@ -61,7 +61,7 @@ public class MusicDisplayActivity extends Activity {
 	List<ShowMusic> musicObj ;
 	String musicTitle;
 	long musicId;
-	PlaySound mp;
+
 	AdapterView.AdapterContextMenuInfo info;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,16 +127,16 @@ public class MusicDisplayActivity extends Activity {
 		@SuppressLint("InlinedApi")
 		public void onClick(View view) {
 
+			if (getIntent().getCharSequenceExtra("TAB").toString()
+					.contentEquals("Music")) {
 				playSlideShow();
+			}
 		}
 	};
 	public void playSlideShow() {
 		List<ShowMusic> playlist = db.getShowMusic(showid);
 		ArrayList<String> musicUri = new ArrayList<String>();
 		List<String> imgURI = new ArrayList<String>();
-		for (int i = 0; i <playlist.size();i++){
-			musicUri.add(playlist.get(i).getName());
-		}
 		imgURI = db.getAllimageURI(showid);
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
@@ -165,7 +165,7 @@ public class MusicDisplayActivity extends Activity {
 	@SuppressWarnings("static-access")
 	protected void onStop(){
 		super.onStop();
-		mp.stop_mediaPlayer();
+
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

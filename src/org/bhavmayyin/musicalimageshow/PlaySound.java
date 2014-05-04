@@ -17,7 +17,8 @@ public class PlaySound {
 	private static HashSet<MediaPlayer> mpSet = new HashSet<MediaPlayer>();
 	static int musiccnt = 0;
 	private static ArrayList<String> musicList = new ArrayList<String>();
-	//private static Context context;
+	private static int stop = 0;
+	private static int length;
 	
 	
 	@SuppressWarnings("static-access")
@@ -27,9 +28,9 @@ public class PlaySound {
 	}
 	
 	static void play() {
-	
+		if (stop == 0){
 			FileDescriptor fd = null;
-		      
+		   
 			try {
 				FileInputStream fis = new FileInputStream(musicList.get(musiccnt));
 		        fd = fis.getFD();
@@ -58,14 +59,56 @@ public class PlaySound {
 	      //  Toast.makeText(context," playing -"  + musicList.get(musiccnt),Toast.LENGTH_LONG).show();
 	        mp.start();
 			//mediaPlayer.setLooping(true);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
-		}	
+		}
+	  }
 	}
 	protected static void continuePlay(){
 		play();
 	}
-	
+	protected static boolean isplaying(){
+		try {
+			
+				if(!mpSet.isEmpty()){
+					return mpSet.iterator().next().isPlaying();
+				} else {
+					return false;
+			}
+	    	}catch (Exception e) {
+	    		e.printStackTrace();
+	    		return false;
+	    	}
+	}
+	protected static void pause(){
+		try {
+			
+			if(!mpSet.isEmpty()){
+				MediaPlayer mpplayer = mpSet.iterator().next();
+				mpplayer.pause();
+				length = mpplayer.getCurrentPosition();
+			} 
+		
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		
+    	}
+	}
+	protected static void resume(){
+		try {
+			
+			if(!mpSet.isEmpty()){
+				MediaPlayer mpplayer = mpSet.iterator().next();
+				mpplayer.seekTo(length);
+				mpplayer.start();
+			} 
+		
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		
+    	}
+	}
     protected static void stop_mediaPlayer() {
     	try {
 		for (MediaPlayer mp : mpSet) {
@@ -80,6 +123,10 @@ public class PlaySound {
 		mpSet.clear();
     }
 	static void stop(){
+		stop_mediaPlayer();
+	}
+	static void stop(int real){
+		stop = real;
 		stop_mediaPlayer();
 	}
 }
