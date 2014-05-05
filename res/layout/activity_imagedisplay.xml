@@ -48,36 +48,44 @@
     android:id="@+id/row1"
     android:layout_alignParentBottom="true"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dip"
     android:layout_gravity="center"
     android:layout_weight="1"
     android:gravity="center"
     android:orientation="horizontal" >
 
-
+   
+    <Button
+        android:id="@+id/blankImageButton"
+            android:layout_width="0dip"
+            android:layout_height="48dip"
+            android:gravity="center_horizontal"
+            android:layout_weight="0.6"
+            android:clickable="false"
+            android:enabled="false"
+            android:scaleType="fitEnd"
+            android:background="@drawable/custombutton" />
     
-    <ImageButton
+     <ImageButton
         android:id="@+id/addImageButton"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="48dip"
             android:gravity="center_horizontal"
-            android:layout_weight="0.5"
-            android:scaleType="fitEnd"
-        android:background="@drawable/custombutton"
-        android:onClick="onClick"
-        android:src="@drawable/ic_action_new" />
- 
+            android:layout_weight="0.2"
+            android:scaleType="fitCenter"
+        	android:background="@drawable/custombutton"
+	        android:onClick="onClick"
+	        android:src="@drawable/ic_action_new" />
     <ImageButton
         android:id="@+id/playImageButton"
-              android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-             android:gravity="center_horizontal"
-             android:scaleType="fitStart"
-        android:background="@drawable/custombutton"
-        android:onClick="onClick"
-        android:src="@drawable/ic_action_play" />
+            android:layout_width="0dip"
+            android:layout_height="48dip"
+            android:layout_weight="0.2"
+            android:gravity="center_horizontal"
+            android:scaleType="fitCenter"
+	        android:background="@drawable/custombutton"
+	        android:onClick="onClick"
+	        android:src="@drawable/ic_action_play" />
      
 </LinearLayout>
 </RelativeLayout>
-  

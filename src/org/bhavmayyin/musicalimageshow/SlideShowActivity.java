@@ -77,6 +77,7 @@ public class SlideShowActivity extends Activity {
 		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		
 		setContentView(R.layout.activity_slideshow);
 		Bundle b = this.getIntent().getExtras();
