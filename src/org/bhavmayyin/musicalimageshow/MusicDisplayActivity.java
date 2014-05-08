@@ -54,11 +54,11 @@ public class MusicDisplayActivity extends Activity {
 
 	File file;
 	DatabaseHelper db;
-	int showid ;
+	int showid;
 	TextView tv;
 	ListView musicList;
 	MusicAdapter musicadapter;
-	List<ShowMusic> musicObj ;
+	List<ShowMusic> musicObj;
 	String musicTitle;
 	long musicId;
 
@@ -66,7 +66,7 @@ public class MusicDisplayActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_musicdisplay);
 
@@ -77,52 +77,54 @@ public class MusicDisplayActivity extends Activity {
 
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
-		tv = (TextView)  findViewById(R.id.ssMTitle);
+		tv = (TextView) findViewById(R.id.ssMTitle);
 		tv.setText(getIntent().getStringExtra("showTitle"));
 		musicObj = db.getShowMusic(showid);
 
 		musicList = (ListView) findViewById(R.id.musicListView);
 		musicadapter = new MusicAdapter(this, musicObj);
 		musicList.setAdapter(musicadapter);
-	    // Register the ListView  for Context menu
-        registerForContextMenu(musicList);
+		// Register the ListView for Context menu
+		registerForContextMenu(musicList);
 	}
-	
 
-    @Override 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
-    {
-            super.onCreateContextMenu(menu, v, menuInfo);
-           info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            musicTitle = ((TextView) info.targetView).getText().toString();
-            info.targetView.setBackgroundColor(Color.rgb(153,204,255));
-   
-            musicId = info.id;
-            menu.setHeaderTitle("Delete Music file:" + musicTitle );  
-            menu.add(0, v.getId(), 0, "Cancel");//groupId, itemId, order, title 
-            menu.add(0, v.getId(), 0, "Delete"); 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		musicTitle = ((TextView) info.targetView).getText().toString();
+		info.targetView.setBackgroundColor(Color.rgb(153, 204, 255));
 
-    } 
-    
-    @Override  
-    public boolean onContextItemSelected(MenuItem item){  
-            if(item.getTitle()=="Delete"){
-            	Toast.makeText(getApplicationContext(),"deleting music file-" + musicTitle,Toast.LENGTH_LONG).show();
-            	ShowMusic sm = (ShowMusic) musicadapter.getItem((int)musicId);
-            	db.deleteShowMusic(sm.getId());
-            	musicObj.remove(sm);
-            	musicadapter.notifyDataSetChanged();
-            }  
-            else if(item.getTitle()=="Cancel"){
-            	Toast.makeText(getApplicationContext(),"Cancelling delete",Toast.LENGTH_LONG).show();
-            	info.targetView.setBackgroundColor(Color.rgb(255,255,255));
-            }else{
-               return false;
-            }  
-          return true;  
-                            
-      }  
-	public OnClickListener btnPlay = new OnClickListener()  {
+		musicId = info.id;
+		menu.setHeaderTitle("Delete Music file:" + musicTitle);
+		menu.add(0, v.getId(), 0, "Cancel");// groupId, itemId, order, title
+		menu.add(0, v.getId(), 0, "Delete");
+
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle() == "Delete") {
+			Toast.makeText(getApplicationContext(),
+					"Deleting music file-" + musicTitle, Toast.LENGTH_LONG)
+					.show();
+			ShowMusic sm = (ShowMusic) musicadapter.getItem((int) musicId);
+			db.deleteShowMusic(sm.getId());
+			musicObj.remove(sm);
+			musicadapter.notifyDataSetChanged();
+		} else if (item.getTitle() == "Cancel") {
+			Toast.makeText(getApplicationContext(), "Cancelling delete",
+					Toast.LENGTH_LONG).show();
+			info.targetView.setBackgroundColor(Color.rgb(255, 255, 255));
+		} else {
+			return false;
+		}
+		return true;
+
+	}
+
+	public OnClickListener btnPlay = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
 		public void onClick(View view) {
@@ -133,22 +135,43 @@ public class MusicDisplayActivity extends Activity {
 			}
 		}
 	};
+
 	public void playSlideShow() {
-		List<ShowMusic> playlist = db.getShowMusic(showid);
+		// List<ShowMusic> playlist = db.getShowMusic(showid);
 		ArrayList<String> musicUri = new ArrayList<String>();
 		List<String> imgURI = new ArrayList<String>();
 		imgURI = db.getAllimageURI(showid);
+		musicUri = (ArrayList<String>) db.getShowMusicURI(showid);
+
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
 		String musickey = "MusicFilePaths";
-		musicUri =(ArrayList<String>) db.getShowMusicURI(showid);
-		b.putStringArrayList(key, (ArrayList<String>) imgURI);
-		b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
-		Intent intent = new Intent(this, SlideShowActivity.class);
-		intent.putExtras(b);
-		startActivity(intent);
+
+		if (imgURI.isEmpty() && !musicUri.isEmpty()) {
+
+			// alertbox("Cannot play Slideshow without images",
+			// "No images selected");
+			Toast.makeText(getApplicationContext(),
+					"Cannot play Slideshow without images. Please select atleast one image", Toast.LENGTH_LONG)
+					.show();
+		} else if (imgURI.isEmpty() && musicUri.isEmpty()) {
+
+			// alertbox("Please select music files & images to play slideshow",
+			// "No images & music");
+			Toast.makeText(getApplicationContext(),
+					"Please select music files & images to play slideshow",
+					Toast.LENGTH_LONG).show();
+		} else {
+
+			b.putStringArrayList(key, (ArrayList<String>) imgURI);
+			b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
+			Intent intent = new Intent(this, SlideShowActivity.class);
+			intent.putExtras(b);
+			startActivity(intent);
+		}
 	}
-		public OnClickListener btnOpenGallery = new OnClickListener() {
+
+	public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
 		public void onClick(View view) {
@@ -162,8 +185,9 @@ public class MusicDisplayActivity extends Activity {
 			}
 		}
 	};
+
 	@SuppressWarnings("static-access")
-	protected void onStop(){
+	protected void onStop() {
 		super.onStop();
 
 	}
@@ -171,13 +195,11 @@ public class MusicDisplayActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_MUSIC) {
-				
+
 				Uri selectedMusicUri = data.getData();
 
-				String[] filePathColumn = { 
-						MediaStore.Audio.Media.TITLE,
-						MediaStore.Audio.Media.ARTIST
-						};
+				String[] filePathColumn = { MediaStore.Audio.Media.TITLE,
+						MediaStore.Audio.Media.ARTIST };
 
 				Cursor cursor = getContentResolver().query(selectedMusicUri,
 						filePathColumn, null, null, null);
@@ -193,21 +215,23 @@ public class MusicDisplayActivity extends Activity {
 
 				ShowMusic sm = new ShowMusic();
 				sm.setname(selectedMusicUri.toString());
-				sm.setArtist( artistName);
+				sm.setArtist(artistName);
 				sm.setMusic(displayName);
 				sm.setshowID(showid);
-				sm.setID((int) db.addMusicGetID(selectedMusicUri.toString(),displayName,artistName,showid));
-		
+				sm.setID((int) db.addMusicGetID(selectedMusicUri.toString(),
+						displayName, artistName, showid));
+
 				musicObj.add(sm);
 				musicadapter.notifyDataSetChanged();
 			}
 		}
 	}
- 
+
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
-		private List<ShowMusic> showmusic ;
-//		AssetManager assetManager = getAssets(); 
+		private List<ShowMusic> showmusic;
+
+		// AssetManager assetManager = getAssets();
 
 		public MusicAdapter(Context c, List<ShowMusic> musiclist) {
 			myContext = c;
@@ -229,31 +253,30 @@ public class MusicDisplayActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
 
-			//textView.setLayoutParams(new ListView.LayoutParams(400, 100));
-			textView.setLayoutParams(new ListView.LayoutParams(LayoutParams.FILL_PARENT,100 ));
-			textView.setText("   " + showmusic.get(position).getMusic() + " " 
+			// textView.setLayoutParams(new ListView.LayoutParams(400, 100));
+			textView.setLayoutParams(new ListView.LayoutParams(
+					LayoutParams.FILL_PARENT, 100));
+			textView.setText("   " + showmusic.get(position).getMusic() + " "
 					+ showmusic.get(position).getArtist());
-//			textView.setText(fileDisplayName);
-//			textView.setBackgroundColor(color.holo_red_dark);
-//			final Typeface tvFont = Typeface.createFromAsset(assetManager, "OPTIMA.TTF");
-//	        textView.setTypeface(tvFont);
-//			textView.setTextColor(color.holo_blue_dark);
-		    if (position %2 == 0) {
-		    	textView.setBackgroundColor(Color.rgb(204,255,255));
-		    }
-		    else {
-		    	textView.setBackgroundColor(Color.rgb(255,255,255));
-		    }
-		    textView.setGravity(Gravity.CENTER_VERTICAL);
+			// textView.setText(fileDisplayName);
+			// textView.setBackgroundColor(color.holo_red_dark);
+			// final Typeface tvFont = Typeface.createFromAsset(assetManager,
+			// "OPTIMA.TTF");
+			// textView.setTypeface(tvFont);
+			// textView.setTextColor(color.holo_blue_dark);
+			if (position % 2 == 0) {
+				textView.setBackgroundColor(Color.rgb(204, 255, 255));
+			} else {
+				textView.setBackgroundColor(Color.rgb(255, 255, 255));
+			}
+			textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}
-		void OnPause(){
+
+		void OnPause() {
 			db.close();
 		}
 
 	}
 
 }
-
-
-

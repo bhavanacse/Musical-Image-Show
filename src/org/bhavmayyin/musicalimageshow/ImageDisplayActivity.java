@@ -102,7 +102,7 @@ public class ImageDisplayActivity extends Activity {
     @Override  
     public boolean onContextItemSelected(MenuItem item){  
             if(item.getTitle()=="Delete"){
-            	Toast.makeText(getApplicationContext(),"deleting image file-" + selected ,Toast.LENGTH_LONG).show();
+            	Toast.makeText(getApplicationContext(),"Deleting image file-" + selected ,Toast.LENGTH_LONG).show();
             	db.deleteImageShow(showid, selected);
             	imgURI.remove(imgadapter.getURI(imageId));
             	imgadapter.notifyDataSetChanged();
@@ -144,15 +144,31 @@ public class ImageDisplayActivity extends Activity {
 	};
 
 	public void playSlideShow() {
+		
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
 		String musickey = "MusicFilePaths";
 		musicURI =db.getShowMusicURI(showid);
-		b.putStringArrayList(key, (ArrayList<String>) imgURI);
-		b.putStringArrayList(musickey, (ArrayList<String>) musicURI);
-		Intent intent = new Intent(this, SlideShowActivity.class);
-		intent.putExtras(b);
-		startActivity(intent);
+		
+		if (imgURI.isEmpty() && !musicURI.isEmpty()) {
+
+//			alertbox("Cannot play Slideshow without images",
+//					"No images selected");
+			Toast.makeText(getApplicationContext(),"Cannot play Slideshow without images.  Please select atleast one image." ,Toast.LENGTH_LONG).show();
+		}
+		else if (imgURI.isEmpty() && musicURI.isEmpty()){
+
+//			alertbox("Please select music files & images to play slideshow",
+//					"No images & music");
+			Toast.makeText(getApplicationContext(),"Please select music files & images to play slideshow" ,Toast.LENGTH_LONG).show();
+		} else {
+		
+			b.putStringArrayList(key, (ArrayList<String>) imgURI);
+			b.putStringArrayList(musickey, (ArrayList<String>) musicURI);
+			Intent intent = new Intent(this, SlideShowActivity.class);
+			intent.putExtras(b);
+			startActivity(intent);
+		}
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
