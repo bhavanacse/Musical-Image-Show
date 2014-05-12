@@ -86,14 +86,9 @@ public class SlideShowActivity extends Activity {
 		// ColorDrawable(Color.parseColor("#0099CC")));
 		bar.hide();
 
-		// if (musicUris.size() > 0){
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
-//		if (myImageUris.size() > 0 && musicUris.size() > 0) {
 			ArrayList<String> musicpath = new ArrayList<String>();
-			for (String struri : musicUris) {
-				musicpath.add(getMusicPath(Uri.parse(struri)));
-			}
-			mp = new PlaySound(musicpath);
+			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
 				mp.stop(0);
 				mp.play();
@@ -114,40 +109,7 @@ public class SlideShowActivity extends Activity {
 
 			alertbox("Playing Slideshow without music", "No music selected");
 		}
-		
-		// final Runnable mUpdateResults = new Runnable() {
-		// public void run() {
-		// animateImage();
-		// }
-		// };
-		//
-		// int delay = 0;
-		// int period = 5500;
-		// timer.scheduleAtFixedRate(new TimerTask() {
-		//
-		// public void run() {
-		// mHandler.post(mUpdateResults);
-		// }
-		// },delay, period);
-	}
 
-	public String getMusicPath(Uri uri) {
-		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-		cursor.moveToFirst();
-		String document_id = cursor.getString(0);
-		document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
-		cursor.close();
-
-		cursor = getContentResolver().query(
-				android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				null, MediaStore.Audio.Media._ID + " = ? ",
-				new String[] { document_id }, null);
-		cursor.moveToFirst();
-		String path = cursor.getString(cursor
-				.getColumnIndex(MediaStore.Audio.Media.DATA));
-		cursor.close();
-
-		return path;
 	}
 
 	@SuppressWarnings("static-access")
@@ -173,23 +135,6 @@ public class SlideShowActivity extends Activity {
 		mySlidingImage = (ImageView) findViewById(R.id.slide_show);
 		mySlidingImage.setImageBitmap(currentBitmap);
 		filePathIndex++;
-
-		// final AnimationSet animationSet = new AnimationSet(true);
-		// final Animation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
-		// final Animation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-		//
-		// animationSet.addAnimation(fadeInAnimation);
-		// animationSet.addAnimation(fadeOutAnimation);
-		// fadeInAnimation.setDuration(2000);
-		// fadeInAnimation.setStartOffset(0);
-		// fadeOutAnimation.setDuration(2000);
-		// fadeOutAnimation.setStartOffset(2000 + 1000);
-
-		// animationSet.setAnimationListener(animationListener);
-
-		// mySlidingImage.startAnimation(animationSet);
-
-		// mySlidingImage.getAnimation();
 
 		mySlidingImage.setScaleX(1.0f);
 		mySlidingImage.setScaleY(1.0f);
@@ -228,17 +173,7 @@ public class SlideShowActivity extends Activity {
 		mySlidingImage.animate().alpha(1.0f).setDuration(1000)
 				.setListener(secondAnimationListener).start();
 
-		// mySlidingImage.animate()
-		// .alpha(0f)
-		// .setDuration(1000)
-		// .setListener(new AnimatorListenerAdapter() {
-		// @Override
-		// public void onAnimationEnd(Animator animation) {
-		// mySlidingImage.setVisibility(View.GONE);
-		// mySlidingImage.setScaleX((float)1.0);
-		// mySlidingImage.setScaleY((float)1.0);
-		// }
-		// }).start();
+
 	}
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
@@ -269,9 +204,6 @@ public class SlideShowActivity extends Activity {
 	@SuppressWarnings("static-access")
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			// Toast.makeText(getApplicationContext(),"exiting music file-"
-			// ,Toast.LENGTH_LONG).show();
-
 			if (mp.isplaying()) {
 				mp.pause();
 				mp.stop(1);
@@ -325,36 +257,4 @@ public class SlideShowActivity extends Activity {
 						}).show();
 	}
 
-	// final Animation.AnimationListener animationListener = new
-	// Animation.AnimationListener() {
-	// @Override
-	// public void onAnimationStart(final Animation animation) {
-	// // nothing to do here
-	// }
-	//
-	// @Override
-	// public void onAnimationEnd(final Animation animation) {
-	// // launch showing of next image on the end of the animation
-	// animateImage();
-	// }
-	//
-	// @Override
-	// public void onAnimationRepeat(final Animation animation) {
-	// // nothing to do here
-	// }
-	// };
-
-	// public class BackgroundSound extends AsyncTask<Void, Void, Void> {
-	//
-	// @Override
-	// protected Void doInBackground(Void... params) {
-	// MediaPlayer mediaPlayer = MediaPlayer.create(SlideShowActivity.this,
-	// R.raw.rojaflute);
-	// mediaPlayer.setLooping(true); // Set looping
-	// mediaPlayer.setVolume(100,100);
-	// mediaPlayer.start();
-	//
-	// return null;
-	// }
-	// }
 }

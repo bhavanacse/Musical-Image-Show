@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	  }
 
 	  static class ViewHolder {
-		protected CheckBox checkbox;
+		protected RadioButton checkbox;
 	    protected TextView text;
 
 	  }
@@ -45,7 +46,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	      LayoutInflater inflator = context.getLayoutInflater();
 	      view = inflator.inflate(R.layout.grouprow, null);
 	      final ViewHolder viewHolder = new ViewHolder();
-	      viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
+	      viewHolder.checkbox = (RadioButton) view.findViewById(R.id.checkbox);
 	      viewHolder.checkbox.setTag(list.get(position));
 	      viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
 	      view.setTag(viewHolder);

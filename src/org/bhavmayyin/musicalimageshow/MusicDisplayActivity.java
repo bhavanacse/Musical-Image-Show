@@ -61,7 +61,7 @@ public class MusicDisplayActivity extends Activity {
 	List<ShowMusic> musicObj;
 	String musicTitle;
 	long musicId;
-
+	String showT;
 	AdapterView.AdapterContextMenuInfo info;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +95,10 @@ public class MusicDisplayActivity extends Activity {
 		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		musicTitle = ((TextView) info.targetView).getText().toString();
 		info.targetView.setBackgroundColor(Color.rgb(153, 204, 255));
-
 		musicId = info.id;
 		menu.setHeaderTitle("Delete Music file:" + musicTitle);
 		menu.add(0, v.getId(), 0, "Cancel");// groupId, itemId, order, title
 		menu.add(0, v.getId(), 0, "Delete");
-
 	}
 
 	@Override
@@ -149,15 +147,11 @@ public class MusicDisplayActivity extends Activity {
 
 		if (imgURI.isEmpty() && !musicUri.isEmpty()) {
 
-			// alertbox("Cannot play Slideshow without images",
-			// "No images selected");
 			Toast.makeText(getApplicationContext(),
 					"Cannot play Slideshow without images. Please select atleast one image", Toast.LENGTH_LONG)
 					.show();
 		} else if (imgURI.isEmpty() && musicUri.isEmpty()) {
 
-			// alertbox("Please select music files & images to play slideshow",
-			// "No images & music");
 			Toast.makeText(getApplicationContext(),
 					"Please select music files & images to play slideshow",
 					Toast.LENGTH_LONG).show();
@@ -173,59 +167,30 @@ public class MusicDisplayActivity extends Activity {
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
-		@SuppressLint("InlinedApi")
-		public void onClick(View view) {
-			if (getIntent().getCharSequenceExtra("TAB").toString()
-					.contentEquals("Music")) {
-				Intent intent = new Intent(
-						Intent.ACTION_PICK,
-						android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+	@SuppressLint("InlinedApi")
+	public void onClick(View view) {
+		if (getIntent().getCharSequenceExtra("TAB").toString()
+				.contentEquals("Music")) {
+			getmusic();
 
-				startActivityForResult(intent, SELECT_MUSIC);
-			}
 		}
-	};
+	}
+};
+public void getmusic() {
 
+	Bundle b = new Bundle();
+	b.putInt("showID", showid);
+	b.putString("showTitle",showT);
+	Intent intent = new Intent(this, AudioMediaActivity.class);
+	intent.putExtras(b);
+	startActivity(intent); 
+}
 	@SuppressWarnings("static-access")
 	protected void onStop() {
 		super.onStop();
 
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			if (requestCode == SELECT_MUSIC) {
-
-				Uri selectedMusicUri = data.getData();
-
-				String[] filePathColumn = { MediaStore.Audio.Media.TITLE,
-						MediaStore.Audio.Media.ARTIST };
-
-				Cursor cursor = getContentResolver().query(selectedMusicUri,
-						filePathColumn, null, null, null);
-				cursor.moveToFirst();
-
-				int columnOneIndex = cursor.getColumnIndex(filePathColumn[0]);
-				String displayName = cursor.getString(columnOneIndex);
-
-				int columnTwoIndex = cursor.getColumnIndex(filePathColumn[1]);
-				String artistName = cursor.getString(columnTwoIndex);
-
-				cursor.close();
-
-				ShowMusic sm = new ShowMusic();
-				sm.setname(selectedMusicUri.toString());
-				sm.setArtist(artistName);
-				sm.setMusic(displayName);
-				sm.setshowID(showid);
-				sm.setID((int) db.addMusicGetID(selectedMusicUri.toString(),
-						displayName, artistName, showid));
-
-				musicObj.add(sm);
-				musicadapter.notifyDataSetChanged();
-			}
-		}
-	}
 
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
@@ -252,18 +217,10 @@ public class MusicDisplayActivity extends Activity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
-
-			// textView.setLayoutParams(new ListView.LayoutParams(400, 100));
 			textView.setLayoutParams(new ListView.LayoutParams(
 					LayoutParams.FILL_PARENT, 100));
 			textView.setText("   " + showmusic.get(position).getMusic() + " "
 					+ showmusic.get(position).getArtist());
-			// textView.setText(fileDisplayName);
-			// textView.setBackgroundColor(color.holo_red_dark);
-			// final Typeface tvFont = Typeface.createFromAsset(assetManager,
-			// "OPTIMA.TTF");
-			// textView.setTypeface(tvFont);
-			// textView.setTextColor(color.holo_blue_dark);
 			if (position % 2 == 0) {
 				textView.setBackgroundColor(Color.rgb(204, 255, 255));
 			} else {

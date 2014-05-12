@@ -56,14 +56,15 @@ public class ShowList extends ListActivity {
 	    edTitle.setVisibility(View.GONE);
 	    edDesc.setVisibility(View.GONE);
 	    ActionBar bar = getActionBar();
+	    bar.setTitle("Slide Show List");
 	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 	}
 	public void setDummyList(){
 	    if (slideshows.size() < 1){
 	    	SlideShow ss = new SlideShow();
-	    	ss.setshowName("Create Image Show");
-	    	ss.setshowDescription("Press + button to add Image show");
+	    	ss.setshowName("Press + button");
+	    	ss.setshowDescription("to add Image Slide show");
 	    	ss.setId(-1);
 	        slideshows.add(ss);
 	    }

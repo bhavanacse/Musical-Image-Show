@@ -6,6 +6,9 @@ public class ShowMusic {
 	int showid;
 	String music;
 	String artist;
+	boolean isSelected;
+	String libraryid;
+	String duration;
 	
 	public ShowMusic() {
 		// TODO Auto-generated constructor stub
@@ -32,6 +35,15 @@ public class ShowMusic {
 	public void setMusic(String music){
 		this.music = music;
 	}
+	public void setisselected(boolean b){
+		this.isSelected = b;
+	}
+	public void setlibraryid(String s){
+		this.libraryid = s;
+	}
+	public void setduration(String s){
+		this.duration = s;
+	}
 	public int getId(){
 		return this.id;
 	}
@@ -46,5 +58,15 @@ public class ShowMusic {
 	}
 	public String getArtist(){
 		return this.artist ;
+	}
+	public boolean getisSelected() {
+		// TODO Auto-generated method stub
+		return isSelected;
+	}
+	public String getlibraryid(){
+		return this.libraryid;
+	}
+	public String getduration(){
+		return this.duration;
 	}
 }

@@ -3,47 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res/org.bhavmayyin.musicalimageshow"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff"
-    android:orientation="vertical" >
-
+    android:orientation="vertical"
+    android:background="#ffffff" >
+    
     <TextView
-        android:id="@+id/ssMTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:text="@string/app_name"
-        android:textColor="#0099CC"
-        android:textStyle="bold" />
-
+    	android:id="@+id/ssMTitle"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center_horizontal"
+    	android:layout_centerHorizontal="true"
+    	android:text="@string/app_name"
+    	android:textStyle="bold"
+    	android:textColor="#0099CC" />
+    
     <ListView
         android:id="@+id/musicListView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         android:layout_below="@+id/ssMTitle"
-        android:cacheColorHint="#000000"
+        android:layout_height="fill_parent"
         android:choiceMode="singleChoice"
-        android:descendantFocusability="beforeDescendants"
-        android:divider="#0099CC"
-        android:dividerHeight="3px"
+    	android:descendantFocusability="beforeDescendants"
         android:fadingEdge="none"
-        android:soundEffectsEnabled="true"
-        android:animationCache="true"
-        android:animateLayoutChanges="true" >
+        android:cacheColorHint="#000000"
+    	android:divider="#0099CC"	
+    	android:dividerHeight="3px">
+
     </ListView>
-
-    <TextView
-        android:id="@+id/musicnote"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/rowm1"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:text="Press any music file above for 1-2 seconds to delete"
-        android:textColor="#0099CC"
-        android:textStyle="bold" />
-
-    <LinearLayout
+ 	<TextView
+    	android:id="@+id/musicnote"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center_horizontal"
+    	android:layout_centerHorizontal="true"
+    	android:layout_above="@+id/rowm1"
+    	android:text="Press any music file above for 1-2 seconds to delete"
+    	android:textStyle="bold"
+    	android:textColor="#0099CC"  />
+ 	
+      <LinearLayout
         android:id="@+id/rowm1"
         android:layout_width="fill_parent"
         android:layout_height="44dip"
@@ -57,31 +54,18 @@
             android:id="@+id/addMusicButton"
             android:layout_width="0dip"
             android:layout_height="44dip"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:background="@drawable/custombutton"
             android:gravity="center_horizontal"
             android:onClick="onClick"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_action_new" />
 
-        <!--
-    <Button
-        android:id="@+id/blankMusicButton"
-            android:layout_width="0dip"
-            android:layout_height="44dip"
-            android:gravity="center_horizontal"
-            android:layout_weight="0.2"
-            android:clickable="false"
-            android:enabled="false"
-            android:scaleType="fitEnd"
-            android:background="@drawable/custombutton"  />
-        -->
-
         <ImageButton
             android:id="@+id/playMusicButton"
             android:layout_width="0dip"
             android:layout_height="44dip"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:background="@drawable/custombutton"
             android:gravity="center_horizontal"
             android:onClick="onClick"
@@ -89,4 +73,5 @@
             android:src="@drawable/ic_action_play" />
     </LinearLayout>
 
+ 
 </RelativeLayout>
