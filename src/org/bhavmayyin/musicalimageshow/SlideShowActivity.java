@@ -82,12 +82,10 @@ public class SlideShowActivity extends Activity {
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 		musicUris = b.getStringArrayList("MusicFilePaths");
 		ActionBar bar = getActionBar();
-		// bar.setBackgroundDrawable(new
-		// ColorDrawable(Color.parseColor("#0099CC")));
 		bar.hide();
 
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
-			ArrayList<String> musicpath = new ArrayList<String>();
+			//ArrayList<String> musicpath = new ArrayList<String>();
 			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
 				mp.stop(0);
@@ -177,7 +175,7 @@ public class SlideShowActivity extends Activity {
 	}
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
+		int reqWidth, int reqHeight) {
 		// Raw height and width of image
 		final int height = options.outHeight;
 		final int width = options.outWidth;

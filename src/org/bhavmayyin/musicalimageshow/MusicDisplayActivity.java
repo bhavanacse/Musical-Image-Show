@@ -185,6 +185,13 @@ public void getmusic() {
 	intent.putExtras(b);
 	startActivity(intent); 
 }
+protected void onResume(){
+	super.onResume();
+	musicObj.clear();
+	musicObj = db.getShowMusic(showid);
+	musicadapter.setMusicList(musicObj);
+	musicadapter.notifyDataSetChanged();
+}
 	@SuppressWarnings("static-access")
 	protected void onStop() {
 		super.onStop();
@@ -202,7 +209,9 @@ public void getmusic() {
 			myContext = c;
 			showmusic = musiclist;
 		}
-
+		public void setMusicList(List<ShowMusic> newlist) {
+			this.showmusic = newlist;
+		}
 		public int getCount() {
 			return showmusic.size();
 		}

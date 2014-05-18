@@ -91,7 +91,7 @@ public class AudioMediaActivity extends ListActivity {
 		musicadapter = new InteractiveMediaAdapter(this, musicObj);
 		setListAdapter(musicadapter);
 	    ActionBar bar = getActionBar();
-	    bar.setTitle("Select Music for Slide Show" );
+	    bar.setTitle("Select Music");
 	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 	}
@@ -136,6 +136,7 @@ public class AudioMediaActivity extends ListActivity {
 				 	    		   }
 				 	    	   }
 				 	       }
+				 	      //musicadapter.notifyDataSetChanged();
 				 	       finish();
 				 	       //break;
 				 	       default:

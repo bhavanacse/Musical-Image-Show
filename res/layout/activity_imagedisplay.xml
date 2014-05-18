@@ -27,10 +27,7 @@
         android:horizontalSpacing="5dip"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dip"
-        android:animateLayoutChanges="true"
-        android:soundEffectsEnabled="true"
-        android:animationCache="true">
+        android:verticalSpacing="5dip">
     </GridView>
 
     <TextView
