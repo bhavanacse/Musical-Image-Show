@@ -135,6 +135,7 @@ public class MusicDisplayActivity extends Activity {
 
 	public void playSlideShow() {
 		// List<ShowMusic> playlist = db.getShowMusic(showid);
+		db.reopen();
 		ArrayList<String> musicUri = new ArrayList<String>();
 		List<String> imgURI = new ArrayList<String>();
 		imgURI = db.getAllimageURI(showid);
