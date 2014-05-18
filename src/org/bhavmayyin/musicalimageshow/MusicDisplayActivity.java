@@ -227,14 +227,14 @@ protected void onResume(){
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
 			textView.setLayoutParams(new ListView.LayoutParams(
-					LayoutParams.FILL_PARENT, 100));
+					LayoutParams.FILL_PARENT, 60));
 			textView.setText("   " + showmusic.get(position).getMusic() + " "
 					+ showmusic.get(position).getArtist());
-			if (position % 2 == 0) {
-				textView.setBackgroundColor(Color.rgb(204, 255, 255));
-			} else {
+//			if (position % 2 == 0) {
+//				textView.setBackgroundColor(Color.GRAY);
+//			} else {
 				textView.setBackgroundColor(Color.rgb(255, 255, 255));
-			}
+//			}
 			textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}

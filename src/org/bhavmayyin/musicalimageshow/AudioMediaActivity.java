@@ -216,8 +216,8 @@ public class AudioMediaActivity extends ListActivity {
 		      viewHolder.musiccheck = (CheckBox) view.findViewById(R.id.musiccheck);
 		      viewHolder.musiccheck.setTag(list.get(position));
 		      viewHolder.text = (TextView) view.findViewById(R.id.mediatitle);
-		      view.setTag(viewHolder);
 		      
+		      view.setTag(viewHolder);
 		    } else {
 		      view = convertView;
 		      ((ViewHolder) view.getTag()).musiccheck.setTag(list.get(position));
@@ -225,10 +225,10 @@ public class AudioMediaActivity extends ListActivity {
 		    ViewHolder holder = (ViewHolder) view.getTag();
 		    holder.musiccheck.setChecked(list.get(position).getisSelected());
 		    if (position %2 == 0) {
-		    	view.setBackgroundColor(Color.rgb(204,255,255));
+		    	view.setBackgroundColor(Color.rgb(255,255,255));
 		    }
 		    else {
-		    	view.setBackgroundColor(Color.rgb(255,255,255));
+		    	view.setBackgroundColor(Color.rgb(238,238,238));
 		    }
 		    StringBuffer result = new StringBuffer();// for using arrayList adapter
 	    	//result.append(list.get(position).getshowName()+System.getProperty("line.separator"));

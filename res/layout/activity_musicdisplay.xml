@@ -26,19 +26,19 @@
         android:fadingEdge="none"
         android:cacheColorHint="#000000"
     	android:divider="#0099CC"	
-    	android:dividerHeight="3px">
+    	android:dividerHeight="1px">
 
     </ListView>
  	<TextView
     	android:id="@+id/musicnote"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-    	android:gravity="center_horizontal"
+    	android:gravity="right"
     	android:layout_centerHorizontal="true"
     	android:layout_above="@+id/rowm1"
-    	android:text="Press any music file above for 1-2 seconds to delete"
+    	android:text="** Long Press to delete   "
     	android:textStyle="bold"
-    	android:textColor="#0099CC"  />
+    	android:textColor="#999999"  />
  	
       <LinearLayout
         android:id="@+id/rowm1"

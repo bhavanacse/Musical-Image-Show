@@ -27,7 +27,8 @@
         android:horizontalSpacing="5dip"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dip">
+        android:verticalSpacing="5dip"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
     </GridView>
 
     <TextView
@@ -36,9 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/row1"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:text="Press any image above for 1-2 seconds to delete"
-        android:textColor="#0099CC"
+        android:gravity="right"
+        android:text="** Long Press to delete   "
+        android:textColor="#999999"
         android:textStyle="bold" />
 
     <LinearLayout

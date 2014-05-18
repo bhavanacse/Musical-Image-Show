@@ -64,7 +64,7 @@ public class ShowList extends ListActivity {
 	    if (slideshows.size() < 1){
 	    	SlideShow ss = new SlideShow();
 	    	ss.setshowName("Press + button");
-	    	ss.setshowDescription("to add Image Slide show");
+	    	ss.setshowDescription("to add Slideshow");
 	    	ss.setId(-1);
 	        slideshows.add(ss);
 	    }

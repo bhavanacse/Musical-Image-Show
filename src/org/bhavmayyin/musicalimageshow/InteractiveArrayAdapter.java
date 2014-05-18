@@ -59,7 +59,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 	    holder.checkbox.setChecked(list.get(position).isSelected());
 	    
 	    if (position %2 == 1) {
-	    	view.setBackgroundColor(Color.rgb(204,255,255));
+	    	view.setBackgroundColor(Color.rgb(238,238,238));
 	    }
 	    else {
 	    	view.setBackgroundColor(Color.rgb(255,255,255));
