@@ -42,12 +42,12 @@ public class ShowList extends ListActivity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_show_list);
-		setRequestedOrientation(ActivityInfo   
-				  .SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo   
+		//		  .SCREEN_ORIENTATION_PORTRAIT);
 	    datasource = new DatabaseHelper(this);
 	    slideshows = (ArrayList<SlideShow>) datasource.getAllSlideShows();
 	   
-	    setDummyList();
+	    setDummyList();//add a dummy node if the list is empty
 	    adapter = new InteractiveArrayAdapter(this,
 	            slideshows);
 	    setListAdapter(adapter);
@@ -112,6 +112,8 @@ public class ShowList extends ListActivity {
 	      }
 	}
 	@Override
+	//click on anywhere on the list the check box will be set
+	//check box xml onclick = false
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 	    super.onListItemClick(l, v, position, id);
 	    npos = position;

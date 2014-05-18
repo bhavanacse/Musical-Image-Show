@@ -109,8 +109,7 @@ public class MusicDisplayActivity extends Activity {
 					.show();
 			ShowMusic sm = (ShowMusic) musicadapter.getItem((int) musicId);
 			db.deleteShowMusic(sm.getId());
-			musicObj.remove(sm);
-			musicadapter.notifyDataSetChanged();
+			refreshList();
 		} else if (item.getTitle() == "Cancel") {
 			Toast.makeText(getApplicationContext(), "Cancelling delete",
 					Toast.LENGTH_LONG).show();
@@ -185,12 +184,16 @@ public void getmusic() {
 	intent.putExtras(b);
 	startActivity(intent); 
 }
-protected void onResume(){
-	super.onResume();
+public void refreshList(){
 	musicObj.clear();
+	db.reopen();
 	musicObj = db.getShowMusic(showid);
 	musicadapter.setMusicList(musicObj);
 	musicadapter.notifyDataSetChanged();
+}
+protected void onResume(){
+	super.onResume();
+	refreshList();
 }
 	@SuppressWarnings("static-access")
 	protected void onStop() {
@@ -228,8 +231,12 @@ protected void onResume(){
 			TextView textView = new TextView(myContext);
 			textView.setLayoutParams(new ListView.LayoutParams(
 					LayoutParams.FILL_PARENT, 60));
-			textView.setText("   " + showmusic.get(position).getMusic() + " "
-					+ showmusic.get(position).getArtist());
+			 StringBuffer result = new StringBuffer();// for using arrayList adapter
+			 result.append("   " + showmusic.get(position).getMusic());
+			   // if (!showmusic.get(position).getArtist().isEmpty())
+			    //	result.append(System.getProperty("line.separator") + "   Artist: " + showmusic.get(position).getArtist());
+			 			//	+ showmusic.get(position).getArtist());
+			    textView.setText(result);
 //			if (position % 2 == 0) {
 //				textView.setBackgroundColor(Color.GRAY);
 //			} else {
