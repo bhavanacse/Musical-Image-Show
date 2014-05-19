@@ -54,7 +54,7 @@ public class SelectionActivity extends TabActivity {
 
 		TabSpec imageTab = host.newTabSpec("Images");
 		imageTab.setIndicator("Images",
-				r.getDrawable(android.R.drawable.picture_frame));
+				r.getDrawable(R.drawable.ic_action_picture));
 		Intent intent = new Intent(this, ImageDisplayActivity.class);
 		intent.putExtra("TAB", "Images");
 		intent.putExtra("showID", selshowID);
@@ -64,7 +64,7 @@ public class SelectionActivity extends TabActivity {
 
 		TabSpec musicTab = host.newTabSpec("Music");
 		musicTab.setIndicator("Music",
-				r.getDrawable(android.R.drawable.picture_frame));
+				r.getDrawable(R.drawable.addmusic));
 		Intent intentm = new Intent(this, MusicDisplayActivity.class);
 		intentm.putExtra("TAB", "Music");
 		intentm.putExtra("showID", selshowID);

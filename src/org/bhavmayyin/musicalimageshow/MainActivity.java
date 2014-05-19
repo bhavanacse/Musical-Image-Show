@@ -4,24 +4,27 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.bhavmayyin.musicalimageshow.R.color;
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity {
@@ -30,16 +33,62 @@ private Timer timer;
 private int nindex;
 private MyHandler handler;
 
+private static final String SPLASH_SCREEN_IMAGE1_JPG = "splash_screen_image1.jpg";
+private static final int BORDER_COLOR = Color.BLACK;
+final int BORDER_WIDTH = 20;
+
+	MediaPlayer myPlayer;
+
+	private void setBitmapImage(String fname) throws IOException {
+		Bitmap bmp = BitmapFactory.decodeStream(MainActivity.this.getAssets()
+				.open(fname));
+
+	    Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + 2 * BORDER_WIDTH,
+                bmp.getHeight() + 2 * BORDER_WIDTH,
+                bmp.getConfig());
+		Canvas c = new Canvas(bmpWithBorder);
+	    Paint p = new Paint();
+	    p.setColor(BORDER_COLOR);
+	    c.drawRect(0, 0, bmpWithBorder.getWidth(), bmpWithBorder.getHeight(), p);
+
+	    p = new Paint(Paint.FILTER_BITMAP_FLAG);
+	    c.drawBitmap(bmp, BORDER_WIDTH, BORDER_WIDTH, p);
+		imagev.setImageBitmap(bmp);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
-		imagev = (ImageView) findViewById(R.id.imageView1);
-	    ActionBar bar = getActionBar();
+
+		imagev = new ImageView(MainActivity.this);
+		imagev.setScaleType(ScaleType.FIT_CENTER);
+//		imagev.setPadding(3, 3, 3, 3);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		imagev.setLayoutParams(layoutParams);
+		try {
+			setBitmapImage(SPLASH_SCREEN_IMAGE1_JPG);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		RelativeLayout layout = new RelativeLayout(MainActivity.this);
+		layout.addView(imagev);
+		setContentView(layout);
+
+		ActionBar bar = getActionBar();
 	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
+	    
+	    myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
+	    myPlayer.start();
+	    myPlayer.setVolume(100, 100);
+
 		timer = new Timer();
 		timer.schedule(new TickClass(), 1000,1000);
 		handler = new MyHandler();
@@ -59,7 +108,7 @@ private MyHandler handler;
 		public void handleMessage(Message msg)
 		{
 			super.handleMessage(msg);
-			if (nindex > 3){
+			if (nindex > 2){
 				getActivity();
 				
 			} else {
@@ -67,17 +116,23 @@ private MyHandler handler;
 			try {
 
 				String fname = new String();
-				if (nindex%2 == 0){
-					fname = "images.jpg";
-				} else { fname="play_slideshow.jpg";}
-				Bitmap bmp = BitmapFactory.decodeStream(MainActivity.this.getAssets().open(fname));
-				imagev.setImageBitmap(bmp);
-				Log.v("Loading image: ", "trying to switch");
+				if (nindex % 2 == 1) {
+					fname = "splash_screen_image2.jpg";
+				} else {
+					fname = SPLASH_SCREEN_IMAGE1_JPG;
+				}
+				Log.v("Loading image: " + fname, "trying to switch");
+				setBitmapImage(fname);
 			} catch (IOException e){
-				Log.v("Exception :", e.getMessage());
+				StringBuilder excep = new StringBuilder();
+				for (StackTraceElement st : e.getStackTrace()) {
+					excep.append(st.toString() + "\n");
+				}
+				Log.v("Exception :", excep.toString());
 			}
 		}
 	}
+
 		public void getActivity(){
 			timer.cancel();
 			Intent menuchoice = new Intent(getApplicationContext(), ShowList.class);
@@ -94,5 +149,10 @@ private MyHandler handler;
 		//return super.onCreateOptionsMenu(menu);
 		
 		return true;
+	}
+	
+	protected void onPause(){
+		super.onPause();
+		myPlayer.release();
 	}
 }
