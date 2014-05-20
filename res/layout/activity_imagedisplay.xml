@@ -26,9 +26,9 @@
         android:gravity="center"
         android:horizontalSpacing="5dip"
         android:numColumns="auto_fit"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dip"
-        android:scrollbarAlwaysDrawVerticalTrack="true">
+        android:verticalSpacing="5dip" >
     </GridView>
 
     <TextView

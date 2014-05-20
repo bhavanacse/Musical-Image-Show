@@ -14,13 +14,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
 
 /**
  * @author bhavana
  * 
  */
+@SuppressWarnings("deprecation")
 public class SelectionActivity extends TabActivity {
 	int selshowID;
 	DatabaseHelper db;
@@ -34,9 +34,8 @@ public class SelectionActivity extends TabActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// setContentView(R.layout.activity_selection);
 		intent = getIntent();
 		selshowID = intent.getIntExtra("Selected Slide Show", 0);
 		db = new DatabaseHelper(this);
@@ -63,15 +62,12 @@ public class SelectionActivity extends TabActivity {
 		host.addTab(imageTab);
 
 		TabSpec musicTab = host.newTabSpec("Music");
-		musicTab.setIndicator("Music",
-				r.getDrawable(R.drawable.addmusic));
+		musicTab.setIndicator("Music", r.getDrawable(android.R.drawable.ic_media_play));
 		Intent intentm = new Intent(this, MusicDisplayActivity.class);
 		intentm.putExtra("TAB", "Music");
 		intentm.putExtra("showID", selshowID);
 		intentm.putExtra("showTitle", sTitleDesc);
 		musicTab.setContent(intentm);
 		host.addTab(musicTab);
-
 	}
-
 }

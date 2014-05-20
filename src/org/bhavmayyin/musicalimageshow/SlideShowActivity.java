@@ -41,7 +41,6 @@ public class SlideShowActivity extends Activity {
 	ImageView mySlidingImage;
 	Timer timer = new Timer();
 	final Handler mHandler = new Handler();
-	// BackgroundSound mBackgroundSound = new BackgroundSound();
 	static PlaySound mp;
 	OrientationEventListener orientationListener;
 
@@ -66,14 +65,13 @@ public class SlideShowActivity extends Activity {
 		bar.hide();
 
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
-			//ArrayList<String> musicpath = new ArrayList<String>();
 			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
 				mp.stop(0);
 				mp.play();
 			}
 			animateImage();
-			
+
 			orientationListener = new OrientationEventListener(
 					getApplicationContext(), SensorManager.SENSOR_DELAY_UI) {
 				public void onOrientationChanged(int orientation) {
@@ -151,12 +149,10 @@ public class SlideShowActivity extends Activity {
 		};
 		mySlidingImage.animate().alpha(1.0f).setDuration(1000)
 				.setListener(secondAnimationListener).start();
-
-
 	}
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
-		int reqWidth, int reqHeight) {
+			int reqWidth, int reqHeight) {
 		// Raw height and width of image
 		final int height = options.outHeight;
 		final int width = options.outWidth;
@@ -193,19 +189,15 @@ public class SlideShowActivity extends Activity {
 
 	public void onResume() {
 		super.onResume();
-		// // mBackgroundSound.execute();
 		if (!mp.isplaying()) {
 			mp.stop(0);
 			mp.resume();
-			// mp.play();
 		}
 	}
 
 	public void onPause() {
 		super.onPause();
 		timer.cancel();
-		// mp.stop(1);
-		// mBackgroundSound.cancel(true);
 		if (mp.isplaying()) {
 			mp.pause();
 			mp.stop(1);

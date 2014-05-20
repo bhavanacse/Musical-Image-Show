@@ -1,48 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-       <item android:state_pressed="true" >
-        <shape android:shape="rectangle" >
-            <gradient
-                android:startColor="@color/blue1"
-                android:endColor="@color/blue4"
-                android:angle="270" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-            <padding
-                android:left="1dp"
-                android:top="1dp"
-                android:right="1dp"
-                android:bottom="1dp" />
-        </shape>
-    </item>
+    <item android:state_pressed="true"><shape android:shape="rectangle">
+            <gradient android:angle="270" android:endColor="@color/blue4" android:startColor="@color/blue1" />
 
-    <item android:state_focused="true" >
-        <shape android:shape="rectangle" >
-            <gradient
-                android:endColor="#AA66CC"
-                android:startColor="#AA66CC"
-                android:angle="270" />
+            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+        </shape></item>
+    <item android:state_focused="true"><shape android:shape="rectangle">
+            <gradient android:angle="270" android:endColor="#AA66CC" android:startColor="#AA66CC" />
 
-            <padding
-                android:left="10dp"
-                android:top="10dp"
-                android:right="10dp"
-                android:bottom="10dp" />
-        </shape>
-    </item>
+            <padding android:bottom="10dp" android:left="10dp" android:right="10dp" android:top="10dp" />
+        </shape></item>
+    <item><shape android:shape="rectangle">
+            <gradient android:angle="270" android:endColor="#0099CC" android:startColor="#0099CC" />
 
-    <item>        
-        <shape android:shape="rectangle" >
-            <gradient
-                android:endColor="#0099CC"
-                android:startColor="#0099CC"
-                android:angle="270" />
-
-            <padding
-                android:left="10dp"
-                android:top="10dp"
-                android:right="10dp"
-                android:bottom="10dp" />
-        </shape>
-    </item>
+            <padding android:bottom="10dp" android:left="10dp" android:right="10dp" android:top="10dp" />
+        </shape></item>
 
 </selector>

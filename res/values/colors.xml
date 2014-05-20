@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="blue1">#00FFFF</color>
     <color name="blue2">#99CCFF</color>
     <color name="blue3">#6666FF</color>
-    <color name="blue4">#33CCFF</color>  
+    <color name="blue4">#33CCFF</color>
     <color name="blue5">#CCFFFF</color>
     <color name="blue6">#00CCFF</color>
     <color name="blue7">#0099FF</color>
-    <color name="purple_dark">#660066</color>        
+    <color name="purple_dark">#660066</color>
+
 </resources>

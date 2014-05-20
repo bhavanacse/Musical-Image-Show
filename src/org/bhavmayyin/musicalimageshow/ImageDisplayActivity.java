@@ -5,22 +5,17 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.ContextMenu;
@@ -62,7 +57,7 @@ public class ImageDisplayActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_imagedisplay);
 
@@ -75,48 +70,51 @@ public class ImageDisplayActivity extends Activity {
 		db = new DatabaseHelper(this);
 		showid = getIntent().getIntExtra("showID", 0);
 		imgURI = db.getAllimageURI(showid);
-		
+
 		tv = (TextView) findViewById(R.id.ssTitle);
 		tv.setText(getIntent().getStringExtra("showTitle"));
 
 		imageGrid = (GridView) findViewById(R.id.grid);
 		imgadapter = new ImageAdapter(this, imgURI);
 		imageGrid.setAdapter(imgadapter);
-	     registerForContextMenu(imageGrid);
+		registerForContextMenu(imageGrid);
 	}
 
-    @Override 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
-    {
-            super.onCreateContextMenu(menu, v, menuInfo);
-            info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-           	info.targetView.setBackgroundColor(Color.rgb(255,204,0));// orange rim
-            imageId = (int)info.position;
-            selected = imgadapter.getURI(imageId);
-            menu.setHeaderTitle("Delete Image file:"  );  
-            menu.add(0, v.getId(), 0, "Cancel");//groupId, itemId, order, title 
-            menu.add(0, v.getId(), 0, "Delete"); 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		info.targetView.setBackgroundColor(Color.rgb(255, 204, 0));// orange rim
+		imageId = (int) info.position;
+		selected = imgadapter.getURI(imageId);
+		menu.setHeaderTitle("Delete Image file:");
+		menu.add(0, v.getId(), 0, "Cancel");// groupId, itemId, order, title
+		menu.add(0, v.getId(), 0, "Delete");
 
-    } 
-    
-    @Override  
-    public boolean onContextItemSelected(MenuItem item){  
-            if(item.getTitle()=="Delete"){
-            	Toast.makeText(getApplicationContext(),"Deleting image file-" + selected ,Toast.LENGTH_LONG).show();
-            	db.deleteImageShow(showid, selected);
-            	imgURI.remove(imgadapter.getURI(imageId));
-            	imgadapter.notifyDataSetChanged();
-            }  
-            else if(item.getTitle()=="Cancel"){
-            	Toast.makeText(getApplicationContext(),"Cancelling delete",Toast.LENGTH_LONG).show();
-            	info.targetView.setBackgroundColor(Color.rgb(255,255,255));
-            }else{
-               return false;
-            } 
-            selected = "";
-          return true;  
-                            
-      }  
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle() == "Delete") {
+			Toast.makeText(getApplicationContext(),
+					"Deleting image file-" + selected, Toast.LENGTH_LONG)
+					.show();
+			db.deleteImageShow(showid, selected);
+			imgURI.remove(imgadapter.getURI(imageId));
+			imgadapter.notifyDataSetChanged();
+		} else if (item.getTitle() == "Cancel") {
+			Toast.makeText(getApplicationContext(), "Cancelling delete",
+					Toast.LENGTH_LONG).show();
+			info.targetView.setBackgroundColor(Color.rgb(255, 255, 255));
+		} else {
+			return false;
+		}
+		selected = "";
+		return true;
+
+	}
+
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
@@ -144,25 +142,25 @@ public class ImageDisplayActivity extends Activity {
 	};
 
 	public void playSlideShow() {
-		
+
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
 		String musickey = "MusicFilePaths";
-		musicURI =db.getShowMusicURI(showid);
-		
+		musicURI = db.getShowMusicURI(showid);
+
 		if (imgURI.isEmpty() && !musicURI.isEmpty()) {
 
-//			alertbox("Cannot play Slideshow without images",
-//					"No images selected");
-			Toast.makeText(getApplicationContext(),"Cannot play Slideshow without images.  Please select atleast one image." ,Toast.LENGTH_LONG).show();
-		}
-		else if (imgURI.isEmpty() && musicURI.isEmpty()){
+			Toast.makeText(
+					getApplicationContext(),
+					"Cannot play Slideshow without images.  Please select atleast one image.",
+					Toast.LENGTH_LONG).show();
+		} else if (imgURI.isEmpty() && musicURI.isEmpty()) {
 
-//			alertbox("Please select music files & images to play slideshow",
-//					"No images & music");
-			Toast.makeText(getApplicationContext(),"Please select music files & images to play slideshow" ,Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(),
+					"Please select music files & images to play slideshow",
+					Toast.LENGTH_LONG).show();
 		} else {
-		
+
 			b.putStringArrayList(key, (ArrayList<String>) imgURI);
 			b.putStringArrayList(musickey, (ArrayList<String>) musicURI);
 			Intent intent = new Intent(this, SlideShowActivity.class);
@@ -178,41 +176,40 @@ public class ImageDisplayActivity extends Activity {
 				filePaths = new ArrayList<String>();
 				Uri selectedImageUri = null;
 				String path;
-				if (data.getClipData() != null){
-					totalImages = data.getClipData().getItemCount(); 
-				} else if (data.getData() != null){
+				if (data.getClipData() != null) {
+					totalImages = data.getClipData().getItemCount();
+				} else if (data.getData() != null) {
 					totalImages = 1;
 				}
-					for (int currentImage = 0; currentImage < totalImages; currentImage++) {
-						if (data.getClipData() != null){
-							Item currentClip = data.getClipData().getItemAt(
-									currentImage);
-		
-							selectedImageUri = currentClip.getUri();
-							
-						} else if (data.getData() != null){
-							selectedImageUri = data.getData();
-						}
-						
-						path = getFilePath(selectedImageUri);
-	
-						if (!path.isEmpty()) {
-							filePaths.add(path);
-							imgURI.add(path);
-						}
+				for (int currentImage = 0; currentImage < totalImages; currentImage++) {
+					if (data.getClipData() != null) {
+						Item currentClip = data.getClipData().getItemAt(
+								currentImage);
+
+						selectedImageUri = currentClip.getUri();
+
+					} else if (data.getData() != null) {
+						selectedImageUri = data.getData();
 					}
-					db.addImage(filePaths, showid);
-					// imgadapter.notifyDataSetChanged();
+
+					path = getFilePath(selectedImageUri);
+
+					if (!path.isEmpty()) {
+						filePaths.add(path);
+						imgURI.add(path);
+					}
 				}
-				imageGrid.setAdapter(imgadapter);
+				db.addImage(filePaths, showid);
+			}
+			imageGrid.setAdapter(imgadapter);
 		}
 	}
-	
-	public String getFilePath(Uri currentUri){
+
+	public String getFilePath(Uri currentUri) {
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-		
-		Cursor cursor = getContentResolver().query(
-				currentUri, filePathColumn, null, null, null);
+
+		Cursor cursor = getContentResolver().query(currentUri, filePathColumn,
+				null, null, null);
 		cursor.moveToFirst();
 
 		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -221,12 +218,15 @@ public class ImageDisplayActivity extends Activity {
 
 		return filePath;
 	}
-	void OnPause(){
+
+	void OnPause() {
 		db.closeDB();
 	}
-	void OnResume(){
+
+	void OnResume() {
 		db.reopen();
 	}
+
 	public class ImageAdapter extends BaseAdapter {
 		private Context mContext;
 		private List<String> mThumbIds;
@@ -247,9 +247,11 @@ public class ImageDisplayActivity extends Activity {
 			// TODO Auto-generated method stub
 			return BitmapFactory.decodeFile(mThumbIds.get(position));
 		}
-		public String getURI(int position){
+
+		public String getURI(int position) {
 			return mThumbIds.get(position);
 		}
+
 		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
@@ -299,9 +301,8 @@ public class ImageDisplayActivity extends Activity {
 				final int halfWidth = width / 2;
 
 				// Calculate the largest inSampleSize value that is a power of 2
-				// and
-				// keeps both
-				// height and width larger than the requested height and width.
+				// and keeps both height and width larger than the requested
+				// height and width.
 				while ((halfHeight / inSampleSize) > reqHeight
 						&& (halfWidth / inSampleSize) > reqWidth) {
 					inSampleSize *= 2;

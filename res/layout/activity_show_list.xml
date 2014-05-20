@@ -8,38 +8,39 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ShowList" >
+
     <EditText
-    	android:id="@+id/showname"
+        android:id="@+id/showname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/apptheme_edit_text_holo_light"
+        android:hint="Enter Show Name"
         android:textColor="#000000"
-        android:textColorHint="#827B60"
-        android:hint="Enter Show Name" />
-    
-     <EditText
-    	android:id="@+id/showdesc"
+        android:textColorHint="#827B60" />
+
+    <EditText
+        android:id="@+id/showdesc"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/apptheme_edit_text_holo_light"
-        android:textColor="#000000"
-        android:textColorHint="#827B60"
-        android:layout_below="@+id/showname"
         android:layout_alignLeft="@+id/showname"
-        android:hint="Enter Optional Show Description" />
-     
-      <ListView
+        android:layout_below="@+id/showname"
+        android:background="@drawable/apptheme_edit_text_holo_light"
+        android:hint="Enter Optional Show Description"
+        android:textColor="#000000"
+        android:textColorHint="#827B60" />
+
+    <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:choiceMode="singleChoice"
-    	android:descendantFocusability="beforeDescendants"
-        android:fadingEdge="none"
         android:layout_below="@+id/showdesc"
-    	android:cacheColorHint="#000000"
-    	android:divider="#0099CC"	
-    	android:dividerHeight="1px"        
         android:background="#ffffff"
-        android:text="SlideShowList" />    
+        android:cacheColorHint="#000000"
+        android:choiceMode="singleChoice"
+        android:descendantFocusability="beforeDescendants"
+        android:divider="#0099CC"
+        android:dividerHeight="1px"
+        android:fadingEdge="none"
+        android:text="SlideShowList" />
 
 </RelativeLayout>

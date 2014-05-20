@@ -2,71 +2,89 @@ package org.bhavmayyin.musicalimageshow;
 
 public class ShowMusic {
 	int id;
-	String showname;//uri
+	String showname;// uri
 	int showid;
 	String music;
 	String artist;
 	boolean isSelected;
 	String libraryid;
 	String duration;
-	
+
 	public ShowMusic() {
 		// TODO Auto-generated constructor stub
 	}
-	public ShowMusic(String name){
+
+	public ShowMusic(String name) {
 		this.showname = name;
 	}
-	public ShowMusic(String name, String music){
+
+	public ShowMusic(String name, String music) {
 		this.showname = name;
 		this.music = music;
 	}
-	public void setID(int i){
+
+	public void setID(int i) {
 		this.id = i;
 	}
-	public void setshowID(int i){
+
+	public void setshowID(int i) {
 		this.showid = i;
 	}
-	public void setArtist(String s){
+
+	public void setArtist(String s) {
 		this.artist = s;
 	}
-	public void setname(String s){
+
+	public void setname(String s) {
 		this.showname = s;
 	}
-	public void setMusic(String music){
+
+	public void setMusic(String music) {
 		this.music = music;
 	}
-	public void setisselected(boolean b){
+
+	public void setisselected(boolean b) {
 		this.isSelected = b;
 	}
-	public void setlibraryid(String s){
+
+	public void setlibraryid(String s) {
 		this.libraryid = s;
 	}
-	public void setduration(String s){
+
+	public void setduration(String s) {
 		this.duration = s;
 	}
-	public int getId(){
+
+	public int getId() {
 		return this.id;
 	}
-	public int getshowId(){
+
+	public int getshowId() {
 		return this.showid;
 	}
-	public String getName(){
-		return this.showname ;
+
+	public String getName() {
+		return this.showname;
 	}
-	public String getMusic(){
-		return this.music ;
+
+	public String getMusic() {
+		return this.music;
 	}
-	public String getArtist(){
-		return this.artist ;
+
+	public String getArtist() {
+		return this.artist;
 	}
+
 	public boolean getisSelected() {
 		// TODO Auto-generated method stub
 		return isSelected;
 	}
-	public String getlibraryid(){
+
+	public String getlibraryid() {
 		return this.libraryid;
 	}
-	public String getduration(){
+
+	public String getduration() {
 		return this.duration;
 	}
 }

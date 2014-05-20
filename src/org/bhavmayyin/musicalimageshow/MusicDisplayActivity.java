@@ -5,30 +5,16 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import android.R.color;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract.Data;
-import android.provider.MediaStore;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,9 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,7 +118,6 @@ public class MusicDisplayActivity extends Activity {
 	};
 
 	public void playSlideShow() {
-		// List<ShowMusic> playlist = db.getShowMusic(showid);
 		db.reopen();
 		ArrayList<String> musicUri = new ArrayList<String>();
 		List<String> imgURI = new ArrayList<String>();
@@ -147,9 +130,10 @@ public class MusicDisplayActivity extends Activity {
 
 		if (imgURI.isEmpty() && !musicUri.isEmpty()) {
 
-			Toast.makeText(getApplicationContext(),
-					"Cannot play Slideshow without images. Please select atleast one image", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(
+					getApplicationContext(),
+					"Cannot play Slideshow without images. Please select atleast one image",
+					Toast.LENGTH_LONG).show();
 		} else if (imgURI.isEmpty() && musicUri.isEmpty()) {
 
 			Toast.makeText(getApplicationContext(),
@@ -167,55 +151,58 @@ public class MusicDisplayActivity extends Activity {
 
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
-	@SuppressLint("InlinedApi")
-	public void onClick(View view) {
-		if (getIntent().getCharSequenceExtra("TAB").toString()
-				.contentEquals("Music")) {
-			getmusic();
+		@SuppressLint("InlinedApi")
+		public void onClick(View view) {
+			if (getIntent().getCharSequenceExtra("TAB").toString()
+					.contentEquals("Music")) {
+				getmusic();
 
+			}
 		}
-	}
-};
-public void getmusic() {
+	};
 
-	Bundle b = new Bundle();
-	b.putInt("showID", showid);
-	b.putString("showTitle",showT);
-	Intent intent = new Intent(this, AudioMediaActivity.class);
-	intent.putExtras(b);
-	startActivity(intent); 
-}
-public void refreshList(){
-	musicObj.clear();
-	db.reopen();
-	musicObj = db.getShowMusic(showid);
-	musicadapter.setMusicList(musicObj);
-	musicadapter.notifyDataSetChanged();
-}
-protected void onResume(){
-	super.onResume();
-	refreshList();
-}
+	public void getmusic() {
+
+		Bundle b = new Bundle();
+		b.putInt("showID", showid);
+		b.putString("showTitle", showT);
+		Intent intent = new Intent(this, AudioMediaActivity.class);
+		intent.putExtras(b);
+		startActivity(intent);
+	}
+
+	public void refreshList() {
+		musicObj.clear();
+		db.reopen();
+		musicObj = db.getShowMusic(showid);
+		musicadapter.setMusicList(musicObj);
+		musicadapter.notifyDataSetChanged();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		refreshList();
+	}
+
 	@SuppressWarnings("static-access")
 	protected void onStop() {
 		super.onStop();
 
 	}
 
-
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
 		private List<ShowMusic> showmusic;
-
-		// AssetManager assetManager = getAssets();
 
 		public MusicAdapter(Context c, List<ShowMusic> musiclist) {
 			myContext = c;
 			showmusic = musiclist;
 		}
+
 		public void setMusicList(List<ShowMusic> newlist) {
 			this.showmusic = newlist;
 		}
+
 		public int getCount() {
 			return showmusic.size();
 		}
@@ -232,17 +219,15 @@ protected void onResume(){
 			TextView textView = new TextView(myContext);
 			textView.setLayoutParams(new ListView.LayoutParams(
 					LayoutParams.FILL_PARENT, 60));
-			 StringBuffer result = new StringBuffer();// for using arrayList adapter
-			 result.append("   " + showmusic.get(position).getMusic());
-			   // if (!showmusic.get(position).getArtist().isEmpty())
-			    //	result.append(System.getProperty("line.separator") + "   Artist: " + showmusic.get(position).getArtist());
-			 			//	+ showmusic.get(position).getArtist());
-			    textView.setText(result);
-//			if (position % 2 == 0) {
-//				textView.setBackgroundColor(Color.GRAY);
-//			} else {
-				textView.setBackgroundColor(Color.rgb(255, 255, 255));
-//			}
+			StringBuffer result = new StringBuffer();// for using arrayList
+														// adapter
+			result.append("   " + showmusic.get(position).getMusic());
+			// if (!showmusic.get(position).getArtist().isEmpty())
+			// result.append(System.getProperty("line.separator") +
+			// "   Artist: " + showmusic.get(position).getArtist());
+			// + showmusic.get(position).getArtist());
+			textView.setText(result);
+			textView.setBackgroundColor(Color.rgb(255, 255, 255));
 			textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}
@@ -250,7 +235,5 @@ protected void onResume(){
 		void OnPause() {
 			db.close();
 		}
-
 	}
-
 }

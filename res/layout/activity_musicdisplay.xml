@@ -3,44 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res/org.bhavmayyin.musicalimageshow"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#ffffff" >
-    
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
     <TextView
-    	android:id="@+id/ssMTitle"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:gravity="center_horizontal"
-    	android:layout_centerHorizontal="true"
-    	android:text="@string/app_name"
-    	android:textStyle="bold"
-    	android:textColor="#0099CC" />
-    
+        android:id="@+id/ssMTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="#0099CC"
+        android:textStyle="bold" />
+
     <ListView
         android:id="@+id/musicListView"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/ssMTitle"
         android:layout_height="fill_parent"
-        android:choiceMode="singleChoice"
-    	android:descendantFocusability="beforeDescendants"
-        android:fadingEdge="none"
+        android:layout_below="@+id/ssMTitle"
         android:cacheColorHint="#000000"
-    	android:divider="#0099CC"	
-    	android:dividerHeight="1px">
-
+        android:choiceMode="singleChoice"
+        android:descendantFocusability="beforeDescendants"
+        android:divider="#0099CC"
+        android:dividerHeight="1px"
+        android:fadingEdge="none" >
     </ListView>
- 	<TextView
-    	android:id="@+id/musicnote"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:gravity="right"
-    	android:layout_centerHorizontal="true"
-    	android:layout_above="@+id/rowm1"
-    	android:text="** Long Press to delete   "
-    	android:textStyle="bold"
-    	android:textColor="#999999"  />
- 	
-      <LinearLayout
+
+    <TextView
+        android:id="@+id/musicnote"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rowm1"
+        android:layout_centerHorizontal="true"
+        android:gravity="right"
+        android:text="** Long Press to delete   "
+        android:textColor="#999999"
+        android:textStyle="bold" />
+
+    <LinearLayout
         android:id="@+id/rowm1"
         android:layout_width="fill_parent"
         android:layout_height="44dip"
@@ -73,5 +73,4 @@
             android:src="@drawable/ic_action_slideshow" />
     </LinearLayout>
 
- 
 </RelativeLayout>

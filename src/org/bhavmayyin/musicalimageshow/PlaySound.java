@@ -2,16 +2,10 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import android.content.Context;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.widget.Toast;
 
 public class PlaySound {
 	private static HashSet<MediaPlayer> mpSet = new HashSet<MediaPlayer>();
@@ -54,11 +48,7 @@ public class PlaySound {
 				});
 				mpSet.add(mp);
 				mp.prepare();
-
-				// Toast.makeText(context," playing -" +
-				// musicList.get(musiccnt),Toast.LENGTH_LONG).show();
 				mp.start();
-				// mediaPlayer.setLooping(true);
 
 			} catch (Exception e) {
 				e.printStackTrace();

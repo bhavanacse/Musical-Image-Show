@@ -28,14 +28,14 @@ import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity {
-private ImageView imagev;
-private Timer timer;
-private int nindex;
-private MyHandler handler;
+	private ImageView imagev;
+	private Timer timer;
+	private int nindex;
+	private MyHandler handler;
 
-private static final String SPLASH_SCREEN_IMAGE1_JPG = "splash_screen_image1.jpg";
-private static final int BORDER_COLOR = Color.BLACK;
-final int BORDER_WIDTH = 20;
+	private static final String SPLASH_SCREEN_IMAGE1_JPG = "splash_screen_image1.jpg";
+	private static final int BORDER_COLOR = Color.BLACK;
+	final int BORDER_WIDTH = 20;
 
 	MediaPlayer myPlayer;
 
@@ -43,16 +43,16 @@ final int BORDER_WIDTH = 20;
 		Bitmap bmp = BitmapFactory.decodeStream(MainActivity.this.getAssets()
 				.open(fname));
 
-	    Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + 2 * BORDER_WIDTH,
-                bmp.getHeight() + 2 * BORDER_WIDTH,
-                bmp.getConfig());
+		Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + 2
+				* BORDER_WIDTH, bmp.getHeight() + 2 * BORDER_WIDTH,
+				bmp.getConfig());
 		Canvas c = new Canvas(bmpWithBorder);
-	    Paint p = new Paint();
-	    p.setColor(BORDER_COLOR);
-	    c.drawRect(0, 0, bmpWithBorder.getWidth(), bmpWithBorder.getHeight(), p);
+		Paint p = new Paint();
+		p.setColor(BORDER_COLOR);
+		c.drawRect(0, 0, bmpWithBorder.getWidth(), bmpWithBorder.getHeight(), p);
 
-	    p = new Paint(Paint.FILTER_BITMAP_FLAG);
-	    c.drawBitmap(bmp, BORDER_WIDTH, BORDER_WIDTH, p);
+		p = new Paint(Paint.FILTER_BITMAP_FLAG);
+		c.drawBitmap(bmp, BORDER_WIDTH, BORDER_WIDTH, p);
 		imagev.setImageBitmap(bmp);
 	}
 
@@ -60,14 +60,14 @@ final int BORDER_WIDTH = 20;
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
 
 		imagev = new ImageView(MainActivity.this);
 		imagev.setScaleType(ScaleType.FIT_CENTER);
-//		imagev.setPadding(3, 3, 3, 3);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 		imagev.setLayoutParams(layoutParams);
@@ -77,81 +77,75 @@ final int BORDER_WIDTH = 20;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		RelativeLayout layout = new RelativeLayout(MainActivity.this);
 		layout.addView(imagev);
 		setContentView(layout);
 
 		ActionBar bar = getActionBar();
-	    bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
-	    
-	    myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
-	    myPlayer.start();
-	    myPlayer.setVolume(100, 100);
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
+
+		myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
+		myPlayer.start();
+		myPlayer.setVolume(100, 100);
 
 		timer = new Timer();
-		timer.schedule(new TickClass(), 1000,1000);
+		timer.schedule(new TickClass(), 1000, 1000);
 		handler = new MyHandler();
-		
 	}
-	
-	private class TickClass extends TimerTask
-	{
+
+	private class TickClass extends TimerTask {
 		@Override
-		public void run(){
+		public void run() {
 			handler.sendEmptyMessage(nindex);
 			nindex++;
 		}
 	}
-	private class MyHandler extends Handler
-	{
-		public void handleMessage(Message msg)
-		{
-			super.handleMessage(msg);
-			if (nindex > 2){
-				getActivity();
-				
-			} else {
-			
-			try {
 
-				String fname = new String();
-				if (nindex % 2 == 1) {
-					fname = "splash_screen_image2.jpg";
-				} else {
-					fname = SPLASH_SCREEN_IMAGE1_JPG;
+	private class MyHandler extends Handler {
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			if (nindex > 2) {
+				getActivity();
+
+			} else {
+
+				try {
+					String fname = new String();
+					if (nindex % 2 == 1) {
+						fname = "splash_screen_image2.jpg";
+					} else {
+						fname = SPLASH_SCREEN_IMAGE1_JPG;
+					}
+					Log.v("Loading image: " + fname, "trying to switch");
+					setBitmapImage(fname);
+				} catch (IOException e) {
+					StringBuilder excep = new StringBuilder();
+					for (StackTraceElement st : e.getStackTrace()) {
+						excep.append(st.toString() + "\n");
+					}
+					Log.v("Exception :", excep.toString());
 				}
-				Log.v("Loading image: " + fname, "trying to switch");
-				setBitmapImage(fname);
-			} catch (IOException e){
-				StringBuilder excep = new StringBuilder();
-				for (StackTraceElement st : e.getStackTrace()) {
-					excep.append(st.toString() + "\n");
-				}
-				Log.v("Exception :", excep.toString());
 			}
 		}
-	}
 
-		public void getActivity(){
+		public void getActivity() {
 			timer.cancel();
-			Intent menuchoice = new Intent(getApplicationContext(), ShowList.class);
+			Intent menuchoice = new Intent(getApplicationContext(),
+					ShowList.class);
 			startActivity(menuchoice);
-			
+
 		}
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		//return super.onCreateOptionsMenu(menu);
-		
 		return true;
 	}
-	
-	protected void onPause(){
+
+	protected void onPause() {
 		super.onPause();
 		myPlayer.release();
 	}
