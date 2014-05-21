@@ -71,21 +71,23 @@ public class MusicDisplayActivity extends Activity {
 		registerForContextMenu(musicList);
 	}
 
+	// Contextual menu to delete a selected music file
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		musicTitle = ((TextView) info.targetView).getText().toString();
-		info.targetView.setBackgroundColor(Color.rgb(204, 0, 0));
+		info.targetView.setBackgroundColor(Color.rgb(204, 0, 0)); // Red rim
 		musicId = info.id;
 		menu.setHeaderTitle("Delete Music file:" + musicTitle);
-		menu.add(0, v.getId(), 0, "Cancel");// groupId, itemId, order, title
+		menu.add(0, v.getId(), 0, "Cancel");
 		menu.add(0, v.getId(), 0, "Delete");
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		// If the selected option is "Delete", music file gets deleted
 		if (item.getTitle() == "Delete") {
 			Toast.makeText(getApplicationContext(),
 					"Deleting music file-" + musicTitle, Toast.LENGTH_LONG)
@@ -93,6 +95,7 @@ public class MusicDisplayActivity extends Activity {
 			ShowMusic sm = (ShowMusic) musicAdapter.getItem((int) musicId);
 			db.deleteShowMusic(sm.getId());
 			refreshList();
+		// If the selected option is "Cancel", deletion of music file gets cancelled
 		} else if (item.getTitle() == "Cancel") {
 			Toast.makeText(getApplicationContext(), "Cancelling delete",
 					Toast.LENGTH_LONG).show();
@@ -104,6 +107,7 @@ public class MusicDisplayActivity extends Activity {
 
 	}
 
+	// Plays the Slide show on click of Slide show button 
 	public OnClickListener btnPlay = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
@@ -119,28 +123,30 @@ public class MusicDisplayActivity extends Activity {
 	public void playSlideShow() {
 		db.reopen();
 		ArrayList<String> musicUri = new ArrayList<String>();
-		List<String> imgURI = new ArrayList<String>();
-		imgURI = db.getAllimageURI(showID);
-		musicUri = (ArrayList<String>) db.getShowMusicURI(showID);
-
+		List<String> imgUri = new ArrayList<String>();
+		imgUri = db.getAllimageURI(showID); // Get Images' URIs for a slide show
+		musicUri = (ArrayList<String>) db.getShowMusicURI(showID); // Get Music files' URIs for a slide show 
+		
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
 		String musickey = "MusicFilePaths";
 
-		if (imgURI.isEmpty() && !musicUri.isEmpty()) {
+		// If there are no images in Images tab but music files in Music tab
+		if (imgUri.isEmpty() && !musicUri.isEmpty()) {
 
 			Toast.makeText(
 					getApplicationContext(),
 					"Cannot play Slideshow without images. Please select atleast one image",
 					Toast.LENGTH_LONG).show();
-		} else if (imgURI.isEmpty() && musicUri.isEmpty()) {
+		// If both Images and Music tabs does not contain any files			
+		} else if (imgUri.isEmpty() && musicUri.isEmpty()) {
 
 			Toast.makeText(getApplicationContext(),
 					"Please select music files & images to play slideshow",
 					Toast.LENGTH_LONG).show();
-		} else {
-
-			b.putStringArrayList(key, (ArrayList<String>) imgURI);
+		} else { // Start the Slide show
+     
+			b.putStringArrayList(key, (ArrayList<String>) imgUri);
 			b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
 			Intent intent = new Intent(this, SlideShowActivity.class);
 			intent.putExtras(b);
@@ -148,6 +154,7 @@ public class MusicDisplayActivity extends Activity {
 		}
 	}
 
+	// Opens a custom Music library on click of "Add" button in Music tab
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
@@ -155,11 +162,11 @@ public class MusicDisplayActivity extends Activity {
 			if (getIntent().getCharSequenceExtra("TAB").toString()
 					.contentEquals("Music")) {
 				getmusic();
-
 			}
 		}
 	};
 
+	// Starts a new activity "AudioMediaActivity" for selecting music files
 	public void getmusic() {
 
 		Bundle b = new Bundle();
@@ -170,6 +177,8 @@ public class MusicDisplayActivity extends Activity {
 		startActivity(intent);
 	}
 
+	// Refresh the music files list by retrieving the music files using ShowID 
+	// and then setting to adapter
 	public void refreshList() {
 		musicObj.clear();
 		db.reopen();
@@ -178,6 +187,7 @@ public class MusicDisplayActivity extends Activity {
 		musicAdapter.notifyDataSetChanged();
 	}
 
+	// Refresh the music files list on resuming the activity
 	protected void onResume() {
 		super.onResume();
 		refreshList();
@@ -186,9 +196,9 @@ public class MusicDisplayActivity extends Activity {
 	@SuppressWarnings("static-access")
 	protected void onStop() {
 		super.onStop();
-
 	}
 
+	// Adapter used to show the music files collection in list
 	public class MusicAdapter extends BaseAdapter {
 		private Context myContext;
 		private List<ShowMusic> showmusic;
@@ -214,6 +224,7 @@ public class MusicDisplayActivity extends Activity {
 			return position;
 		}
 
+		// Create a dynamic text view to append the music file to the list view
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView textView = new TextView(myContext);
 			textView.setLayoutParams(new ListView.LayoutParams(
@@ -226,11 +237,16 @@ public class MusicDisplayActivity extends Activity {
 			// "   Artist: " + showmusic.get(position).getArtist());
 			// + showmusic.get(position).getArtist());
 			textView.setText(result);
-			textView.setBackgroundColor(Color.rgb(255, 255, 255));
+			if (position % 2 == 0){
+				textView.setBackgroundColor(Color.rgb(255, 255, 255));
+			} else {
+				textView.setBackgroundColor(Color.rgb(238, 238, 238));
+			}
 			textView.setGravity(Gravity.CENTER_VERTICAL);
 			return textView;
 		}
 
+		// Close the database on pause of the current activity
 		void OnPause() {
 			db.close();
 		}
