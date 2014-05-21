@@ -63,6 +63,9 @@ public class MainActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
+		
+		ActionBar bar = getActionBar();
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 		imagev = new ImageView(MainActivity.this);
 		imagev.setScaleType(ScaleType.FIT_CENTER);
@@ -81,9 +84,6 @@ public class MainActivity extends Activity {
 		RelativeLayout layout = new RelativeLayout(MainActivity.this);
 		layout.addView(imagev);
 		setContentView(layout);
-
-		ActionBar bar = getActionBar();
-		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 		myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
 		myPlayer.start();

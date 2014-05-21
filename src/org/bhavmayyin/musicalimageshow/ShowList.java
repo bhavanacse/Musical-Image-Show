@@ -49,7 +49,7 @@ public class ShowList extends ListActivity {
 		edTitle.setVisibility(View.GONE);
 		edDesc.setVisibility(View.GONE);
 		ActionBar bar = getActionBar();
-		bar.setTitle("Slide Show List");
+		bar.setTitle("Slideshows");
 		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 	}
@@ -165,8 +165,8 @@ public class ShowList extends ListActivity {
 
 			} else {
 				if (edTitle.isShown()) {
-					alertbox("Cannot Add Image Show",
-							"Image Show Name Cannot Be Blank");
+					alertbox("Cannot add Imageshow",
+							"Imageshow name cannot be blank");
 				}
 			}
 

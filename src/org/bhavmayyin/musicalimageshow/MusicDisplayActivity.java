@@ -30,7 +30,9 @@ import android.widget.Toast;
 
 /**
  * @author bhavana
- * 
+ * MusicDisplayActivity - Screen that allows to select music files with 
+ * "Add New Music" button and show those files in List View.
+ * Slideshow button to play Slideshow
  */
 public class MusicDisplayActivity extends Activity {
 
@@ -38,10 +40,9 @@ public class MusicDisplayActivity extends Activity {
 
 	File file;
 	DatabaseHelper db;
-	int showid;
-	TextView tv;
+	int showID;
 	ListView musicList;
-	MusicAdapter musicadapter;
+	MusicAdapter musicAdapter;
 	List<ShowMusic> musicObj;
 	String musicTitle;
 	long musicId;
@@ -60,14 +61,12 @@ public class MusicDisplayActivity extends Activity {
 		btnPlayMusic.setOnClickListener(btnPlay);
 
 		db = new DatabaseHelper(this);
-		showid = getIntent().getIntExtra("showID", 0);
-		tv = (TextView) findViewById(R.id.ssMTitle);
-		tv.setText(getIntent().getStringExtra("showTitle"));
-		musicObj = db.getShowMusic(showid);
+		showID = getIntent().getIntExtra("showID", 0);
+		musicObj = db.getShowMusic(showID);
 
 		musicList = (ListView) findViewById(R.id.musicListView);
-		musicadapter = new MusicAdapter(this, musicObj);
-		musicList.setAdapter(musicadapter);
+		musicAdapter = new MusicAdapter(this, musicObj);
+		musicList.setAdapter(musicAdapter); // Set the adapter to the List View
 		// Register the ListView for Context menu
 		registerForContextMenu(musicList);
 	}
@@ -78,7 +77,7 @@ public class MusicDisplayActivity extends Activity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		musicTitle = ((TextView) info.targetView).getText().toString();
-		info.targetView.setBackgroundColor(Color.rgb(153, 204, 255));
+		info.targetView.setBackgroundColor(Color.rgb(204, 0, 0));
 		musicId = info.id;
 		menu.setHeaderTitle("Delete Music file:" + musicTitle);
 		menu.add(0, v.getId(), 0, "Cancel");// groupId, itemId, order, title
@@ -91,7 +90,7 @@ public class MusicDisplayActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					"Deleting music file-" + musicTitle, Toast.LENGTH_LONG)
 					.show();
-			ShowMusic sm = (ShowMusic) musicadapter.getItem((int) musicId);
+			ShowMusic sm = (ShowMusic) musicAdapter.getItem((int) musicId);
 			db.deleteShowMusic(sm.getId());
 			refreshList();
 		} else if (item.getTitle() == "Cancel") {
@@ -121,8 +120,8 @@ public class MusicDisplayActivity extends Activity {
 		db.reopen();
 		ArrayList<String> musicUri = new ArrayList<String>();
 		List<String> imgURI = new ArrayList<String>();
-		imgURI = db.getAllimageURI(showid);
-		musicUri = (ArrayList<String>) db.getShowMusicURI(showid);
+		imgURI = db.getAllimageURI(showID);
+		musicUri = (ArrayList<String>) db.getShowMusicURI(showID);
 
 		Bundle b = new Bundle();
 		String key = "ImageFilePaths";
@@ -164,7 +163,7 @@ public class MusicDisplayActivity extends Activity {
 	public void getmusic() {
 
 		Bundle b = new Bundle();
-		b.putInt("showID", showid);
+		b.putInt("showID", showID);
 		b.putString("showTitle", showT);
 		Intent intent = new Intent(this, AudioMediaActivity.class);
 		intent.putExtras(b);
@@ -174,9 +173,9 @@ public class MusicDisplayActivity extends Activity {
 	public void refreshList() {
 		musicObj.clear();
 		db.reopen();
-		musicObj = db.getShowMusic(showid);
-		musicadapter.setMusicList(musicObj);
-		musicadapter.notifyDataSetChanged();
+		musicObj = db.getShowMusic(showID);
+		musicAdapter.setMusicList(musicObj);
+		musicAdapter.notifyDataSetChanged();
 	}
 
 	protected void onResume() {
