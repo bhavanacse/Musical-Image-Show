@@ -42,7 +42,7 @@ public class SelectionActivity extends TabActivity {
 		// Get the ID of selected slide show from second screen 
 		selShowID = intent.getIntExtra("Selected Slide Show", 0);
 		db = new DatabaseHelper(this);
-		selShow = db.getSlideShow(selShowID);
+		selShow = db.getSlideShow(selShowID);//get the slide show from database
 		db.closeDB();
 		sTitle = selShow.getshowName(); //Get slide show title
 		sDesc = selShow.getshowDescription(); //Get slide show title

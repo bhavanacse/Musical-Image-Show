@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String LOG = "DatabaseHelper";
 
-	// Database Version
+	// Database Version - increment the version # will trigger update()
 	private static final int DATABASE_VERSION = 6;
 
 	// Database Name
@@ -66,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_SHOWID + " INTEGER, "
 			+ KEY_URI + " TEXT," + KEY_MUSIC + " TEXT," + KEY_ARTIST + " TEXT"
 			+ ")";
-
+// constructor
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		// 
 		// on upgrade drop older tables
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SLIDESHOW);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGESHOW);
@@ -102,15 +102,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * Creating a slideshow
 	 */
 
-	public void createSlideShow(SlideShow ss) {
+	public long createSlideShow(SlideShow ss) {
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(KEY_SHOWNAME, ss.getshowName());
 		values.put(KEY_DESCRIPTION, ss.getshowDescription());
-		db.insert(TABLE_SLIDESHOW, null, values);
+		return db.insert(TABLE_SLIDESHOW, null, values);
 	}
-
+	//add slide show to with provided different parameters
 	public void createSlideShow(String title, String Desc,
 			ArrayList<ImageShow> img) {
 
@@ -126,7 +126,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	/*
 	 * 
-	 * get single todo
+	 * get single slide show
 	 */
 
 	public SlideShow getSlideShow(long showid) {
@@ -178,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	/**
 	 * /*
 	 * 
-	 * getting slideshow count
+	 * getting total slideshow count
 	 */
 
 	public int getSlideShowCount() {
@@ -193,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	/*
 	 * 
-	 * Updating a SlideShow
+	 * Updating a SlideShow elements based on the id
 	 */
 
 	public int updateSlideShow(SlideShow ss) {
@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				new String[] { String.valueOf(ss.getId()) });
 	}
 
-	// get slideshow id (for new added show)
+	// get slideshow id (for given the name and description)
 	public int getShowID(String name, String desc) {
 		int showid;
 		String idQquery = "SELECT * FROM " + TABLE_SLIDESHOW + " WHERE "
@@ -233,10 +233,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public void deleteSlideShow(long ss_id) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		// before delete the slideshow, all images and music should be delete
-		List<ImageShow> imageshows = new ArrayList<ImageShow>(
-				getAllimages(ss_id));
-
+		// before delete the slideshow, all images and music should be deleted
+		db.delete(TABLE_IMAGESHOW, KEY_SHOWID + " = ?",
+				new String[] { String.valueOf(ss_id) });
+		db.delete(TABLE_SHOWMUSIC, KEY_SHOWID + " = ?",
+				new String[] { String.valueOf(ss_id) });
 		db.delete(TABLE_SLIDESHOW, KEY_ID + " = ?",
 				new String[] { String.valueOf(ss_id) });
 	}
@@ -307,7 +308,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		List<String> imageshows = new ArrayList<String>();
 		String selectQuery = "SELECT * FROM " + TABLE_IMAGESHOW + " WHERE "
 				+ KEY_SHOWID + " = " + showid;
-		SQLiteDatabase db = this.getReadableDatabase();
+		SQLiteDatabase db = this.getReadableDatabase();//read only
 		Cursor c = db.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
@@ -339,11 +340,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		// deleting an image
 		db.execSQL(deletesql);
 	}
-
+//delete an image given the image id
 	public void deleteImageShow(ImageShow is) {
 
 		SQLiteDatabase db = this.getWritableDatabase();
-		// before deleting an image
+		
 		db.delete(TABLE_IMAGESHOW, KEY_ID + " = ?",
 				new String[] { String.valueOf(is) });
 
@@ -377,17 +378,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_URI, filePath);
 		values.put(KEY_MUSIC, music);
 		values.put(KEY_ARTIST, artist);
-		// insert row
+		// insert row automatically return the key_id
 		return db.insert(TABLE_SHOWMUSIC, null, values);
-		/*
-		 * String queryMax = "SELECT MAX(" + KEY_ID + ") as _id FROM " +
-		 * TABLE_SHOWMUSIC ; queryMax += " WHERE " + KEY_SHOWID + " = " + showid
-		 * + " AND " + KEY_URI + " = '" + filePath + "' AND " + KEY_MUSIC +
-		 * " = '" + music + "' AND " + KEY_ARTIST + " = '" + artist + "'";
-		 * Cursor mcursor = db.rawQuery(queryMax, null);
-		 * 
-		 * return mcursor.getLong(0);
-		 */
 	}
 
 	public void addMusicList(List<ShowMusic> filePaths, long showid) {
@@ -416,7 +408,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	// delete a music
+	// delete a music with music id
 	public void deleteShowMusic(long id) {
 
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -448,6 +440,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return musicURI;
 	}
 
+	// getting a list of music associated with the slideshow id
 	public List<String> getShowMusicURI(long showid) {
 
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -458,7 +451,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Cursor c = db.rawQuery(selectQuery, null);
 		if (c.moveToFirst()) {
 			do {
-				// adding to imageshow list
+				// adding to musicshow list
 				musicURI.add(c.getString(c.getColumnIndex(KEY_URI)));
 			} while (c.moveToNext());
 		}
@@ -472,7 +465,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.close();
 	}
 
-	public void reopen() {
+	public void reopen() { //reopen the database if it is closed
 		SQLiteDatabase db = this.getWritableDatabase();
 		if (db == null || !db.isOpen()) {
 			close();

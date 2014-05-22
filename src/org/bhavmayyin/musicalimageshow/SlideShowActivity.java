@@ -55,37 +55,31 @@ public class SlideShowActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Hide the tool bar and make the activity to show full screen
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		setContentView(R.layout.activity_slideshow);
 		
 		Bundle b = this.getIntent().getExtras();
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 		musicUris = b.getStringArrayList("MusicFilePaths");
-		
-		// Hide the action bar
-		ActionBar bar = getActionBar();
-		bar.hide();
+
 
 		// Play the music and start animating images if both images and music files exist
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
+			//if music and image lists are not empty
 			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
-				mp.stop(0);
+				mp.stop(0);//set the stop status, 0=really stop
 				mp.play();
 			}
 			animateImage();
-
+			//try to set orientation change not to stop
 			orientationListener = new OrientationEventListener(
 					getApplicationContext(), SensorManager.SENSOR_DELAY_UI) {
 				public void onOrientationChanged(int orientation) {
 					if (mp.isplaying()) {
 						mp.continuePlay();
-//						mp.pause();
+//						
 					} else {
-						mp.resume();
+						mp.resume();//customized resume
 					}
 				}
 			};

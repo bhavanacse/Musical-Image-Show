@@ -16,7 +16,7 @@ public class PlaySound {
 	private static HashSet<MediaPlayer> mpSet = new HashSet<MediaPlayer>();
 	static int musiccnt = 0;
 	private static ArrayList<String> musicList = new ArrayList<String>();
-	private static int stop = 0;
+	private static int stop = 0;//the status state setting
 	private static int length;
 
 	@SuppressWarnings("static-access")
@@ -24,13 +24,13 @@ public class PlaySound {
 		this.musicList = musicFile;
 	}
 
-	static void play() {
-		if (stop == 0) {
+	static void play() {//check the stop variable setting state
+		if (stop == 0) {//if stop != 0, will not play
 			FileDescriptor fd = null;
 
 			try {
 				FileInputStream fis = new FileInputStream(
-						musicList.get(musiccnt));
+						musicList.get(musiccnt));//the arraylist index
 				fd = fis.getFD();
 				MediaPlayer mp = new MediaPlayer();
 				mp.setDataSource(fd);
@@ -38,11 +38,11 @@ public class PlaySound {
 				mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 					@Override
 					public void onCompletion(MediaPlayer mp) {
-						// TODO Auto-generated method stub
+						// once player stop
 
-						musiccnt++;
+						musiccnt++;//increment the index
 						if (musiccnt >= musicList.size()) {
-							musiccnt = 0;
+							musiccnt = 0;//reset index to beginning
 						}
 						mpSet.remove(mp);
 						mp.stop();
@@ -51,7 +51,7 @@ public class PlaySound {
 
 					}
 				});
-				mpSet.add(mp);
+				mpSet.add(mp); //reset the player
 				mp.prepare();
 				mp.start();
 
@@ -66,7 +66,7 @@ public class PlaySound {
 	}
 
 	protected static boolean isplaying() {
-		try {
+		try { // tell whether the player is playing
 			if (!mpSet.isEmpty()) {
 				return mpSet.iterator().next().isPlaying();
 			} else {
@@ -83,7 +83,7 @@ public class PlaySound {
 
 			if (!mpSet.isEmpty()) {
 				MediaPlayer mpplayer = mpSet.iterator().next();
-				mpplayer.pause();
+				mpplayer.pause();//want to track the current stop position 
 				length = mpplayer.getCurrentPosition();
 			}
 
@@ -97,7 +97,7 @@ public class PlaySound {
 
 			if (!mpSet.isEmpty()) {
 				MediaPlayer mpplayer = mpSet.iterator().next();
-				mpplayer.seekTo(length);
+				mpplayer.seekTo(length);//want to restart at the last stop position
 				mpplayer.start();
 			}
 		} catch (Exception e) {
@@ -107,7 +107,7 @@ public class PlaySound {
 	}
 
 	protected static void stop_mediaPlayer() {
-		try {
+		try {//stop all the music playing
 			for (MediaPlayer mp : mpSet) {
 				if (mp != null) {
 					mp.stop();
@@ -125,7 +125,7 @@ public class PlaySound {
 	}
 
 	static void stop(int real) {
-		stop = real;
+		stop = real; //setting the stop state
 		stop_mediaPlayer();
 	}
 }

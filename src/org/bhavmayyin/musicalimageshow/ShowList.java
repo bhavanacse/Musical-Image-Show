@@ -35,15 +35,15 @@ public class ShowList extends ListActivity {
 	EditText edDesc;
 	int npos = -1;
 	Menu actionmenu;
-	int actionBarState = 0;
-	MenuItem additem, acceptitem, edititem, deleteitem;
+	int actionBarState = 0;//for display action bar menu item
+	MenuItem additem, acceptitem, edititem, deleteitem;// menu items
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_show_list);
-		datasource = new DatabaseHelper(this);
+		datasource = new DatabaseHelper(this);//open database instance
 		slideshows = (ArrayList<SlideShow>) datasource.getAllSlideShows();
 
 		setDummyList();// add a dummy node if the list is empty
@@ -51,20 +51,20 @@ public class ShowList extends ListActivity {
 		setListAdapter(adapter);
 		edTitle = (EditText) findViewById(R.id.showname);
 		edDesc = (EditText) findViewById(R.id.showdesc);
-		edTitle.setVisibility(View.GONE);
+		edTitle.setVisibility(View.GONE);//hide the editbox from the view
 		edDesc.setVisibility(View.GONE);
-		ActionBar bar = getActionBar();
-		bar.setTitle("Imageshows");
+		ActionBar bar = getActionBar();//implement action bar
+		bar.setTitle("Imageshows");//set bar title and color
 		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 	}
 
-	public void setDummyList() {
-		if (slideshows.size() < 1) {
-			SlideShow ss = new SlideShow();
+	public void setDummyList() {//initially the list is empty-display a message
+		if (slideshows.size() < 1) {//new list no music
+			SlideShow ss = new SlideShow();//slide show object
 			ss.setshowName("Press + button");
 			ss.setshowDescription("to add Imageshow");
-			ss.setId(-1);
+			ss.setId(-1);//so it is dummy item
 			slideshows.add(ss);
 		}
 	}
@@ -78,14 +78,14 @@ public class ShowList extends ListActivity {
 		edititem = menu.findItem(R.id.edit_show);
 		deleteitem = menu.findItem(R.id.delete_show);
 		if (menu != null) {
-			setActionBar();
+			setActionBar();//function to set menu item display
 		}
 		return super.onCreateOptionsMenu(menu);
 
 	}
 
 	protected void setActionBar() {
-		// different state setting the actionBar icons
+		// different state setting different actionBar icons
 		switch (actionBarState) {
 		case 0: // initial state
 			deleteitem.setVisible(false);
@@ -105,7 +105,7 @@ public class ShowList extends ListActivity {
 			additem.setVisible(false);
 			edititem.setVisible(true);
 			break;
-		default:
+		default: // every menu item is displayed
 			deleteitem.setVisible(true);
 			acceptitem.setVisible(true);
 			additem.setVisible(true);
@@ -122,7 +122,7 @@ public class ShowList extends ListActivity {
 			if (i != position) {
 				slideshows.get(i).setselected(false);// unselect other
 			} else {
-				if (slideshows.get(i).getId() != -1) {
+				if (slideshows.get(i).getId() != -1) {//not a dummy list
 					slideshows.get(i).setselected(
 							!slideshows.get(i).isSelected());
 					if (!slideshows.get(i).isSelected()) {
@@ -132,7 +132,7 @@ public class ShowList extends ListActivity {
 					} else {
 						actionBarState = 2; // action bar has edit, delete only
 					}
-					invalidateOptionsMenu();
+					invalidateOptionsMenu();//reset the menu item on the action bar
 				}
 			}
 		}
@@ -141,10 +141,10 @@ public class ShowList extends ListActivity {
 
 	@SuppressLint("NewApi")
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {//on the action bar
 		switch (item.getItemId()) {
 		case R.id.edit_show:
-			editShow();
+			editShow();//will move to next activity
 			return true; // edit
 		case R.id.delete_show:
 			deleteShow();
@@ -152,29 +152,11 @@ public class ShowList extends ListActivity {
 		case R.id.new_show:
 			actionBarState = 1;
 			invalidateOptionsMenu();
-			addNewShow();
+			addNewShow();//setting up new input screen
 			return true;
 		case R.id.accept_show:
-			String stitle = edTitle.getText().toString();
-			String sdesc = edDesc.getText().toString();
-			if (!stitle.isEmpty()) {
-				SlideShow ss = new SlideShow(stitle, sdesc);
-
-				if (slideshows.size() > 0 && slideshows.get(0).getId() == -1) {
-					slideshows.remove(0); // a dummy first element
-				}
-				slideshows.add(0, ss);
-				datasource.createSlideShow(ss);
-				ss.setId(datasource.getShowID(stitle, sdesc));
-				resetInputScreen();
-
-			} else {
-				if (edTitle.isShown()) {
-					alertbox("Cannot add Imageshow",
-							"Imageshow name cannot be blank");
-				}
-			}
-
+			acceptChoice();//verify the new input and move on
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -186,9 +168,8 @@ public class ShowList extends ListActivity {
 			resetInputScreen();
 		} else {
 			// no selection
-			if (npos != -1 && slideshows.get(npos).getId() != -1) { // the first
-																	// dummy
-																	// entry
+			if (npos != -1 && slideshows.get(npos).getId() != -1) { 
+				//the first entry, not the dummy entry
 				alertbox("Delete Imageshow",
 						"Are you sure you want to delete Imageshow "
 								+ slideshows.get(npos).getshowName() + " ?");
@@ -201,14 +182,14 @@ public class ShowList extends ListActivity {
 	public void editShow() {
 		if (slideshows.get(0).getId() > -1) {
 			boolean checked = false;
-			if (npos > -1) {
+			if (npos > -1) {//not a dummy one
 				checked = slideshows.get(npos).isSelected();
 			}
-			if (checked) {
+			if (checked) { //
 				Intent intent = new Intent(this, SelectionActivity.class);
 				intent.putExtra("Selected Slide Show", slideshows.get(npos)
 						.getId());
-				startActivity(intent);
+				startActivity(intent);//select the image and music activity
 			}
 		}
 	}
@@ -226,7 +207,7 @@ public class ShowList extends ListActivity {
 						.getId());
 				startActivity(intent);
 			} else {
-
+				// display the input box
 				edTitle.setVisibility(View.VISIBLE);
 				edDesc.setVisibility(View.VISIBLE);
 				edTitle.requestFocus();
@@ -237,6 +218,27 @@ public class ShowList extends ListActivity {
 			edDesc.setVisibility(View.VISIBLE);
 			edTitle.requestFocus();
 		}
+	}
+	public void acceptChoice() {// for adding new show after input
+		String stitle = edTitle.getText().toString();
+		String sdesc = edDesc.getText().toString();
+		if (!stitle.isEmpty()) {
+			SlideShow ss = new SlideShow(stitle, sdesc);
+
+			if (slideshows.size() > 0 && slideshows.get(0).getId() == -1) {
+				slideshows.remove(0); // a dummy first element
+			}
+			slideshows.add(0, ss);//add to the top of the list
+			ss.setId((int) datasource.createSlideShow(ss));
+			resetInputScreen();//verify valid input entries
+
+		} else {
+			if (edTitle.isShown()) {
+				alertbox("Cannot add Imageshow",
+						"Imageshow name cannot be blank");
+			}
+		}
+
 	}
 
 	public void setActivityBackgroundcolor(int color) {
@@ -249,15 +251,15 @@ public class ShowList extends ListActivity {
 		edDesc.setText("");
 		// hide the keyboard when input is done
 		InputMethodManager inputmgr = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-		inputmgr.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+		inputmgr.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);//toggling keyboard shown/not shown
 		edTitle.setVisibility(View.GONE);
 		edDesc.setVisibility(View.GONE);
 		adapter.notifyDataSetChanged();
-		actionBarState = 0;
-		invalidateOptionsMenu();
+		actionBarState = 0; // reset the action bar to display menu item
+		invalidateOptionsMenu();//refresh the menu bar
 	}
 
-	protected void alertbox(String title, String msg) {
+	protected void alertbox(String title, String msg) {//to display alert msg
 		final String finaltitle = title;
 		new AlertDialog.Builder(this)
 
@@ -271,10 +273,10 @@ public class ShowList extends ListActivity {
 									npos).getId());
 							slideshows.remove(npos);
 							npos = -1;
-							setDummyList();
+							setDummyList();//nothing on the list
 							adapter.notifyDataSetChanged();
 							actionBarState = 0;
-							invalidateOptionsMenu();
+							invalidateOptionsMenu();//reset menu bar items
 						}
 					}
 				})
@@ -287,7 +289,7 @@ public class ShowList extends ListActivity {
 
 								if (!finaltitle.toLowerCase()
 										.contains("delete")) {
-									resetInputScreen();
+									resetInputScreen();//hide/unhide editboxes
 								}
 
 							}
@@ -295,7 +297,7 @@ public class ShowList extends ListActivity {
 	}
 
 	void OnStop() {
-		datasource.closeDB();
+		datasource.closeDB();//make sure database is closed to avoid memory leak
 	}
 
 }

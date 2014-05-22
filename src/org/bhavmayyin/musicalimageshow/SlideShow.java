@@ -2,7 +2,7 @@ package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
 
-public class SlideShow {
+public class SlideShow { // define the SlideShow object
 	private int id;
 	private ArrayList<ImageShow> imglist;
 	private String showName;

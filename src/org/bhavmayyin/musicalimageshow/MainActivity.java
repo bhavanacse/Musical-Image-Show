@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
 
 	private class TickClass extends TimerTask {
 		@Override
-		public void run() {
+		public void run() { //timer thread handler
 			handler.sendEmptyMessage(nindex);
 			nindex++;
 		}
@@ -140,7 +140,7 @@ public class MainActivity extends Activity {
 		}
 
 		public void getActivity() {
-			timer.cancel();
+			timer.cancel();//stop the timer thread and go to next activity
 			Intent menuchoice = new Intent(getApplicationContext(),
 					ShowList.class);
 			startActivity(menuchoice);

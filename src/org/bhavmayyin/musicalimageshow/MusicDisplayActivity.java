@@ -145,7 +145,7 @@ public class MusicDisplayActivity extends Activity {
 					"Please select music files & images to play slideshow",
 					Toast.LENGTH_LONG).show();
 		} else { // Start the Slide show
-     
+			//passing variable values to slide show activity
 			b.putStringArrayList(key, (ArrayList<String>) imgUri);
 			b.putStringArrayList(musickey, (ArrayList<String>) musicUri);
 			Intent intent = new Intent(this, SlideShowActivity.class);
@@ -154,7 +154,7 @@ public class MusicDisplayActivity extends Activity {
 		}
 	}
 
-	// Opens a custom Music library on click of "Add" button in Music tab
+	// Opens a custom List from Music library on click of "Add" button in Music tab
 	public OnClickListener btnOpenGallery = new OnClickListener() {
 
 		@SuppressLint("InlinedApi")
@@ -170,6 +170,7 @@ public class MusicDisplayActivity extends Activity {
 	public void getmusic() {
 
 		Bundle b = new Bundle();
+		 //passing the variable values to AudioMediaActivity intent
 		b.putInt("showID", showID);
 		b.putString("showTitle", showT);
 		Intent intent = new Intent(this, AudioMediaActivity.class);
@@ -181,7 +182,7 @@ public class MusicDisplayActivity extends Activity {
 	// and then setting to adapter
 	public void refreshList() {
 		musicObj.clear();
-		db.reopen();
+		db.reopen();//make sure the database is open
 		musicObj = db.getShowMusic(showID);
 		musicAdapter.setMusicList(musicObj);
 		musicAdapter.notifyDataSetChanged();
@@ -235,13 +236,13 @@ public class MusicDisplayActivity extends Activity {
 				musicName = musicName.subSequence(0, 24) + ".....";
 			}
 			result.append("   " + musicName);
-			
+			//we can add the artist name to dispaly if we want
 			// if (!showmusic.get(position).getArtist().isEmpty())
 			// result.append(System.getProperty("line.separator") +
 			// "   Artist: " + showmusic.get(position).getArtist());
 			// + showmusic.get(position).getArtist());
 			textView.setText(result);
-			if (position % 2 == 0){
+			if (position % 2 == 0){//alternate color of the list
 				textView.setBackgroundColor(Color.rgb(255, 255, 255));
 			} else {
 				textView.setBackgroundColor(Color.rgb(238, 238, 238));

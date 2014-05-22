@@ -13,7 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
-
+//a custom adapter to display the slide show list view
 	private final List<SlideShow> list;
 	private final Activity context;
 	int selectedIndex = -1;
@@ -40,7 +40,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 			final ViewHolder viewHolder = new ViewHolder();
 			viewHolder.checkbox = (RadioButton) view
 					.findViewById(R.id.checkbox);
-			viewHolder.checkbox.setTag(list.get(position));
+			viewHolder.checkbox.setTag(list.get(position));//check box 
 			viewHolder.text = (TextView) view.findViewById(R.id.shwtitle);
 			view.setTag(viewHolder);
 
@@ -51,17 +51,19 @@ public class InteractiveArrayAdapter extends ArrayAdapter<SlideShow> {
 		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.checkbox.setChecked(list.get(position).isSelected());
 
-		if (position % 2 == 1) {
+		if (position % 2 == 1) { //alternate row color in list view
 			view.setBackgroundColor(Color.rgb(238, 238, 238));
 		} else {
 			view.setBackgroundColor(Color.rgb(255, 255, 255));
 		}
 		StringBuffer result = new StringBuffer();// for using arrayList adapter
+		// to get name and description of slide show
 		result.append(list.get(position).getshowName());
 		if (!list.get(position).getshowDescription().isEmpty())
 			result.append(" - " + list.get(position).getshowDescription());
 		holder.text.setText(result.toString());
 		if (list.get(position).getId() == -1) {
+			//if it is the dummy value of the list then hide the check box
 			holder.checkbox.setVisibility(View.GONE);
 		} else {
 			holder.checkbox.setVisibility(View.VISIBLE);

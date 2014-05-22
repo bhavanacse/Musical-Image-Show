@@ -212,8 +212,8 @@ public class ImageDisplayActivity extends Activity {
 						path = getFilePath(selectedImageUri);
 						
 						if (!path.isEmpty()) {
-							filePaths.add(path);
-							imgURI.add(path);
+							filePaths.add(path);//add the path to an arraylist
+							imgURI.add(path);//add to the arraylist of for the view
 						}
 					}
 				}
@@ -226,7 +226,7 @@ public class ImageDisplayActivity extends Activity {
 	// Retrieve the file path using the URI
 	public String getFilePath(Uri currentUri) {
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
+		//to query the device library to get the path given the URI
 		Cursor cursor = getContentResolver().query(currentUri, filePathColumn,
 				null, null, null);
 		cursor.moveToFirst();

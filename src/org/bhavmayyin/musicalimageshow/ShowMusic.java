@@ -1,6 +1,6 @@
 package org.bhavmayyin.musicalimageshow;
 
-public class ShowMusic {
+public class ShowMusic { // define the ShowMusic object
 	int id;
 	String showname;// uri
 	int showid;

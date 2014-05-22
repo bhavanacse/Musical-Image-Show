@@ -1,6 +1,6 @@
 package org.bhavmayyin.musicalimageshow;
 
-public class ImageShow {
+public class ImageShow { //to define an image of the show object
 
 	// TODO Auto-generated constructor stub
 	private int id;
