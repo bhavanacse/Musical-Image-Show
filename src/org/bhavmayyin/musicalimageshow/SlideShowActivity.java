@@ -29,7 +29,8 @@ import android.widget.ImageView;
 
 /**
  * @author bhavana
- * 
+ * SlideShowActivity  - Displays the Slideshow of 
+ * selected images & music files
  */
 @SuppressLint("NewApi")
 public class SlideShowActivity extends Activity {
@@ -44,7 +45,7 @@ public class SlideShowActivity extends Activity {
 	static PlaySound mp;
 	OrientationEventListener orientationListener;
 
-	int showid;
+	int showID;
 	AdapterView.AdapterContextMenuInfo info;
 	GridView imageGrid;
 	int imageId;
@@ -54,16 +55,21 @@ public class SlideShowActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Hide the tool bar and make the activity to show full screen
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_slideshow);
+		
 		Bundle b = this.getIntent().getExtras();
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 		musicUris = b.getStringArrayList("MusicFilePaths");
+		
+		// Hide the action bar
 		ActionBar bar = getActionBar();
 		bar.hide();
 
+		// Play the music and start animating images if both images and music files exist
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
 			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
@@ -76,12 +82,14 @@ public class SlideShowActivity extends Activity {
 					getApplicationContext(), SensorManager.SENSOR_DELAY_UI) {
 				public void onOrientationChanged(int orientation) {
 					if (mp.isplaying()) {
-						mp.pause();
+						mp.continuePlay();
+//						mp.pause();
 					} else {
 						mp.resume();
 					}
 				}
 			};
+		// If music files do not exist unlike images	
 		} else if (!myImageUris.isEmpty() && musicUris.isEmpty()) {
 
 			alertbox("Playing Slideshow without music", "No music selected");
@@ -91,6 +99,9 @@ public class SlideShowActivity extends Activity {
 
 	@SuppressWarnings("static-access")
 	@SuppressLint("NewApi")
+	/*
+	 * Start animating images - Ken Burns + more animation effects
+	 */
 	public void animateImage() {
 
 		int imageCount = myImageUris.size();
@@ -110,28 +121,32 @@ public class SlideShowActivity extends Activity {
 				myImageUris.get(filePathIndex % imageCount), options);
 
 		mySlidingImage = (ImageView) findViewById(R.id.slide_show);
-		mySlidingImage.setImageBitmap(currentBitmap);
+		mySlidingImage.setImageBitmap(currentBitmap); // Set the current image to image view
 		filePathIndex++;
 
-		mySlidingImage.setScaleX(1.0f);
-		mySlidingImage.setScaleY(1.0f);
-		mySlidingImage.setAlpha(0f);
-		mySlidingImage.setRotation(0);
+		mySlidingImage.setScaleX(1.0f); // Initial scale of image in X direction
+		mySlidingImage.setScaleY(1.0f); // Initial scale of image in Y direction
+		mySlidingImage.setAlpha(0f); // Set brightness to 0 
+		mySlidingImage.setRotation(0); // Set initial rotation to 0
 
-		mySlidingImage.setVisibility(View.VISIBLE);
+		mySlidingImage.setVisibility(View.VISIBLE); // Make the image visible
+		// Set the next scaling number using random number generation
 		final float nextScale = 1.0f + (randomNumGenerator.nextFloat() - 0.5f) * 2 / 5;
+		// Set the next rotation number using random number generation
 		final float nextRotation = (randomNumGenerator.nextFloat() - 0.5f) * 2 * 5;
 
 		final AnimatorListenerAdapter nextImageAnimationListener = new AnimatorListenerAdapter() {
+			// Call the animateImage() method on end of animating each image
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				animateImage();
+				animateImage(); 
 			}
 		};
 		final AnimatorListenerAdapter thirdAnimationListener = new AnimatorListenerAdapter() {
 			@SuppressLint("NewApi")
 			@Override
 			public void onAnimationEnd(Animator animation) {
+				// Fade out the image by setting the alpha value
 				mySlidingImage.animate().alpha(0f).setDuration(2000)
 						.setListener(nextImageAnimationListener).start();
 
@@ -140,13 +155,16 @@ public class SlideShowActivity extends Activity {
 		AnimatorListenerAdapter secondAnimationListener = new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
-
+				// Zoom in/Zoom out and rotate the image and then start the third animation effect  
 				mySlidingImage.animate().scaleX(nextScale).scaleY(nextScale)
 						.rotationBy(nextRotation).setDuration(3000)
 						.setListener(thirdAnimationListener).start();
 
 			}
 		};
+		
+		// Give a FadeIn effect to image by setting the alpha value and then start applying 
+		//second animation effects
 		mySlidingImage.animate().alpha(1.0f).setDuration(1000)
 				.setListener(secondAnimationListener).start();
 	}
@@ -187,6 +205,7 @@ public class SlideShowActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@SuppressWarnings("static-access")
 	public void onResume() {
 		super.onResume();
 		if (!mp.isplaying()) {
@@ -195,6 +214,7 @@ public class SlideShowActivity extends Activity {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void onPause() {
 		super.onPause();
 		timer.cancel();
@@ -204,6 +224,9 @@ public class SlideShowActivity extends Activity {
 		}
 	}
 
+	/*
+	 * Alert box with Ok and Cancel buttons
+	 */
 	protected void alertbox(String title, String msg) {
 		final String finaltitle = title;
 		new AlertDialog.Builder(this)
