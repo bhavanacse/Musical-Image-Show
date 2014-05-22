@@ -1,3 +1,8 @@
+/*
+ * ShowList screen which displays the list of Slideshows
+ * Allows to create, delete and edit a Slide show 
+ */
+
 package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;

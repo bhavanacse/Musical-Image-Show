@@ -1,3 +1,8 @@
+/*
+ * Media Player functions defined to perform the operations 
+ * of the music played along with Slide show 
+ */
+
 package org.bhavmayyin.musicalimageshow;
 
 import java.io.FileDescriptor;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.bhavmayyin.musicalimageshow;
 
 import java.io.File;
@@ -31,7 +28,7 @@ import android.widget.TextView;
 
 /**
  * @author bhavana
- * 
+ * Custom Music library to select multiple music files available
  */
 public class AudioMediaActivity extends ListActivity {
 

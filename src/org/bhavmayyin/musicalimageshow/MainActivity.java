@@ -1,3 +1,7 @@
+/*
+ * First Screen that shows two images one after another 
+ * with a bit of introductory music for the app
+ */
 package org.bhavmayyin.musicalimageshow;
 
 import java.io.IOException;
@@ -39,6 +43,49 @@ public class MainActivity extends Activity {
 
 	MediaPlayer myPlayer;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setContentView(R.layout.activity_main);
+		
+		// Set the color of the action bar
+		ActionBar bar = getActionBar();
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
+
+		imagev = new ImageView(MainActivity.this);
+		
+		// Defining properties of the image to be set in the activity
+		imagev.setScaleType(ScaleType.FIT_CENTER);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		imagev.setLayoutParams(layoutParams);
+		try {
+			setBitmapImage(SPLASH_SCREEN_IMAGE1_JPG);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		RelativeLayout layout = new RelativeLayout(MainActivity.this);
+		layout.addView(imagev); // Add the image to the layout
+		setContentView(layout);
+
+		// Play the music
+		myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
+		myPlayer.start();
+		myPlayer.setVolume(100, 100);
+
+		timer = new Timer();
+		timer.schedule(new TickClass(), 1000, 1000);
+		handler = new MyHandler();
+	}
+	
+	// To show the image with a border
 	private void setBitmapImage(String fname) throws IOException {
 		Bitmap bmp = BitmapFactory.decodeStream(MainActivity.this.getAssets()
 				.open(fname));
@@ -56,44 +103,6 @@ public class MainActivity extends Activity {
 		imagev.setImageBitmap(bmp);
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_main);
-		
-		ActionBar bar = getActionBar();
-		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
-
-		imagev = new ImageView(MainActivity.this);
-		imagev.setScaleType(ScaleType.FIT_CENTER);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		imagev.setLayoutParams(layoutParams);
-		try {
-			setBitmapImage(SPLASH_SCREEN_IMAGE1_JPG);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		RelativeLayout layout = new RelativeLayout(MainActivity.this);
-		layout.addView(imagev);
-		setContentView(layout);
-
-		myPlayer = MediaPlayer.create(MainActivity.this, R.raw.music_bit);
-		myPlayer.start();
-		myPlayer.setVolume(100, 100);
-
-		timer = new Timer();
-		timer.schedule(new TickClass(), 1000, 1000);
-		handler = new MyHandler();
-	}
-
 	private class TickClass extends TimerTask {
 		@Override
 		public void run() {
@@ -102,6 +111,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	// Handler to rotate the images one after other
 	private class MyHandler extends Handler {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -145,6 +155,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	// Release the media player on pause of the activity
 	protected void onPause() {
 		super.onPause();
 		myPlayer.release();

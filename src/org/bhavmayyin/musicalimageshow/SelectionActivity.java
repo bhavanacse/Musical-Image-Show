@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;

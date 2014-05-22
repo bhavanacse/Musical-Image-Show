@@ -1,3 +1,7 @@
+/*
+ * Database defined to store all the Slide shows' information
+ */
+
 package org.bhavmayyin.musicalimageshow;
 
 import java.util.ArrayList;
