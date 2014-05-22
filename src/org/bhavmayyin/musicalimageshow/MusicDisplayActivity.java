@@ -229,9 +229,13 @@ public class MusicDisplayActivity extends Activity {
 			TextView textView = new TextView(myContext);
 			textView.setLayoutParams(new ListView.LayoutParams(
 					LayoutParams.FILL_PARENT, 60));
-			StringBuffer result = new StringBuffer();// for using arrayList
-														// adapter
-			result.append("   " + showmusic.get(position).getMusic());
+			StringBuffer result = new StringBuffer();// for using arrayList adapter
+			String musicName = showmusic.get(position).getMusic();
+			if (musicName.length() > 25){
+				musicName = musicName.subSequence(0, 24) + ".....";
+			}
+			result.append("   " + musicName);
+			
 			// if (!showmusic.get(position).getArtist().isEmpty())
 			// result.append(System.getProperty("line.separator") +
 			// "   Artist: " + showmusic.get(position).getArtist());

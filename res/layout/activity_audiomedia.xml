@@ -27,7 +27,8 @@
         android:descendantFocusability="beforeDescendants"
         android:divider="#0099CC"
         android:dividerHeight="1px"
-        android:fadingEdge="none" >
+        android:fadingEdge="none"
+        android:scrollbarAlwaysDrawVerticalTrack="true" >
     </ListView>
 
 </RelativeLayout>

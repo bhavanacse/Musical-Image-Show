@@ -184,6 +184,7 @@ public class AudioMediaActivity extends ListActivity {
 				viewHolder.text = (TextView) view.findViewById(R.id.mediatitle);
 
 				view.setTag(viewHolder);
+				view.setPadding(3, 0, 3, 15);
 			} else {
 				view = convertView;
 				((ViewHolder) view.getTag()).musiccheck.setTag(list

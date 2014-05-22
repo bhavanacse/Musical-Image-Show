@@ -49,7 +49,7 @@ public class ShowList extends ListActivity {
 		edTitle.setVisibility(View.GONE);
 		edDesc.setVisibility(View.GONE);
 		ActionBar bar = getActionBar();
-		bar.setTitle("Slideshows");
+		bar.setTitle("Imageshows");
 		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0099CC")));
 
 	}
@@ -58,7 +58,7 @@ public class ShowList extends ListActivity {
 		if (slideshows.size() < 1) {
 			SlideShow ss = new SlideShow();
 			ss.setshowName("Press + button");
-			ss.setshowDescription("to add Slideshow");
+			ss.setshowDescription("to add Imageshow");
 			ss.setId(-1);
 			slideshows.add(ss);
 		}
@@ -184,7 +184,7 @@ public class ShowList extends ListActivity {
 			if (npos != -1 && slideshows.get(npos).getId() != -1) { // the first
 																	// dummy
 																	// entry
-				alertbox("Delete ImageShow",
+				alertbox("Delete Imageshow",
 						"Are you sure you want to delete Imageshow "
 								+ slideshows.get(npos).getshowName() + " ?");
 			}
