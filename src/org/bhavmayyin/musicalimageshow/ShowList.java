@@ -287,6 +287,9 @@ public class ShowList extends ListActivity {
 							actionBarState = 0;
 							invalidateOptionsMenu();// reset menu bar items
 						}
+						if(finaltitle.toLowerCase().contains("cannot add")){
+							edTitle.requestFocus();
+						}
 					}
 				})
 				.setNegativeButton("Cancel",
