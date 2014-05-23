@@ -28,9 +28,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 /**
- * @author bhavana
- * SlideShowActivity  - Displays the Slideshow of 
- * selected images & music files
+ * @author bhavana SlideShowActivity - Displays the Slideshow of selected images
+ *         & music files
  */
 @SuppressLint("NewApi")
 public class SlideShowActivity extends Activity {
@@ -50,40 +49,41 @@ public class SlideShowActivity extends Activity {
 	GridView imageGrid;
 	int imageId;
 	String selected;
+	int firstDuration = 1000, secDuration = 2000;
 
 	@SuppressWarnings("static-access")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_slideshow);
-		
+
 		Bundle b = this.getIntent().getExtras();
 		myImageUris = b.getStringArrayList("ImageFilePaths");
 		musicUris = b.getStringArrayList("MusicFilePaths");
 
-
-		// Play the music and start animating images if both images and music files exist
+		// Play the music and start animating images if both images and music
+		// files exist
 		if (!myImageUris.isEmpty() && !musicUris.isEmpty()) {
-			//if music and image lists are not empty
+			// if music and image lists are not empty
 			mp = new PlaySound(musicUris);
 			if (!mp.isplaying()) {
-				mp.stop(0);//set the stop status, 0=really stop
+				mp.stop(0);// set the stop status, 0=really stop
 				mp.play();
 			}
 			animateImage();
-			//try to set orientation change not to stop
+			// try to set orientation change not to stop
 			orientationListener = new OrientationEventListener(
 					getApplicationContext(), SensorManager.SENSOR_DELAY_UI) {
 				public void onOrientationChanged(int orientation) {
 					if (mp.isplaying()) {
 						mp.continuePlay();
-//						
+						//
 					} else {
-						mp.resume();//customized resume
+						mp.resume();// customized resume
 					}
 				}
 			};
-		// If music files do not exist unlike images	
+			// If music files do not exist unlike images
 		} else if (!myImageUris.isEmpty() && musicUris.isEmpty()) {
 
 			alertbox("Playing Slideshow without music", "No music selected");
@@ -98,42 +98,40 @@ public class SlideShowActivity extends Activity {
 	 */
 	public void animateImage() {
 
-		int imageCount = myImageUris.size();
+		final int imageCount = myImageUris.size();
 
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 
-		BitmapFactory.decodeFile(myImageUris.get(filePathIndex % imageCount),
-				options);
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		Bitmap currentBitmap = BitmapFactory.decodeFile(
-				myImageUris.get(filePathIndex % imageCount), options);
+		Bitmap currentBitmap = BitmapFactory.decodeFile(myImageUris
+				.get(filePathIndex % imageCount));
 
 		mySlidingImage = (ImageView) findViewById(R.id.slide_show);
-		mySlidingImage.setImageBitmap(currentBitmap); // Set the current image to image view
+		mySlidingImage.setImageBitmap(currentBitmap); // Set the current image
+														// to image view
 		filePathIndex++;
 
 		mySlidingImage.setScaleX(1.0f); // Initial scale of image in X direction
 		mySlidingImage.setScaleY(1.0f); // Initial scale of image in Y direction
-		mySlidingImage.setAlpha(0f); // Set brightness to 0 
+		mySlidingImage.setAlpha(0f); // Set brightness to 0
 		mySlidingImage.setRotation(0); // Set initial rotation to 0
+		mySlidingImage.setRotationX(0f); // Set initial rotation in X direction to 0
+		mySlidingImage.setRotationY(0f); // Set initial rotation in Y direction to 0
+		mySlidingImage.setTranslationX(0f); // Set initial translation in X direction to 0
+		mySlidingImage.setTranslationY(0f); // Set initial translation in Y direction to 0
 
 		mySlidingImage.setVisibility(View.VISIBLE); // Make the image visible
 		// Set the next scaling number using random number generation
 		final float nextScale = 1.0f + (randomNumGenerator.nextFloat() - 0.5f) * 2 / 5;
 		// Set the next rotation number using random number generation
-		final float nextRotation = (randomNumGenerator.nextFloat() - 0.5f) * 2 * 5;
+		final float nextRotation = (randomNumGenerator.nextFloat() - 0.5f) * 2 * 10;
+		final float otherRotation = (randomNumGenerator.nextFloat() - 0.5f) * 800;
 
 		final AnimatorListenerAdapter nextImageAnimationListener = new AnimatorListenerAdapter() {
 			// Call the animateImage() method on end of animating each image
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				animateImage(); 
+				animateImage();
 			}
 		};
 		final AnimatorListenerAdapter thirdAnimationListener = new AnimatorListenerAdapter() {
@@ -141,7 +139,7 @@ public class SlideShowActivity extends Activity {
 			@Override
 			public void onAnimationEnd(Animator animation) {
 				// Fade out the image by setting the alpha value
-				mySlidingImage.animate().alpha(0f).setDuration(2000)
+				mySlidingImage.animate().alpha(0f).setDuration(firstDuration)
 						.setListener(nextImageAnimationListener).start();
 
 			};
@@ -149,43 +147,55 @@ public class SlideShowActivity extends Activity {
 		AnimatorListenerAdapter secondAnimationListener = new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				// Zoom in/Zoom out and rotate the image and then start the third animation effect  
-				mySlidingImage.animate().scaleX(nextScale).scaleY(nextScale)
-						.rotationBy(nextRotation).setDuration(3000)
-						.setListener(thirdAnimationListener).start();
-
+				Random rN = new Random();
+				int r = rN.nextInt(100);
+				if (r <= 15) {
+					// Zoom in/Zoom out and rotate the image and then start the
+					// third animation effect
+					mySlidingImage.animate().scaleX(nextScale)
+							.scaleY(nextScale).rotationBy(nextRotation)
+							.setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Translate in X direction and rotate in Y direction
+				} else if (r > 15 && r <= 30) {
+					mySlidingImage.animate().translationX(-800f)
+							.rotationY(otherRotation).setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Translate in Y direction	
+				} else if (r > 30 && r <= 45) {
+					mySlidingImage.animate()
+							.rotationY(otherRotation).setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Translate in opposite X & Y direction	
+				} else if (r > 45 && r <= 60) {
+					mySlidingImage.animate().translationX(-500f)
+							.translationY(-500f).setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Translate in X & Y direction	
+				} else if (r > 60 && r <= 75) {
+					mySlidingImage.animate().translationX(500f)
+							.translationY(500f).setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Translate and rotate in positive X direction
+				} else if (r > 75 && r <= 90) {
+					mySlidingImage.animate().translationX(800f)
+							.rotationX(otherRotation).setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				// Zoom in image in X and Y scale
+				} else {
+					mySlidingImage.animate().scaleX(nextScale)
+							.scaleY(nextScale)
+							.setDuration(secDuration)
+							.setListener(thirdAnimationListener).start();
+				}
 			}
 		};
-		
-		// Give a FadeIn effect to image by setting the alpha value and then start applying 
-		//second animation effects
-		mySlidingImage.animate().alpha(1.0f).setDuration(1000)
+
+		// Give a FadeIn effect to image by setting the alpha value and then
+		// start applying
+		// second animation effects
+		mySlidingImage.animate().alpha(1.0f).setDuration(firstDuration)
 				.setListener(secondAnimationListener).start();
-	}
-
-	public static int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-
-			// Calculate the largest inSampleSize value that is a power of 2
-			// and keeps both height and width larger than the requested height
-			// and width.
-
-			while ((halfHeight / inSampleSize) > reqHeight
-					&& (halfWidth / inSampleSize) > reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-
-		return inSampleSize;
 	}
 
 	@SuppressWarnings("static-access")
