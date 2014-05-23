@@ -117,7 +117,7 @@ public class ShowList extends ListActivity {
 	// click on anywhere on the list the check box will be set
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
+		//only if it is not in add new slide show mode
 		if (!edTitle.isShown()) {
 			npos = position;
 			for (int i = 0; i < slideshows.size(); i++) {
