@@ -160,7 +160,7 @@ public class SlideShowActivity extends Activity {
 				} else if (r > 15 && r <= 30) {
 					mySlidingImage.animate().translationX(-800f)
 							.rotationY(otherRotation).setDuration(secDuration)
-							.setListener(thirdAnimationListener).start();
+							.setListener(nextImageAnimationListener).start();
 				// Translate in Y direction	
 				} else if (r > 30 && r <= 45) {
 					mySlidingImage.animate()
@@ -170,17 +170,17 @@ public class SlideShowActivity extends Activity {
 				} else if (r > 45 && r <= 60) {
 					mySlidingImage.animate().translationX(-500f)
 							.translationY(-500f).setDuration(secDuration)
-							.setListener(thirdAnimationListener).start();
+							.setListener(nextImageAnimationListener).start();
 				// Translate in X & Y direction	
 				} else if (r > 60 && r <= 75) {
 					mySlidingImage.animate().translationX(500f)
 							.translationY(500f).setDuration(secDuration)
-							.setListener(thirdAnimationListener).start();
+							.setListener(nextImageAnimationListener).start();
 				// Translate and rotate in positive X direction
 				} else if (r > 75 && r <= 90) {
 					mySlidingImage.animate().translationX(800f)
 							.rotationX(otherRotation).setDuration(secDuration)
-							.setListener(thirdAnimationListener).start();
+							.setListener(nextImageAnimationListener).start();
 				// Zoom in image in X and Y scale
 				} else {
 					mySlidingImage.animate().scaleX(nextScale)
